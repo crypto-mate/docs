@@ -15,7 +15,7 @@ Retrieves all pending or rejected documents for a specific client. Requires an A
 ## Response
 
 <ResponseField name="documents" type="array">
-  List of pending documents. Each item includes `provider`, `type`, `name`, `description`, `requireImage`, `requireBackImage`, `requireNumber`, `requireExpiration`, and `issueReasons`.
+  List of pending documents. Each item includes `provider`, `type`, `name`, `description`, `require_image`, `require_back_image`, `require_number`, `require_expiration`, and `issue_reasons`.
 </ResponseField>
 
 <RequestExample>
@@ -37,11 +37,11 @@ curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4
       "type": "PASSPORT",
       "name": "Passport",
       "description": "A valid government-issued passport",
-      "requireImage": true,
-      "requireBackImage": false,
-      "requireNumber": true,
-      "requireExpiration": true,
-      "issueReasons": ["image_unclear"]
+      "require_image": true,
+      "require_back_image": false,
+      "require_number": true,
+      "require_expiration": true,
+      "issue_reasons": ["image_unclear"]
     }
   ]
 }

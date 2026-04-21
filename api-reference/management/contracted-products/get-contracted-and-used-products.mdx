@@ -8,15 +8,15 @@ Retrieves both contracted product limits and current usage statistics for the co
 
 ## Response
 
-<ResponseField name="treasuryWallets" type="object">
+<ResponseField name="treasury_wallets" type="object">
   Treasury wallets usage. Contains `total` (contracted limit) and `used` (currently in use).
 </ResponseField>
 
-<ResponseField name="virtualWallets" type="object">
+<ResponseField name="virtual_wallets" type="object">
   Virtual wallets usage. Contains `total` and `used`.
 </ResponseField>
 
-<ResponseField name="virtualCards" type="object">
+<ResponseField name="virtual_cards" type="object">
   Virtual cards usage. Contains `total` and `used`.
 </ResponseField>
 
@@ -33,9 +33,9 @@ curl -X GET "https://api.cryptomate.me/management/contracted-product/used" \
 
 ```json 200 OK
 {
-  "treasuryWallets": { "total": 10, "used": 4 },
-  "virtualWallets": { "total": 100, "used": 67 },
-  "virtualCards": { "total": 50, "used": 12 }
+  "treasury_wallets": { "total": 10, "used": 4 },
+  "virtual_wallets": { "total": 100, "used": 67 },
+  "virtual_cards": { "total": 50, "used": 12 }
 }
 ```
 

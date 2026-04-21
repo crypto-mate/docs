@@ -7,7 +7,7 @@
     "light": "#9D5CC3",
     "dark": "#480F6A"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "api": {
     "mdx": {
       "server": "https://api.sandbox.cryptomate.me",
@@ -99,7 +99,7 @@
             ]
           },
           {
-            "anchor": "Virtual Wallets",
+            "anchor": "Active Management",
             "icon": "wallet",
             "pages": [
               "api-reference/virtual-wallets/index",

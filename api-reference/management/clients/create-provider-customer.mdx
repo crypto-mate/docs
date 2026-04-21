@@ -18,7 +18,7 @@ Links a client to a specific provider's customer ID for external service integra
   External provider. One of `BRIDGE`, `REAP`, `UNLIMINT`, `PAXOS`, etc.
 </ParamField>
 
-<ParamField body="customerId" type="string" required>
+<ParamField body="customer_id" type="string" required>
   Customer ID in the external provider's system.
 </ParamField>
 
@@ -28,7 +28,7 @@ Links a client to a specific provider's customer ID for external service integra
   Mapping identifier.
 </ResponseField>
 
-<ResponseField name="clientId" type="string">
+<ResponseField name="client_id" type="string">
   Client identifier.
 </ResponseField>
 
@@ -36,7 +36,7 @@ Links a client to a specific provider's customer ID for external service integra
   External provider.
 </ResponseField>
 
-<ResponseField name="customerId" type="string">
+<ResponseField name="customer_id" type="string">
   Customer ID in the external provider's system.
 </ResponseField>
 
@@ -44,11 +44,11 @@ Links a client to a specific provider's customer ID for external service integra
   Mapping status.
 </ResponseField>
 
-<ResponseField name="createdAt" type="string">
+<ResponseField name="created_at" type="string">
   Creation timestamp.
 </ResponseField>
 
-<ResponseField name="updatedAt" type="string">
+<ResponseField name="updated_at" type="string">
   Last update timestamp.
 </ResponseField>
 
@@ -60,7 +60,7 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
   -H "Content-Type: application/json" \
   -d '{
     "provider": "BRIDGE",
-    "customerId": "cust_ext_xyz789"
+    "customer_id": "cust_ext_xyz789"
   }'
 ```
 
@@ -71,12 +71,12 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
 ```json 200 OK
 {
   "id": "cpc_abc123",
-  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
   "provider": "BRIDGE",
-  "customerId": "cust_ext_xyz789",
+  "customer_id": "cust_ext_xyz789",
   "status": "active",
-  "createdAt": "2026-04-15T10:30:00",
-  "updatedAt": "2026-04-15T10:30:00"
+  "created_at": "2026-04-15T10:30:00",
+  "updated_at": "2026-04-15T10:30:00"
 }
 ```
 

@@ -14,27 +14,27 @@ Creates a new Brazilian PIX bank account for the specified client. Requires an A
 
 ## Body
 
-<ParamField body="bankName" type="string">
+<ParamField body="bank_name" type="string">
   Name of the bank.
 </ParamField>
 
-<ParamField body="accountAlias" type="string">
+<ParamField body="account_alias" type="string">
   User-friendly alias for the account.
 </ParamField>
 
-<ParamField body="bankHolderFirstName" type="string">
+<ParamField body="bank_holder_first_name" type="string">
   Account holder's first name.
 </ParamField>
 
-<ParamField body="bankHolderLastName" type="string">
+<ParamField body="bank_holder_last_name" type="string">
   Account holder's last name.
 </ParamField>
 
-<ParamField body="pixKey" type="string">
+<ParamField body="pix_key" type="string">
   PIX key (email, phone, CPF, or random key).
 </ParamField>
 
-<ParamField body="documentNumber" type="string">
+<ParamField body="document_number" type="string">
   CPF or CNPJ document number.
 </ParamField>
 
@@ -48,7 +48,7 @@ Creates a new Brazilian PIX bank account for the specified client. Requires an A
 
 ## Response
 
-See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the full field list. PIX accounts expose `pixKey` and `documentNumber`.
+See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the full field list. PIX accounts expose `pix_key` and `document_number`.
 
 <RequestExample>
 
@@ -57,17 +57,17 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
   -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "bankName": "Banco do Brasil",
-    "accountAlias": "Primary PIX Account",
-    "bankHolderFirstName": "João",
-    "bankHolderLastName": "Silva",
-    "pixKey": "customer@example.com",
-    "documentNumber": "12345678900",
+    "bank_name": "Banco do Brasil",
+    "account_alias": "Primary PIX Account",
+    "bank_holder_first_name": "João",
+    "bank_holder_last_name": "Silva",
+    "pix_key": "customer@example.com",
+    "document_number": "12345678900",
     "country": "BR",
     "address": {
       "streetLine1": "Av. Paulista 1000",
       "city": "São Paulo",
-      "postalCode": "01310-100",
+      "postal_code": "01310-100",
       "country": "BR"
     }
   }'
@@ -80,12 +80,12 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
 ```json 200 OK
 {
   "id": "ba_jkl012",
-  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-  "bankName": "Banco do Brasil",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "Banco do Brasil",
   "type": "PIX",
   "currency": "BRL",
-  "pixKey": "customer@example.com",
-  "documentNumber": "12345678900"
+  "pix_key": "customer@example.com",
+  "document_number": "12345678900"
 }
 ```
 

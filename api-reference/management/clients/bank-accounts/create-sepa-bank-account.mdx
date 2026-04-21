@@ -14,23 +14,23 @@ Creates a new European SEPA bank account for the specified client. Requires an A
 
 ## Body
 
-<ParamField body="bankName" type="string">
+<ParamField body="bank_name" type="string">
   Name of the bank.
 </ParamField>
 
-<ParamField body="accountAlias" type="string">
+<ParamField body="account_alias" type="string">
   User-friendly alias for the account.
 </ParamField>
 
-<ParamField body="bankHolderFirstName" type="string">
+<ParamField body="bank_holder_first_name" type="string">
   Account holder's first name.
 </ParamField>
 
-<ParamField body="bankHolderLastName" type="string">
+<ParamField body="bank_holder_last_name" type="string">
   Account holder's last name.
 </ParamField>
 
-<ParamField body="accountNumber" type="string">
+<ParamField body="account_number" type="string">
   IBAN (International Bank Account Number).
 </ParamField>
 
@@ -57,17 +57,17 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
   -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "bankName": "Deutsche Bank",
-    "accountAlias": "Primary SEPA Account",
-    "bankHolderFirstName": "Hans",
-    "bankHolderLastName": "Mueller",
-    "accountNumber": "DE89370400440532013000",
+    "bank_name": "Deutsche Bank",
+    "account_alias": "Primary SEPA Account",
+    "bank_holder_first_name": "Hans",
+    "bank_holder_last_name": "Mueller",
+    "account_number": "DE89370400440532013000",
     "bic": "DEUTDEFF",
     "country": "DE",
     "address": {
       "streetLine1": "Friedrichstrasse 100",
       "city": "Berlin",
-      "postalCode": "10117",
+      "postal_code": "10117",
       "country": "DE"
     }
   }'
@@ -80,8 +80,8 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
 ```json 200 OK
 {
   "id": "ba_ghi789",
-  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-  "bankName": "Deutsche Bank",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "Deutsche Bank",
   "type": "SEPA",
   "currency": "EUR",
   "iban": "DE89370400440532013000",

@@ -14,11 +14,11 @@ Retrieves the payment destination configuration for a specific blockchain networ
 
 ## Response
 
-<ResponseField name="paymentDepositAddress" type="string">
+<ResponseField name="payment_deposit_address" type="string">
   Blockchain address where payment deposits are received.
 </ResponseField>
 
-<ResponseField name="feeDepositAddress" type="string">
+<ResponseField name="fee_deposit_address" type="string">
   Blockchain address where fee deposits are received.
 </ResponseField>
 
@@ -39,8 +39,8 @@ curl -X GET "https://api.cryptomate.me/management/configurations/payments/polygo
 
 ```json 200 OK
 {
-  "paymentDepositAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-  "feeDepositAddress": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+  "payment_deposit_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "fee_deposit_address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
   "blockchain": "polygon"
 }
 ```

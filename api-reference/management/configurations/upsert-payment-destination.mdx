@@ -12,11 +12,11 @@ Creates a new payment destination configuration or updates an existing one for a
   Blockchain network identifier.
 </ParamField>
 
-<ParamField body="paymentDepositAddress" type="string" required>
+<ParamField body="payment_deposit_address" type="string" required>
   Blockchain address for payment deposits.
 </ParamField>
 
-<ParamField body="feeDepositAddress" type="string" required>
+<ParamField body="fee_deposit_address" type="string" required>
   Blockchain address for fee deposits.
 </ParamField>
 
@@ -28,8 +28,8 @@ curl -X POST "https://api.cryptomate.me/management/configurations/payments" \
   -H "Content-Type: application/json" \
   -d '{
     "blockchain": "polygon",
-    "paymentDepositAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-    "feeDepositAddress": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+    "payment_deposit_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "fee_deposit_address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
   }'
 ```
 

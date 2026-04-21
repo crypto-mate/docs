@@ -13,7 +13,7 @@ Retrieves a list of all supported countries with their subdivisions for client r
 </ResponseField>
 
 <ResponseField name="data" type="array">
-  List of country details. Each item has `name`, `alpha3`, `postalCodeFormat`, and a `subdivisions` array.
+  List of country details. Each item has `name`, `alpha3`, `postal_code_format`, and a `subdivisions` array.
 </ResponseField>
 
 <RequestExample>
@@ -34,7 +34,7 @@ curl -X GET "https://api.cryptomate.me/management/clients/countries" \
     {
       "name": "United States",
       "alpha3": "USA",
-      "postalCodeFormat": "#####",
+      "postal_code_format": "#####",
       "subdivisions": []
     }
   ]

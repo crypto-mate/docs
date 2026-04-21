@@ -1,33 +1,70 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Introduction"
+description: "Reference for the CryptoMate public API — endpoints, conventions, and how to authenticate."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+Welcome to the CryptoMate API reference. This section documents every public endpoint grouped by product: **Treasury**, **Active Management**, **Cards**, and **Management**.
 
-## Welcome
+## Base URLs
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+| Environment | Base URL |
+|---|---|
+| Sandbox | `https://api.sandbox.cryptomate.me` |
+| Production | `https://api.cryptomate.me` |
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Always build and test against Sandbox first. See [Quickstart](/quickstart) for the full onboarding flow.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All requests are authenticated with an API key sent in the `X-API-KEY` header.
+
+```bash
+curl https://api.cryptomate.me/... \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+Keys are issued from the [CryptoMate Portal](https://portal.cryptomate.me) and can be scoped with feature-level permissions and IP allowlists. See [API Keys & Access Security](/authentication) for details.
+
+## Request and response format
+
+- All request bodies and responses use **JSON** with **snake_case** field names.
+- Timestamps are ISO-8601 in UTC (e.g. `2026-04-21T12:34:56Z`).
+- Monetary amounts are serialized as decimal numbers.
+
+## Errors
+
+Failed requests return a JSON body with `code` and `message`. Each response (including webhooks) also includes an `X-Trace-Id` header that you should attach to any support request.
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet with id `wallet_...` was not found."
+}
 ```
+
+For the full list of HTTP status codes and error codes, see [Errors](/integration/errors).
+
+## Idempotency
+
+Write endpoints that mutate state (transfers, ramps, card operations) support idempotency via the `Idempotency-Key` header. Repeating a request with the same key within the idempotency window returns the original result instead of executing a second time.
+
+## Webhooks
+
+Many workflows are asynchronous. Register a webhook endpoint from the Portal to receive real-time notifications about deposits, card authorizations, ramp completions, and more. See [Webhooks](/integration/webhooks) for the payload format and event catalog.
+
+## Products
+
+<CardGroup cols={2}>
+  <Card title="Treasury" icon="vault" href="/api-reference/treasury/index">
+    Manage MPC accounts, wallets, tokens, and transactions across multiple blockchains.
+  </Card>
+  <Card title="Active Management" icon="wallet" href="/api-reference/virtual-wallets/index">
+    Centralize client deposits, run ramps, and manage a holding wallet architecture.
+  </Card>
+  <Card title="Cards" icon="credit-card" href="/api-reference/cards/index">
+    Issue virtual Visa cards backed by stablecoin collateral.
+  </Card>
+  <Card title="Management" icon="gear" href="/api-reference/management/index">
+    Company, clients, bank accounts, blockchains, configurations, and contracted products.
+  </Card>
+</CardGroup>

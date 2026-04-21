@@ -26,8 +26,8 @@ Retrieves the documentation checklist required for client creation. Requires an 
   Checklist description.
 </ResponseField>
 
-<ResponseField name="documentGroups" type="array">
-  List of document groups, each with `id`, `name`, `description`, `required`, and `validDocuments`.
+<ResponseField name="document_groups" type="array">
+  List of document groups, each with `id`, `name`, `description`, `required`, and `valid_documents`.
 </ResponseField>
 
 <RequestExample>
@@ -46,13 +46,13 @@ curl -X GET "https://api.cryptomate.me/management/clients/documentation/checklis
   "id": "checklist_abc123",
   "name": "Standard KYC Verification",
   "description": "Documents required for individual verification",
-  "documentGroups": [
+  "document_groups": [
     {
       "id": "dg_identity",
       "name": "Identity Documents",
       "description": "Government-issued identification documents",
       "required": true,
-      "validDocuments": []
+      "valid_documents": []
     }
   ]
 }

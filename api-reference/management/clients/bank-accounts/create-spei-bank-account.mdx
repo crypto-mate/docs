@@ -14,19 +14,19 @@ Creates a new Mexican SPEI bank account for the specified client. Requires an AP
 
 ## Body
 
-<ParamField body="bankName" type="string">
+<ParamField body="bank_name" type="string">
   Name of the bank.
 </ParamField>
 
-<ParamField body="accountAlias" type="string">
+<ParamField body="account_alias" type="string">
   User-friendly alias for the account.
 </ParamField>
 
-<ParamField body="bankHolderName" type="string">
+<ParamField body="bank_holder_name" type="string">
   Account holder's full name.
 </ParamField>
 
-<ParamField body="accountNumber" type="string">
+<ParamField body="account_number" type="string">
   CLABE number (18 digits).
 </ParamField>
 
@@ -45,14 +45,14 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
   -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "bankName": "BBVA Bancomer",
-    "accountAlias": "Primary SPEI Account",
-    "bankHolderName": "Juan Carlos Rodriguez",
-    "accountNumber": "012180001234567897",
+    "bank_name": "BBVA Bancomer",
+    "account_alias": "Primary SPEI Account",
+    "bank_holder_name": "Juan Carlos Rodriguez",
+    "account_number": "012180001234567897",
     "address": {
       "streetLine1": "Av. Insurgentes Sur 1602",
       "city": "Ciudad de México",
-      "postalCode": "03940",
+      "postal_code": "03940",
       "country": "MX"
     }
   }'
@@ -65,9 +65,9 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
 ```json 200 OK
 {
   "id": "ba_def456",
-  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-  "bankName": "BBVA Bancomer",
-  "bankHolderName": "Juan Carlos Rodriguez",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "BBVA Bancomer",
+  "bank_holder_name": "Juan Carlos Rodriguez",
   "type": "SPEI",
   "currency": "MXN",
   "clabe": "012180001234567897"

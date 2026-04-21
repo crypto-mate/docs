@@ -18,7 +18,7 @@ Updates the customer ID for an existing provider customer link. Requires an API 
 
 ## Body
 
-<ParamField body="customerId" type="string" required>
+<ParamField body="customer_id" type="string" required>
   Updated customer ID in the external provider's system.
 </ParamField>
 
@@ -33,7 +33,7 @@ curl -X PUT "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4
   -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "customerId": "cust_ext_updated_123"
+    "customer_id": "cust_ext_updated_123"
   }'
 ```
 

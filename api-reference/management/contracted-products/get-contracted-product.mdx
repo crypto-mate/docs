@@ -8,15 +8,15 @@ Retrieves the product contract details for the current company, including contra
 
 ## Response
 
-<ResponseField name="treasuryWallets" type="integer">
+<ResponseField name="treasury_wallets" type="integer">
   Maximum number of treasury wallets.
 </ResponseField>
 
-<ResponseField name="virtualWallets" type="integer">
+<ResponseField name="virtual_wallets" type="integer">
   Maximum number of virtual wallets.
 </ResponseField>
 
-<ResponseField name="virtualCards" type="integer">
+<ResponseField name="virtual_cards" type="integer">
   Maximum number of virtual cards.
 </ResponseField>
 
@@ -33,9 +33,9 @@ curl -X GET "https://api.cryptomate.me/management/contracted-product" \
 
 ```json 200 OK
 {
-  "treasuryWallets": 10,
-  "virtualWallets": 100,
-  "virtualCards": 50
+  "treasury_wallets": 10,
+  "virtual_wallets": 100,
+  "virtual_cards": 50
 }
 ```
 
