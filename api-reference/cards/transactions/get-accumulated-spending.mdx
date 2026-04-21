@@ -1,0 +1,55 @@
+---
+title: "Get card accumulated spending"
+description: "Retrieve the amount already spent against a card's daily, weekly, and monthly limits."
+api: "GET /cards/transactions/{cardId}/accumulated-spending"
+---
+
+Returns the amount already consumed against the card's daily, weekly, and monthly spending limits. Use this alongside the card's `daily_limit`, `weekly_limit`, and `monthly_limit` to compute the remaining available amount on each period. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="daily_spending" type="number">
+  Amount spent on the current day against the daily limit.
+</ResponseField>
+
+<ResponseField name="weekly_spending" type="number">
+  Amount spent on the current week against the weekly limit.
+</ResponseField>
+
+<ResponseField name="monthly_spending" type="number">
+  Amount spent on the current month against the monthly limit.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/accumulated-spending" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "daily_spending": 125.50,
+  "weekly_spending": 450.00,
+  "monthly_spending": 1800.75
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found."
+}
+```
+
+</ResponseExample>

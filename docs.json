@@ -192,7 +192,8 @@
                 "group": "Transactions",
                 "pages": [
                   "api-reference/cards/transactions/search-transactions",
-                  "api-reference/cards/transactions/get-transactions-pdf"
+                  "api-reference/cards/transactions/get-transactions-pdf",
+                  "api-reference/cards/transactions/get-accumulated-spending"
                 ]
               },
               {
