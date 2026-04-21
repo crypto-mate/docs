@@ -1,77 +1,435 @@
 ---
 title: "Webhooks"
-description: "Receive real-time notifications for deposits, card transactions, and wallet activity."
+description: "Receive real-time notifications for card transactions, treasury movements, and wallet activity."
 ---
 
 ## Overview
 
-Webhooks let your system receive **real-time notifications** about events happening in CryptoMate — new deposits, card authorizations, withdrawals, and more. Notifications are delivered to an HTTP endpoint you configure in your environment.
+CryptoMate pushes real-time events to an HTTPS endpoint you register. Every event (card authorization, deposit, withdraw, transfer, ramp, KYC status change, and more) is sent as a `POST` with a JSON envelope and an event-specific `data` payload.
 
-## Webhook payload structure
-
-Every webhook request shares a common envelope and an event-specific `data` object.
-
-| Field | Type | Description |
-|---|---|---|
-| `operation` | string | High-level operation type (e.g. `TREASURY`, `CARDS`, `VIRTUAL_WALLETS`) |
-| `sub_operation` | string | Specific activity within the operation |
-| `operation_id` | string | Unique identifier for this notification |
-| `status` | string | `SUCCESS` \| `CANCELLED` \| `FAILED` |
-| `reason` | string | Failure reason (present when `status` is `FAILED`) |
-| `data` | object | Event-specific payload; shape varies by event type |
-
-### Example
-
-```json
-{
-  "operation": "TREASURY",
-  "sub_operation": "DEPOSIT",
-  "operation_id": "ca0c57d2-b1c9-4bcd-9d5d-8d361cad6fdd",
-  "status": "SUCCESS",
-  "data": { }
-}
-```
-
-## Available events
-
-<AccordionGroup>
-  <Accordion title="General">
-    - New deposit received
-  </Accordion>
-  <Accordion title="Cards">
-    - Card transaction approval
-    - Card transaction declined
-    - Card transaction clearing pending
-    - Card transaction clearing failed
-    - Card transaction cleared
-    - Card transaction refund
-    - Card transaction reversal
-    - Card 3DS challenge
-  </Accordion>
-  <Accordion title="Active Management">
-    - Withdraw completed
-  </Accordion>
-</AccordionGroup>
+All JSON field names use `snake_case`.
 
 ## Setup
-
-To start receiving notifications, configure a webhook endpoint capable of receiving and processing the payloads above.
 
 <Steps>
   <Step title="Expose an HTTPS endpoint">
     Host a publicly reachable HTTPS URL that accepts `POST` requests with a JSON body.
   </Step>
-  <Step title="Register it in CryptoMate">
-    Register the endpoint from the [Portal](https://portal.cryptomate.me) so CryptoMate knows where to deliver events.
+  <Step title="Register the URL">
+    Configure the webhook URL on your company via the [Subscribe webhook URL](/api-reference/management/company/subscribe-webhook-url) endpoint, or from the [Portal](https://portal.cryptomate.me).
+  </Step>
+  <Step title="Configure a webhook_key secret">
+    Set a shared secret via the [Subscribe webhook key](/api-reference/management/company/subscribe-webhook-key) endpoint. CryptoMate sends this value in the `X-Webhook-Key` header on every request so your endpoint can authenticate it.
   </Step>
   <Step title="Acknowledge quickly">
-    Return a `2xx` response as soon as you've persisted the event. Do heavier processing asynchronously to avoid timeouts.
+    Return `200 OK` with the expected body as soon as possible. Heavy processing should happen asynchronously.
   </Step>
   <Step title="Handle retries idempotently">
-    Use `operation_id` to deduplicate events — the same webhook may be delivered more than once if your endpoint doesn't respond in time.
+    Deduplicate on `operation_id` — the same event may be delivered more than once.
   </Step>
 </Steps>
 
-<Tip>
-  For card transaction authorization, your endpoint has **1,200 ms** to respond with an approval or rejection before CryptoMate applies the default behavior.
-</Tip>
+## Authentication
+
+CryptoMate authenticates itself to your endpoint using a shared secret — your `webhook_key`.
+
+On every request, CryptoMate sets:
+
+| Header | Value |
+|---|---|
+| `X-Webhook-Key` | Your `webhook_key` secret |
+| `X-Request-Timestamp` | Epoch milliseconds of when the request was sent |
+| `Content-Type` | `application/json` |
+
+Your endpoint should compare the `X-Webhook-Key` header against the secret you stored when you configured it. Reject any request where the value does not match.
+
+Rotate the key at any time via the [Subscribe webhook key](/api-reference/management/company/subscribe-webhook-key) endpoint. CryptoMate uses the new value on the very next delivery.
+
+<Warning>
+  Treat `webhook_key` like a password. Store it in a secret manager, compare in constant time, and never log it.
+</Warning>
+
+## Request envelope
+
+Every webhook body has the same top-level shape:
+
+| Field | Type | Description |
+|---|---|---|
+| `product` | string | One of `treasury`, `virtual_wallets`, `cards`, `company_activity` |
+| `event_type` | string | Specific event — see the catalog below |
+| `operation_id` | string | Unique identifier for this event. Use it for idempotent processing. |
+| `status` | string | One of `pending`, `success`, `failed`, `canceled`, `time_canceled`, `manual_check` |
+| `data` | object | Event-specific payload. Shape varies per `event_type` — see catalog. |
+
+### Example envelope
+
+```json
+{
+  "product": "virtual_wallets",
+  "event_type": "deposit",
+  "operation_id": "0x1a2b3c4d...ef",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_abc123",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "transaction_hash": "0x1a2b3c4d...ef",
+    "from_wallet_address": "0xdef...",
+    "amount": "125.50",
+    "token": { "address": "0x2791...6174" }
+  }
+}
+```
+
+## Expected response
+
+Respond with HTTP `200 OK` and a JSON body:
+
+```json
+{ "response_code": "OK" }
+```
+
+Any non-`200` status is treated as a delivery failure and triggers a retry (except on the card authorization path — see below).
+
+### Card external authorization response
+
+When `product=cards` and `event_type=authorization`, the `response_code` you return determines whether the card transaction is approved or declined:
+
+| `response_code` | Meaning |
+|---|---|
+| `"00"` or `"SUCCESS"` | Approve the transaction |
+| `"05"` | Decline — do not authorize |
+| any other value | Passed through to the card network as the decline reason code (ISO 8583 response code) |
+
+The response **must** arrive within the deadline described below or CryptoMate applies the default behavior configured on the card.
+
+## Delivery and retries
+
+| Scenario | Timeout | Retries |
+|---|---|---|
+| Card `authorization` (external authorization) | 1,200 ms hard deadline on the response | None — a missed deadline applies the card's default behavior |
+| Regular events (most webhooks) | 30 s HTTP timeout | Up to 10 attempts with exponential backoff (initial 1 s, multiplier 2x) |
+| Non-retriable informational events (e.g. `notification_3ds_authorization`) | 30 s | None |
+
+Notes:
+
+- The authorization path uses a pre-warmed HTTP/2 client with TLS 1.3 and connection pooling — but the business deadline for your full response is **1,200 ms**.
+- CryptoMate may deliver the same event more than once (after retries, or following an internal redelivery). Always deduplicate using `operation_id`.
+- `X-Request-Timestamp` lets you measure network skew and reject events that arrive well past their useful window.
+
+## Event catalog
+
+### Cards
+
+Emitted with `product: "cards"`.
+
+#### `authorization` — external authorization request
+
+Sent when a card transaction needs your approval before it is authorized by the network. Your response's `response_code` drives the decision. Hard **1,200 ms** deadline, no retries.
+
+```json
+{
+  "product": "cards",
+  "event_type": "authorization",
+  "operation_id": "life_evt_abc123",
+  "status": "pending",
+  "data": {
+    "card_id": "crd_123",
+    "bill_amount": "42.50",
+    "bill_currency_number": "840",
+    "bill_currency_code": "USD",
+    "exchange_rate": "1.0",
+    "fees": { "atm_fees": "0.00", "fx_fees": "0.42" },
+    "transaction_amount": "42.50",
+    "transaction_currency_number": "840",
+    "transaction_currency_code": "USD",
+    "channel": "POS",
+    "created_at": "2025-01-15T12:34:56Z",
+    "merchant_data": {
+      "id": "mch_1",
+      "name": "Acme Coffee",
+      "city": "Miami",
+      "post_code": "33101",
+      "state": "FL",
+      "country": "USA",
+      "mcc_category": "Restaurants",
+      "mcc_code": "5812"
+    },
+    "decline_reason": null,
+    "metadata": { "account": "0xabc..." }
+  }
+}
+```
+
+For DeFi-signed authorizations, `data` additionally carries a `signature` field.
+
+#### `authorized` — transaction authorized
+
+Sent after a transaction has been approved and is being processed internally. No approval decision required.
+
+```json
+{
+  "product": "cards",
+  "event_type": "authorized",
+  "operation_id": "txn_abc123",
+  "status": "success",
+  "data": {
+    "card_id": "crd_123",
+    "bill_amount": "42.50",
+    "bill_currency_code": "USD",
+    "fees": { "atm_fees": "0.00", "fx_fees": "0.42" },
+    "transaction_amount": "42.50",
+    "transaction_currency_code": "USD",
+    "channel": "POS",
+    "created_at": "2025-01-15T12:34:56Z",
+    "merchant_data": { "name": "Acme Coffee", "mcc_code": "5812" }
+  }
+}
+```
+
+#### `cleared` — transaction cleared
+
+Sent when a previously authorized transaction clears (settles). Same `data` shape as `authorized`.
+
+#### `declined` — transaction declined
+
+Sent when a transaction is declined by the network or by CryptoMate. `data` shape as `authorized`, with `decline_reason` populated:
+
+```json
+{
+  "product": "cards",
+  "event_type": "declined",
+  "operation_id": "life_evt_abc123",
+  "status": "success",
+  "data": {
+    "card_id": "crd_123",
+    "bill_amount": "42.50",
+    "bill_currency_code": "USD",
+    "decline_reason": {
+      "response_code": "05",
+      "description": "Do not honor",
+      "code": "INSUFFICIENT_FUNDS",
+      "simple_reason": "Insufficient funds",
+      "detailed_reason": "Wallet balance is lower than transaction amount"
+    },
+    "merchant_data": { "name": "Acme Coffee", "mcc_code": "5812" }
+  }
+}
+```
+
+#### `reversal` — authorization reversed
+
+Sent when a prior authorization is reversed (released) by the network. Same `data` shape as `authorized`.
+
+#### `refund` — refund received
+
+Sent when a merchant issues a refund. Same `data` shape as `authorized`.
+
+#### `deposit` — card deposit credited
+
+Sent when a deposit is credited to the card-linked wallet (after fees).
+
+```json
+{
+  "product": "cards",
+  "event_type": "deposit",
+  "operation_id": "0xtxhash...",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_abc",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "transaction_hash": "0xtxhash...",
+    "from_wallet_address": "0xdef...",
+    "amount": "500.00",
+    "net_amount": "498.50",
+    "token": { "address": "0x2791...6174" }
+  }
+}
+```
+
+#### `visa_direct_deposit` — Visa Direct deposit credited
+
+Sent when a Visa Direct push funds transfer credits the card. `data` mirrors the `authorized` transaction shape.
+
+#### `warranty_withdraw` — warranty withdrawal
+
+Sent on a warranty/holding-wallet withdrawal, success or failure (see `status`).
+
+```json
+{
+  "product": "cards",
+  "event_type": "warranty_withdraw",
+  "operation_id": "0xtxhash...",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_holding",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "card_id": "crd_123",
+    "transaction_hash": "0xtxhash...",
+    "to_wallet_address": "0xdef...",
+    "amount": "100.00",
+    "token_address": "0x2791...6174",
+    "created_at": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+#### `notification_3ds_authorization` — 3DS challenge code
+
+Informational event containing the code the cardholder needs for a 3DS challenge. No retry, no approval decision.
+
+```json
+{
+  "product": "cards",
+  "event_type": "notification_3ds_authorization",
+  "operation_id": "act_abc123",
+  "status": "pending",
+  "data": {
+    "code": "act_abc123",
+    "card_id": "crd_123",
+    "merchant_name": "Acme Coffee",
+    "merchant_country_code": "USA",
+    "transaction_amount": "42.50",
+    "transaction_currency": "USD",
+    "transaction_timestamp": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+### Virtual Wallets
+
+Emitted with `product: "virtual_wallets"`.
+
+#### `deposit` — on-chain deposit detected
+
+```json
+{
+  "product": "virtual_wallets",
+  "event_type": "deposit",
+  "operation_id": "0xtxhash...",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_abc",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "transaction_hash": "0xtxhash...",
+    "from_wallet_address": "0xdef...",
+    "amount": "125.50",
+    "token": { "address": "0x2791...6174" }
+  }
+}
+```
+
+#### `withdraw` — withdrawal executed
+
+Sent on both success and failure (see `status`). `reason` is populated on failures.
+
+```json
+{
+  "product": "virtual_wallets",
+  "event_type": "withdraw",
+  "operation_id": "wf_abc123",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_abc",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "transaction_hash": "0xtxhash...",
+    "to_wallet_address": "0xdef...",
+    "amount": "125.50",
+    "token": { "address": "0x2791...6174" },
+    "created_at": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+#### `ramp_on` — fiat-to-crypto ramp credited
+
+Sent when a fiat deposit has been converted to crypto and credited to the customer's wallet.
+
+```json
+{
+  "product": "virtual_wallets",
+  "event_type": "ramp_on",
+  "operation_id": "wf_abc123",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_abc",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "transaction_hash": "0xtxhash...",
+    "amount": "1000.00",
+    "exchange_rate": "1.0",
+    "token": { "address": "0x2791...6174", "symbol": "USDC" },
+    "source_amount": "1000.00",
+    "source_currency": "USD",
+    "source_from": "Jane Doe",
+    "created_at": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+### Treasury
+
+Emitted with `product: "treasury"`.
+
+#### `transfer` — treasury transfer executed
+
+Sent on both success and failure (see `status`).
+
+```json
+{
+  "product": "treasury",
+  "event_type": "transfer",
+  "operation_id": "wf_abc123",
+  "status": "success",
+  "data": {
+    "wallet_id": "wlt_treasury",
+    "wallet_address": "0xabc...",
+    "blockchain": "polygon",
+    "transaction_hash": "0xtxhash...",
+    "to_wallet_address": "0xdef...",
+    "amount": "5000.00",
+    "token": { "address": "0x2791...6174" },
+    "created_at": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+#### `ramp_on` — fiat-to-crypto ramp credited
+
+Same shape as the Virtual Wallets `ramp_on` event, with `product: "treasury"`.
+
+### Company Activity
+
+Emitted with `product: "company_activity"`.
+
+#### `client_status` — customer KYC status changed
+
+Sent when a company client's KYC/KYB status changes (for example, rejected by the ramp provider). `status` is `failed` when the client is rejected; `data` is the full client record with `status`, `rejection_code` and `rejection_description` populated.
+
+```json
+{
+  "product": "company_activity",
+  "event_type": "client_status",
+  "operation_id": "cli_abc123",
+  "status": "failed",
+  "data": {
+    "id": "cli_abc123",
+    "company_id": "cmp_xyz",
+    "type": "individual",
+    "email": "jane@example.com",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "status": "rejected",
+    "rejection_code": "REJECTED_BY_PROVIDER",
+    "rejection_description": "Sanctions match",
+    "created_at": "2025-01-10T09:00:00Z",
+    "updated_at": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+The `data` object carries the full `CompanyClient` record; additional fields (address, document type, business fields, etc.) are included when present.

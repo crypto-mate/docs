@@ -99,6 +99,18 @@ A **company client** is an end user that has completed KYC verification and can 
 3. Real cryptocurrency is transferred out of the holding wallet for fiat conversion.
 4. Fiat currency is sent to the client's linked bank account.
 
+## Webhooks
+
+Active Management emits events with `product: "virtual_wallets"` so you can drive your UI and accounting as soon as funds move. Register a webhook URL and `webhook_key` from the Portal (or via the [Subscribe webhook URL](/api-reference/management/company/subscribe-webhook-url) and [Subscribe webhook key](/api-reference/management/company/subscribe-webhook-key) endpoints).
+
+| Event | When it fires |
+|---|---|
+| `deposit` | A client deposit into a virtual wallet is detected on-chain and credited to the virtual balance. |
+| `withdraw` | A withdrawal from a virtual wallet to an external address completes. |
+| `ramp_on` | A fiat-to-crypto ramp completes and the equivalent virtual balance is credited. |
+
+See [Webhooks](/integration/webhooks) for the full envelope, authentication via `X-Webhook-Key`, retry behavior, and payload examples.
+
 <Card
   title="Active Management API reference"
   icon="terminal"

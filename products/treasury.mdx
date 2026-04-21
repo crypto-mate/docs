@@ -36,7 +36,7 @@ Treasury operates across the following networks:
 
 ## How it works
 
-Treasury integrates with the broader CryptoMate platform through RESTful API endpoints, so you can drive operations from either the dashboard or your own back-office systems.
+Treasury integrates with the broader CryptoMate platform through RESTful API endpoints, so you can drive operations from either the Portal or your own back-office systems.
 
 A typical setup looks like this:
 
@@ -44,10 +44,21 @@ A typical setup looks like this:
 2. Attach **wallets** to each account across the blockchains you operate on.
 3. Move funds between wallets or through ramps, and monitor balances and transactions via the reporting endpoints.
 
+## Webhooks
+
+Treasury emits events with `product: "treasury"` so you can react to on-chain movements in real time. Register a webhook URL and `webhook_key` from the Portal (or via the [Subscribe webhook URL](/api-reference/management/company/subscribe-webhook-url) and [Subscribe webhook key](/api-reference/management/company/subscribe-webhook-key) endpoints) to start receiving them.
+
+| Event | When it fires |
+|---|---|
+| `transfer` | A token transfer initiated from a treasury wallet completes (success, failed, or requires manual check). |
+| `ramp_on` | A fiat-to-crypto ramp funded into a treasury wallet finishes. |
+
+See [Webhooks](/integration/webhooks) for the full envelope, authentication via `X-Webhook-Key`, retry behavior, and payload examples.
+
 <Card
   title="Treasury API reference"
   icon="terminal"
-  href="/api-reference/introduction"
+  href="/api-reference/treasury/index"
   horizontal
 >
   Explore endpoints for accounts, wallets, tokens, and transactions.

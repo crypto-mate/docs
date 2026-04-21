@@ -40,10 +40,29 @@ Funds can be withdrawn from the holding wallet to external accounts for independ
 
 This solution combines the convenience of conventional cards with the flexibility of blockchain infrastructure, giving businesses a modern way to manage payments backed by crypto reserves.
 
+## Webhooks
+
+Cards is the most event-heavy product. Every authorization, clearing, refund, reversal, and card deposit is pushed to your webhook endpoint with `product: "cards"`. Register a webhook URL and `webhook_key` from the Portal (or via the [Subscribe webhook URL](/api-reference/management/company/subscribe-webhook-url) and [Subscribe webhook key](/api-reference/management/company/subscribe-webhook-key) endpoints).
+
+| Event | When it fires |
+|---|---|
+| `authorization` | A transaction needs your approval. Respond within **1,200 ms** with `"00"`/`"SUCCESS"` to approve or `"05"` to decline. |
+| `authorized` | A transaction was authorized by CryptoMate (external authorization not required or approved). |
+| `cleared` | An authorized transaction cleared and funds settled. |
+| `declined` | A transaction was declined (by your webhook response or by CryptoMate). |
+| `reversal` | A previously authorized transaction was reversed. |
+| `refund` | A merchant refund was applied to the card. |
+| `deposit` | A deposit arrived at the card's top-up wallet. |
+| `visa_direct_deposit` | A Visa Direct deposit credited the card. |
+| `warranty_withdraw` | A withdrawal from the card's warranty/holding balance completed. |
+| `notification_3ds_authorization` | A 3DS challenge was triggered for the cardholder. |
+
+See [Webhooks](/integration/webhooks) for the full envelope, authentication via `X-Webhook-Key`, the 1,200 ms deadline on authorization, and payload examples.
+
 <Card
   title="Cards API reference"
   icon="terminal"
-  href="/api-reference/introduction"
+  href="/api-reference/cards/index"
   horizontal
 >
   Explore endpoints for virtual cards, transactions, and holding.
