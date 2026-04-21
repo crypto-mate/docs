@@ -1,0 +1,44 @@
+---
+title: "Freeze or unfreeze card"
+description: "Set the frozen status of a virtual card."
+api: "PATCH /cards/virtual-cards/{cardId}/frozen"
+---
+
+Sets the frozen status of a virtual card. Frozen cards cannot authorize transactions until they are unfrozen. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="freeze" type="boolean">
+  Whether to freeze (`true`) or unfreeze (`false`) the card.
+</ParamField>
+
+## Response
+
+Returns HTTP 200 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/frozen" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "freeze": true
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{}
+```
+
+</ResponseExample>

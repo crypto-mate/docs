@@ -1,0 +1,49 @@
+---
+title: "Update card OTP phone"
+description: "Update the OTP phone number for a virtual card."
+api: "PUT /cards/virtual-cards/{cardId}/phone"
+---
+
+Updates the phone number used for OTP authentication on card transactions. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="phone_country_code" type="integer">
+  Phone country code.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Phone number without country code.
+</ParamField>
+
+## Response
+
+Returns HTTP 200 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/phone" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone_country_code": 1,
+    "phone": "5551234567"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{}
+```
+
+</ResponseExample>

@@ -1,0 +1,26 @@
+---
+title: "Overview"
+sidebarTitle: "Overview"
+description: "Issue and manage virtual cards, inspect transactions, and fund card accounts."
+---
+
+The Cards API lets you issue virtual cards, configure spending limits and 3DS behavior, fund cards via a holding account, and retrieve transaction history.
+
+All endpoints are authenticated with the `X-API-KEY` header. Read operations typically require access level 1; write operations require access level 2 or higher, and sensitive operations (freeze, PIN update) require access level 3.
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="Virtual Cards" icon="credit-card" href="/api-reference/cards/virtual-cards/list-cards">
+    Create, list, update, freeze, reissue, and manage virtual cards.
+  </Card>
+  <Card title="Transactions" icon="receipt" href="/api-reference/cards/transactions/search-transactions">
+    Search card transactions and export PDF statements.
+  </Card>
+  <Card title="Holding" icon="wallet" href="/api-reference/cards/holding/get-balance">
+    Inspect and withdraw from your card holding account.
+  </Card>
+  <Card title="Webhook Simulation" icon="flask" href="/api-reference/cards/webhooks/simulate/simulate-authorize">
+    Simulate provider webhooks in non-production environments.
+  </Card>
+</CardGroup>

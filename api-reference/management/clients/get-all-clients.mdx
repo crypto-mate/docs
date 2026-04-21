@@ -1,0 +1,58 @@
+---
+title: "List all clients"
+description: "Retrieve all clients for the company."
+api: "GET /management/clients"
+---
+
+Retrieves a list of all clients for the company, with optional filtering by communication preferences. Requires an API key with access level 1 or higher.
+
+## Query parameters
+
+<ParamField query="otp" type="boolean">
+  Filter by OTP preference.
+</ParamField>
+
+<ParamField query="sms" type="boolean">
+  Filter by SMS preference.
+</ParamField>
+
+<ParamField query="whatsapp" type="boolean">
+  Filter by WhatsApp preference.
+</ParamField>
+
+<ParamField query="telegram" type="boolean">
+  Filter by Telegram preference.
+</ParamField>
+
+## Response
+
+Returns an array of client objects. See [Get client by ID](/api-reference/management/clients/get-client) for the full field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients?otp=true" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "companyId": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+    "type": "individual",
+    "status": "ACTIVE",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "otp": true,
+    "sms": true
+  }
+]
+```
+
+</ResponseExample>

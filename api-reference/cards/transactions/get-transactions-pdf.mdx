@@ -1,0 +1,52 @@
+---
+title: "Export transactions PDF"
+description: "Generate a PDF report of card transactions for a date range."
+api: "GET /cards/transactions/{cardId}/pdf"
+---
+
+Generates a PDF report of card transactions for the specified date range. Response body is a binary `application/pdf` payload. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="from_date" type="string">
+  Start date (ISO-8601 `YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  End date (ISO-8601 `YYYY-MM-DD`).
+</ParamField>
+
+## Response
+
+Returns a binary PDF file (`Content-Type: application/pdf`).
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/pdf?from_date=2026-01-01&to_date=2026-04-20" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  --output transactions.pdf
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```text 200 OK
+<binary PDF file (application/pdf)>
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>

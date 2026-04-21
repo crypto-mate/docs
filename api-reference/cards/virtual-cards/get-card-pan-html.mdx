@@ -1,0 +1,38 @@
+---
+title: "Get card PAN HTML"
+description: "Retrieve a secure URL to view the card's PAN."
+api: "GET /cards/virtual-cards/{cardId}/pan-html"
+---
+
+Retrieves a secure URL to view the card's Primary Account Number (PAN), CVV, and expiration in an HTML page. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="url" type="string">
+  URL to access the card PAN information.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/pan-html" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "url": "https://api.cryptomate.me/cards/pan/abc123-secure-token"
+}
+```
+
+</ResponseExample>

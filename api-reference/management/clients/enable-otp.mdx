@@ -1,0 +1,44 @@
+---
+title: "Enable OTP for client"
+description: "Enable one-time password authentication for a client."
+api: "PATCH /management/clients/{id}/enable-otp"
+---
+
+Enables one-time password authentication for the specified client. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Response
+
+Returns the updated client. See [Get client by ID](/api-reference/management/clients/get-client) for the full field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/enable-otp" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "otp": true
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with id: client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,124 @@
+---
+title: "Create bank ramp-on"
+description: "Deposit fiat currency to a virtual wallet via bank transfer."
+api: "POST /virtual-wallets/bank-ramps/ramp-on"
+---
+
+Creates and executes a bank ramp-on transaction to deposit fiat currency into a crypto wallet. The response contains the bank details and reference required to complete the deposit. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="wallet_id" type="string" required>
+  Virtual wallet identifier.
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  Amount to deposit in fiat currency.
+</ParamField>
+
+<ParamField body="source_currency" type="string" required>
+  Source fiat currency. One of `BRL`, `USD`, `EUR`, `MXN`.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique ramp-on operation identifier.
+</ResponseField>
+
+<ResponseField name="state" type="string">
+  Current state of the operation.
+</ResponseField>
+
+<ResponseField name="amount" type="number">
+  Amount to be deposited.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  Currency for the deposit. One of `BRL`, `USD`, `EUR`, `MXN`.
+</ResponseField>
+
+<ResponseField name="payment_rail" type="string">
+  Payment rail method. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`.
+</ResponseField>
+
+<ResponseField name="deposit_message" type="string">
+  Message/reference to include in the deposit.
+</ResponseField>
+
+<ResponseField name="bank_number" type="string">
+  Bank account number.
+</ResponseField>
+
+<ResponseField name="bank_code" type="string">
+  Bank code or routing number.
+</ResponseField>
+
+<ResponseField name="bank_name" type="string">
+  Bank name.
+</ResponseField>
+
+<ResponseField name="bank_address" type="string">
+  Bank address.
+</ResponseField>
+
+<ResponseField name="bank_beneficiary_name" type="string">
+  Beneficiary name.
+</ResponseField>
+
+<ResponseField name="bank_beneficiary_address" type="string">
+  Beneficiary address.
+</ResponseField>
+
+<ResponseField name="br_code" type="string">
+  BR code for PIX payments (Brazil only).
+</ResponseField>
+
+<ResponseField name="qr_code" type="string">
+  Base64-encoded QR code image for the deposit.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-on" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "amount": 1000.00,
+    "source_currency": "USD"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "rampon_abc123",
+  "state": "pending",
+  "amount": 1000.00,
+  "currency": "USD",
+  "payment_rail": "WIRE",
+  "deposit_message": "REF123456",
+  "bank_number": "123456789",
+  "bank_code": "001",
+  "bank_name": "Example Bank",
+  "bank_address": "123 Main Street",
+  "bank_beneficiary_name": "Cryptomate Technologies",
+  "bank_beneficiary_address": "456 Beneficiary Ave",
+  "br_code": null,
+  "qr_code": null
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet not found"
+}
+```
+
+</ResponseExample>

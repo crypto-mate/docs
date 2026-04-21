@@ -1,0 +1,26 @@
+---
+title: "Delete provider customer link"
+description: "Remove the link between a client and a provider's customer ID."
+api: "DELETE /management/clients/{clientId}/providers/{id}"
+---
+
+Removes the link between a client and a provider's customer ID. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the provider customer link to delete.
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/cpc_abc123" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>

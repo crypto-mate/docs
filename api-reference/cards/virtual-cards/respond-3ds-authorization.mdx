@@ -1,0 +1,58 @@
+---
+title: "Respond to 3DS authorization"
+description: "Respond to a forwarded 3D Secure authorization challenge."
+api: "POST /cards/virtual-cards/{cardId}/3ds-authorization"
+---
+
+Responds to a 3D Secure authorization challenge that was forwarded to your backend. Used when the card is configured with `FORWARDED` 3DS. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="code" type="string" required>
+  Authorization code from the 3DS challenge.
+</ParamField>
+
+<ParamField body="approve" type="boolean">
+  Whether to approve (`true`) or decline (`false`) the authorization.
+</ParamField>
+
+## Response
+
+<ResponseField name="code" type="string">
+  The authorization code submitted.
+</ResponseField>
+
+<ResponseField name="approve" type="boolean">
+  Whether the authorization was approved.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/3ds-authorization" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "123456",
+    "approve": true
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "code": "123456",
+  "approve": true
+}
+```
+
+</ResponseExample>

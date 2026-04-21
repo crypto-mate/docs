@@ -1,0 +1,141 @@
+---
+title: "Create US bank account"
+description: "Register a US ACH bank account for a client."
+api: "POST /management/clients/{clientId}/banks/us"
+---
+
+Creates a new US bank account for the specified client with ACH transfer capabilities. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="bankName" type="string">
+  Name of the bank.
+</ParamField>
+
+<ParamField body="accountAlias" type="string">
+  User-friendly alias for the account.
+</ParamField>
+
+<ParamField body="bankHolderName" type="string">
+  Account holder's full name.
+</ParamField>
+
+<ParamField body="accountNumber" type="string">
+  US bank account number.
+</ParamField>
+
+<ParamField body="routingNumber" type="string">
+  US 9-digit routing number.
+</ParamField>
+
+<ParamField body="accountType" type="string">
+  Account type. One of `CHECKING`, `SAVINGS`.
+</ParamField>
+
+<ParamField body="address" type="object">
+  Account holder's address.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Bank account identifier.
+</ResponseField>
+
+<ResponseField name="companyId" type="string">
+  Company identifier.
+</ResponseField>
+
+<ResponseField name="clientId" type="string">
+  Client identifier.
+</ResponseField>
+
+<ResponseField name="bankName" type="string">
+  Bank name.
+</ResponseField>
+
+<ResponseField name="bankHolderName" type="string">
+  Account holder full name.
+</ResponseField>
+
+<ResponseField name="accountAlias" type="string">
+  User-friendly alias.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Payment rail. `ACH` for US accounts.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  Account currency. `USD` for US accounts.
+</ResponseField>
+
+<ResponseField name="accountNumber" type="string">
+  Account number.
+</ResponseField>
+
+<ResponseField name="routingNumber" type="string">
+  Routing number.
+</ResponseField>
+
+<ResponseField name="accountType" type="string">
+  Account type.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/us" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bankName": "Chase Bank",
+    "accountAlias": "Primary Checking",
+    "bankHolderName": "John Michael Doe",
+    "accountNumber": "123456789",
+    "routingNumber": "021000021",
+    "accountType": "CHECKING",
+    "address": {
+      "streetLine1": "123 Main Street",
+      "city": "San Francisco",
+      "postalCode": "94102",
+      "state": "CA",
+      "country": "US"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "ba_abc123",
+  "companyId": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bankName": "Chase Bank",
+  "bankHolderName": "John Michael Doe",
+  "accountAlias": "Primary Checking",
+  "type": "ACH",
+  "currency": "USD",
+  "accountNumber": "123456789",
+  "routingNumber": "021000021",
+  "accountType": "checking"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client does not have a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>

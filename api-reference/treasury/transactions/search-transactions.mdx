@@ -1,0 +1,145 @@
+---
+title: "Search transactions"
+description: "Search treasury movements across wallets with filtering and pagination."
+api: "GET /mpc/treasury/transactions/search"
+---
+
+Searches for treasury transactions across multiple wallets with filtering by date range and operation types. Supports pagination with a maximum of 100 results per page. Requires an API key with access level 1 or higher.
+
+Allowed operation types: `TRANSFER`, `DEPOSIT`, `WITHDRAWAL`, `RAMP_ON_TRANSFER`, `RAMP_OFF_TRANSFER`.
+
+## Query parameters
+
+<ParamField query="wallet_ids" type="string[]" required>
+  List of wallet IDs to search transactions from.
+</ParamField>
+
+<ParamField query="operations" type="string[]" required>
+  List of operation types to filter by. One or more of `TRANSFER`, `DEPOSIT`, `WITHDRAWAL`, `RAMP_ON_TRANSFER`, `RAMP_OFF_TRANSFER`.
+</ParamField>
+
+<ParamField query="from_date" type="string">
+  Start date (ISO 8601 `LocalDateTime`, e.g. `2026-01-01T00:00:00`) for the search range.
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  End date (ISO 8601 `LocalDateTime`, e.g. `2026-02-01T00:00:00`) for the search range.
+</ParamField>
+
+<ParamField query="size" type="integer" default="10">
+  Number of results per page. Maximum 100.
+</ParamField>
+
+<ParamField query="page_number" type="integer" default="1">
+  Page number to retrieve.
+</ParamField>
+
+## Response
+
+<ResponseField name="number_of_elements" type="integer">
+  Number of elements in the current page.
+</ResponseField>
+
+<ResponseField name="next_page" type="integer">
+  Next page number if available, `null` if this is the last page.
+</ResponseField>
+
+<ResponseField name="total_pages" type="integer">
+  Total number of pages available.
+</ResponseField>
+
+<ResponseField name="total_elements" type="integer">
+  Total number of elements across all pages.
+</ResponseField>
+
+<ResponseField name="movements" type="object[]">
+  List of treasury movements in the current page.
+
+  <Expandable title="movement">
+    <ResponseField name="account_id" type="string">
+      Account identifier associated with the movement.
+    </ResponseField>
+    <ResponseField name="wallet_id" type="string">
+      Wallet identifier associated with the movement.
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Transaction amount.
+    </ResponseField>
+    <ResponseField name="operation" type="string">
+      Type of treasury operation. One of `DEPOSIT`, `WITHDRAWAL`, `TRANSFER`, `SWAP`, `FEE`.
+    </ResponseField>
+    <ResponseField name="datetime" type="string">
+      Date and time of the movement.
+    </ResponseField>
+    <ResponseField name="blockchain" type="string">
+      Blockchain network.
+    </ResponseField>
+    <ResponseField name="transaction_hash" type="string">
+      Blockchain transaction hash.
+    </ResponseField>
+    <ResponseField name="data" type="object">
+      Additional operation-specific data.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Current status of the movement. One of `PENDING`, `SUCCESS`, `FAILED`.
+    </ResponseField>
+    <ResponseField name="operation_id" type="string">
+      Unique operation identifier.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/treasury/transactions/search?wallet_ids=wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d&operations=TRANSFER&operations=DEPOSIT&from_date=2026-01-01T00:00:00&to_date=2026-02-01T00:00:00&size=10&page_number=1" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "number_of_elements": 2,
+  "next_page": 2,
+  "total_pages": 5,
+  "total_elements": 48,
+  "movements": [
+    {
+      "account_id": "acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+      "wallet_id": "wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "amount": 250.75,
+      "operation": "TRANSFER",
+      "datetime": "2026-02-14T10:30:00",
+      "blockchain": "POLYGON",
+      "transaction_hash": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef1234567890abcdef1234567890",
+      "data": {},
+      "status": "SUCCESS",
+      "operation_id": "op_abc123xyz"
+    },
+    {
+      "account_id": "acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+      "wallet_id": "wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "amount": 1000.00,
+      "operation": "DEPOSIT",
+      "datetime": "2026-02-10T08:15:42",
+      "blockchain": "POLYGON",
+      "transaction_hash": "0x9f8e7d6c5b4a39281726354453627180abcdef1234567890abcdef1234567890",
+      "data": {},
+      "status": "SUCCESS",
+      "operation_id": "op_def456uvw"
+    }
+  ]
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Operation {operation} is not allowed. Allowed operations are: TRANSFER, DEPOSIT, WITHDRAWAL, RAMP_ON_TRANSFER, RAMP_OFF_TRANSFER"
+}
+```
+
+</ResponseExample>

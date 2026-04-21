@@ -1,0 +1,83 @@
+---
+title: "Delete wallet"
+description: "Mark a wallet as deleted."
+api: "DELETE /mpc/accounts/{accountId}/wallets/{walletId}/delete"
+---
+
+Marks a wallet as deleted and removes it from active use. The wallet must not have active balances. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="accountId" type="string" required>
+  The treasury account ID.
+</ParamField>
+
+<ParamField path="walletId" type="string" required>
+  The wallet ID to delete.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique wallet identifier.
+</ResponseField>
+
+<ResponseField name="alias" type="string">
+  Friendly alias name for the wallet.
+</ResponseField>
+
+<ResponseField name="wallet_address" type="string">
+  Blockchain wallet address.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Whether the wallet is enabled for transactions. Returns `false` after deletion.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/mpc/accounts/acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/wallets/wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/delete" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "alias": "Primary Polygon Wallet",
+  "wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "blockchain": "POLYGON",
+  "enabled": false
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet with id `wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d` was not found."
+}
+```
+
+```json 412 Has Balance
+{
+  "code": "VAL",
+  "message": "Wallet has balance, please transfer all tokens to another wallet for deleting it"
+}
+```
+
+```json 412 Gas Recovery
+{
+  "code": "VAL",
+  "message": "Failed to recover gas, please call support"
+}
+```
+
+</ResponseExample>

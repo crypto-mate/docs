@@ -1,0 +1,92 @@
+---
+title: "List virtual cards"
+description: "Retrieve all virtual cards for the authenticated company."
+api: "GET /cards/virtual-cards/list"
+---
+
+Retrieves a list of all virtual cards for the authenticated company. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of virtual card objects.
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="card_holder_name" type="string">
+  Name of the cardholder.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Card type. Possible values: `VIRTUAL`, `PHYSICAL`.
+</ResponseField>
+
+<ResponseField name="last4" type="string">
+  Last 4 digits of the card number.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Card status. Possible values: `ACTIVE`, `DELETED`, `EXPIRED`, `FROZEN`, `INACTIVE`, `BLOCKED`.
+</ResponseField>
+
+<ResponseField name="approval_method" type="string">
+  Transaction approval method. Possible values: `NONE`, `WEBHOOK`, `TOP_UP`, `DEFI`.
+</ResponseField>
+
+<ResponseField name="daily_limit" type="number">
+  Daily spending limit in USD.
+</ResponseField>
+
+<ResponseField name="weekly_limit" type="number">
+  Weekly spending limit in USD.
+</ResponseField>
+
+<ResponseField name="monthly_limit" type="number">
+  Monthly spending limit in USD.
+</ResponseField>
+
+<ResponseField name="forwarded_3ds_type" type="string">
+  3D Secure configuration. Possible values: `AUTOMATIC`, `FORWARDED`, `DISABLED`.
+</ResponseField>
+
+<ResponseField name="meta" type="object">
+  Additional metadata including email and OTP phone number.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/virtual-cards/list" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+    "card_holder_name": "John Doe",
+    "type": "VIRTUAL",
+    "last4": "4242",
+    "status": "ACTIVE",
+    "approval_method": "TOP_UP",
+    "daily_limit": 1000.00,
+    "weekly_limit": 5000.00,
+    "monthly_limit": 20000.00,
+    "forwarded_3ds_type": "AUTOMATIC",
+    "meta": {
+      "email": "cardholder@example.com",
+      "otp_phone_number": {
+        "dial_code": 1,
+        "phone_number": "5551234567"
+      }
+    }
+  }
+]
+```
+
+</ResponseExample>

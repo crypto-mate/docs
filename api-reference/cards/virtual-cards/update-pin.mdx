@@ -1,0 +1,48 @@
+---
+title: "Update card PIN"
+description: "Update the PIN code for a virtual card."
+api: "PUT /cards/virtual-cards/{cardId}/pin"
+---
+
+Updates the PIN code for a virtual card. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="pin" type="string" required>
+  New PIN for the card. Must be between 4 and 12 characters.
+</ParamField>
+
+## Response
+
+<ResponseField name="pin" type="string">
+  The updated PIN value.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/pin" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pin": "1234"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "pin": "1234"
+}
+```
+
+</ResponseExample>

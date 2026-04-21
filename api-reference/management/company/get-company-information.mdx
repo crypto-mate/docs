@@ -1,0 +1,105 @@
+---
+title: "Get company information"
+description: "Retrieve business information for a specific company."
+api: "GET /management/companies/{companyId}/information"
+---
+
+Retrieves comprehensive business information about a specific company including registered address and contact details. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="companyId" type="string" required>
+  Unique identifier of the company.
+</ParamField>
+
+## Response
+
+<ResponseField name="business_name" type="string">
+  Legal business name.
+</ResponseField>
+
+<ResponseField name="business_email" type="string">
+  Business email address.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Primary business address.
+</ResponseField>
+
+<ResponseField name="address2" type="string">
+  Secondary address line.
+</ResponseField>
+
+<ResponseField name="city" type="string">
+  City name.
+</ResponseField>
+
+<ResponseField name="state" type="string">
+  State or province.
+</ResponseField>
+
+<ResponseField name="zip" type="string">
+  Postal code.
+</ResponseField>
+
+<ResponseField name="country" type="string">
+  Country name.
+</ResponseField>
+
+<ResponseField name="country_code" type="string">
+  ISO country code.
+</ResponseField>
+
+<ResponseField name="phone_country_code" type="integer">
+  Phone country code.
+</ResponseField>
+
+<ResponseField name="phone" type="string">
+  Phone number.
+</ResponseField>
+
+<ResponseField name="card_design_id" type="string">
+  Card design identifier.
+</ResponseField>
+
+<ResponseField name="card_design_url" type="string">
+  URL to the card design image.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/companies/comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/information" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "business_name": "Acme Corporation Inc.",
+  "business_email": "business@acme.com",
+  "address": "123 Main Street",
+  "address2": "Suite 200",
+  "city": "San Francisco",
+  "state": "California",
+  "zip": "94102",
+  "country": "United States",
+  "country_code": "US",
+  "phone_country_code": 1,
+  "phone": "4155551234",
+  "card_design_id": "design_abc123",
+  "card_design_url": "https://cdn.example.com/designs/card123.png"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company information not found"
+}
+```
+
+</ResponseExample>

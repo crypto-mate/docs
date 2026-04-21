@@ -1,0 +1,33 @@
+---
+title: "Delete company"
+description: "Permanently delete a company and all associated data."
+api: "DELETE /management/companies/{companyId}"
+---
+
+Permanently deletes a company and all its associated data from the system.
+
+## Path parameters
+
+<ParamField path="companyId" type="string" required>
+  Unique identifier of the company to delete.
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/management/companies/comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company not found"
+}
+```
+
+</ResponseExample>

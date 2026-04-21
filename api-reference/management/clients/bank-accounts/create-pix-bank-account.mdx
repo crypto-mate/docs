@@ -1,0 +1,99 @@
+---
+title: "Create PIX bank account"
+description: "Register a Brazilian PIX bank account for a client."
+api: "POST /management/clients/{clientId}/banks/pix"
+---
+
+Creates a new Brazilian PIX bank account for the specified client. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="bankName" type="string">
+  Name of the bank.
+</ParamField>
+
+<ParamField body="accountAlias" type="string">
+  User-friendly alias for the account.
+</ParamField>
+
+<ParamField body="bankHolderFirstName" type="string">
+  Account holder's first name.
+</ParamField>
+
+<ParamField body="bankHolderLastName" type="string">
+  Account holder's last name.
+</ParamField>
+
+<ParamField body="pixKey" type="string">
+  PIX key (email, phone, CPF, or random key).
+</ParamField>
+
+<ParamField body="documentNumber" type="string">
+  CPF or CNPJ document number.
+</ParamField>
+
+<ParamField body="country" type="string">
+  ISO country code.
+</ParamField>
+
+<ParamField body="address" type="object">
+  Account holder's address.
+</ParamField>
+
+## Response
+
+See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the full field list. PIX accounts expose `pixKey` and `documentNumber`.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/pix" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bankName": "Banco do Brasil",
+    "accountAlias": "Primary PIX Account",
+    "bankHolderFirstName": "João",
+    "bankHolderLastName": "Silva",
+    "pixKey": "customer@example.com",
+    "documentNumber": "12345678900",
+    "country": "BR",
+    "address": {
+      "streetLine1": "Av. Paulista 1000",
+      "city": "São Paulo",
+      "postalCode": "01310-100",
+      "country": "BR"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "ba_jkl012",
+  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bankName": "Banco do Brasil",
+  "type": "PIX",
+  "currency": "BRL",
+  "pixKey": "customer@example.com",
+  "documentNumber": "12345678900"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client does not have a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>

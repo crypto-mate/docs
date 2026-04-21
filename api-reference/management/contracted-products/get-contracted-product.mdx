@@ -1,0 +1,49 @@
+---
+title: "Get contracted product"
+description: "Retrieve contracted product limits for the company."
+api: "GET /management/contracted-product"
+---
+
+Retrieves the product contract details for the current company, including contracted limits for treasury wallets, virtual wallets, and virtual cards. Requires an API key with access level 3 or higher.
+
+## Response
+
+<ResponseField name="treasuryWallets" type="integer">
+  Maximum number of treasury wallets.
+</ResponseField>
+
+<ResponseField name="virtualWallets" type="integer">
+  Maximum number of virtual wallets.
+</ResponseField>
+
+<ResponseField name="virtualCards" type="integer">
+  Maximum number of virtual cards.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/contracted-product" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "treasuryWallets": 10,
+  "virtualWallets": 100,
+  "virtualCards": 50
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company not found"
+}
+```
+
+</ResponseExample>

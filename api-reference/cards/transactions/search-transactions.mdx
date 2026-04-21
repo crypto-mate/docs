@@ -1,0 +1,124 @@
+---
+title: "Search card transactions"
+description: "Retrieve card transactions with filtering, pagination, and sorting."
+api: "GET /cards/transactions/{cardId}/search"
+---
+
+Searches and retrieves transactions for a specific card with filtering, pagination, and sorting options. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="operations" type="array" required>
+  Transaction operation types to include. At least one is required. Possible values: `AUTHORIZATION`, `CLEARING`, `REFUND`, `REVERSAL`.
+</ParamField>
+
+<ParamField query="from_date" type="string">
+  Start date (ISO-8601 `YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  End date (ISO-8601 `YYYY-MM-DD`).
+</ParamField>
+
+<ParamField query="size" type="integer">
+  Page size. Maximum 100. Defaults to `10`.
+</ParamField>
+
+<ParamField query="page_number" type="integer">
+  Page number, starting at `1`. Defaults to `1`.
+</ParamField>
+
+<ParamField query="sort_field" type="string">
+  Field to sort results by.
+</ParamField>
+
+<ParamField query="sort_order" type="string">
+  Sort order. Possible values: `ASC`, `DESC`.
+</ParamField>
+
+## Response
+
+<ResponseField name="number_of_elements" type="integer">
+  Number of transactions in the current page.
+</ResponseField>
+
+<ResponseField name="next_page" type="integer">
+  Next page number, if available.
+</ResponseField>
+
+<ResponseField name="total_pages" type="integer">
+  Total number of pages.
+</ResponseField>
+
+<ResponseField name="total_elements" type="integer">
+  Total number of transactions across all pages.
+</ResponseField>
+
+<ResponseField name="movements" type="array">
+  Array of transaction objects with fields: `id`, `datetime`, `operation`, `bill_amount`, `bill_currency`, `transaction_amount`, `transaction_currency`, `exchange_rate`, `merchant_name`, `original_balance`, `new_balance`, `status`, `decline_reason`, and fee fields (`fee_fx_provider`, `fee_fx_client`, `fee_atm_provider`, `fee_atm_client`, `fee_deposit_provider`, `fee_deposit_client`).
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/search?operations=AUTHORIZATION&operations=CLEARING&from_date=2026-01-01&to_date=2026-04-20&size=10&page_number=1" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "number_of_elements": 1,
+  "next_page": null,
+  "total_pages": 1,
+  "total_elements": 1,
+  "movements": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "datetime": "2026-04-15T10:30:00",
+      "operation": "CLEARING",
+      "bill_amount": 100.00,
+      "bill_currency": "USD",
+      "transaction_amount": 85.50,
+      "transaction_currency": "EUR",
+      "exchange_rate": 1.17,
+      "merchant_name": "Amazon.com",
+      "original_balance": 5000.00,
+      "new_balance": 4900.00,
+      "status": "APPROVED",
+      "decline_reason": null,
+      "fee_fx_provider": 0.50,
+      "fee_fx_client": 0.75,
+      "fee_atm_provider": 0,
+      "fee_atm_client": 0,
+      "fee_deposit_provider": 0,
+      "fee_deposit_client": 0
+    }
+  ]
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "APP_ERROR",
+  "message": "Dates are not valid."
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "At least one operation must be specified in the 'operations' parameter."
+}
+```
+
+</ResponseExample>

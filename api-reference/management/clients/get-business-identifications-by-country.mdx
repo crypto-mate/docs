@@ -1,0 +1,45 @@
+---
+title: "Get business identification types by country"
+description: "List valid business identification types for a country."
+api: "GET /management/clients/business-identifications/{countryCode}"
+---
+
+Retrieves all valid business identification document types (EIN, VAT, TIN, etc.) for a specific country. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="countryCode" type="string" required>
+  ISO country code (e.g., `US`, `MX`, `BR`).
+</ParamField>
+
+## Response
+
+<ResponseField name="type" type="string">
+  Identification type code.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Identification type description.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/business-identifications/US" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "type": "EIN",
+    "description": "Employer Identification Number"
+  }
+]
+```
+
+</ResponseExample>

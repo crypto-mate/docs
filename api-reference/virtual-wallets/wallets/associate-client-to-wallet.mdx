@@ -1,0 +1,41 @@
+---
+title: "Associate client to wallet"
+description: "Associate a client to a virtual wallet."
+api: "PATCH /virtual-wallets/{walletId}/client/{clientId}"
+---
+
+Associates a client with a virtual wallet. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="walletId" type="string" required>
+  Unique identifier of the virtual wallet.
+</ParamField>
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client to associate.
+</ParamField>
+
+## Response
+
+Returns an empty `201 Created` response on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/virtual-wallets/vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/client/client_xyz789" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Failed to associate client to wallet: <reason>"
+}
+```
+
+</ResponseExample>

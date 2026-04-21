@@ -1,0 +1,54 @@
+---
+title: "Get company details"
+description: "Retrieve the current company profile."
+api: "GET /management/companies"
+---
+
+Retrieves the complete information for the current company associated with the API key. Requires an API key with access level 3 or higher.
+
+## Response
+
+<ResponseField name="name" type="string">
+  Company name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Company contact email address.
+</ResponseField>
+
+<ResponseField name="webhook_url" type="string">
+  Webhook URL for receiving notifications.
+</ResponseField>
+
+<ResponseField name="webhook_key" type="string">
+  Secret key used for webhook signature verification.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/companies" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "name": "Acme Corporation",
+  "email": "contact@acme.com",
+  "webhook_url": "https://api.acme.com/webhooks",
+  "webhook_key": "wh_key_abc123xyz"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company not found"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,82 @@
+---
+title: "Transfer token"
+description: "Transfer tokens from a wallet to a destination address."
+api: "POST /mpc/accounts/{accountId}/wallets/{walletId}/transfer"
+---
+
+Initiates a token transfer from the wallet to a destination address. Supports idempotency via the `Idempotency-Key` header. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="accountId" type="string" required>
+  The treasury account ID.
+</ParamField>
+
+<ParamField path="walletId" type="string" required>
+  The wallet ID to transfer from.
+</ParamField>
+
+## Body
+
+<ParamField body="to" type="string" required>
+  Recipient wallet address. Must not contain blank spaces.
+</ParamField>
+
+<ParamField body="token_address" type="string">
+  Smart contract address of the token to transfer. Omit or leave empty to transfer the native coin.
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  Amount to transfer. Maximum 9 integer digits and 6 decimal places. Must be greater than 0.
+</ParamField>
+
+## Response
+
+<ResponseField name="transaction_hash" type="string">
+  Blockchain transaction hash.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Transaction status. One of `PENDING`, `SUCCESS`, `FAILED`, `MANUAL_CHECK`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/mpc/accounts/acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/wallets/wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/transfer" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Idempotency-Key: 4f5b8c9d-1e2a-4b3c-9d8e-7f6a5b4c3d2e" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "token_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "amount": 100.50
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "transaction_hash": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef1234567890abcdef1234567890",
+  "status": "PENDING"
+}
+```
+
+```json 302 Found
+{
+  "code": "WARNING",
+  "message": "Transaction is pending. Please check the status later."
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet with id `wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d` was not found."
+}
+```
+
+</ResponseExample>

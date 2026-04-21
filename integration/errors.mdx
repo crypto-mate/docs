@@ -1,0 +1,43 @@
+---
+title: "Errors"
+description: "Understand CryptoMate's error format, HTTP status codes, and how to trace failing requests."
+---
+
+## Overview
+
+This section describes how to handle errors while integrating with the CryptoMate API. Following these conventions will speed up debugging and make support interactions much faster.
+
+## Request tracing
+
+Every API response and webhook delivery includes an `X-Trace-Id` header. **Include this identifier in any support request** — it lets our team pinpoint the exact call in our logs.
+
+## Error response format
+
+Failed requests return a JSON object with two fields:
+
+- `code` — identifies the specific error type
+- `message` — human-readable description of the error
+
+### Example
+
+```json
+{
+  "code": "API_ERROR",
+  "message": "Access denied. The API Key is not authorized to do this operation."
+}
+```
+
+## HTTP status codes
+
+| Code | Meaning |
+|---|---|
+| `200` / `201` | Successful request |
+| `400` | Invalid request — verify the body of `POST`/`PUT`/`PATCH` calls or the parameters of `GET`/`DELETE` calls |
+| `401` | The API Key is not authorized for this operation — check its configuration |
+| `404` | The requested resource does not exist — verify the identifier |
+| `412` | Internal validation failure — inspect the request body |
+| `500` | Server-side issue — retry later and contact support if it persists |
+
+<Tip>
+  Always log `X-Trace-Id` alongside your own request identifiers. It turns a "the API is broken" ticket into a conversation we can resolve in minutes.
+</Tip>

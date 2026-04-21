@@ -1,0 +1,44 @@
+---
+title: "Update card email"
+description: "Update the email address associated with a virtual card."
+api: "PUT /cards/virtual-cards/{cardId}/email"
+---
+
+Updates the email address associated with a virtual card. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="business_email" type="string">
+  New business email address.
+</ParamField>
+
+## Response
+
+Returns HTTP 200 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/email" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "business_email": "new-cardholder@example.com"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{}
+```
+
+</ResponseExample>

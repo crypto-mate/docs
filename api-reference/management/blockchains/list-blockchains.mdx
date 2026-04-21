@@ -1,0 +1,35 @@
+---
+title: "List supported blockchains"
+description: "List all blockchain networks supported by the platform."
+api: "GET /management/blockchains/list"
+---
+
+Retrieves a complete list of all blockchain networks supported by the platform. Requires an API key with access level 3 or higher.
+
+## Response
+
+Returns an array of blockchain identifiers. Possible values include `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`, `SOLANA`, `BITCOIN`, and other networks.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/blockchains/list" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  "polygon",
+  "bnb",
+  "tron",
+  "rsk",
+  "solana",
+  "stellar"
+]
+```
+
+</ResponseExample>

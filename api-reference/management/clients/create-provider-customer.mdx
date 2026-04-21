@@ -1,0 +1,90 @@
+---
+title: "Create provider customer link"
+description: "Link a client to an external provider customer ID."
+api: "POST /management/clients/{clientId}/providers"
+---
+
+Links a client to a specific provider's customer ID for external service integration. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="provider" type="string" required>
+  External provider. One of `BRIDGE`, `REAP`, `UNLIMINT`, `PAXOS`, etc.
+</ParamField>
+
+<ParamField body="customerId" type="string" required>
+  Customer ID in the external provider's system.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Mapping identifier.
+</ResponseField>
+
+<ResponseField name="clientId" type="string">
+  Client identifier.
+</ResponseField>
+
+<ResponseField name="provider" type="string">
+  External provider.
+</ResponseField>
+
+<ResponseField name="customerId" type="string">
+  Customer ID in the external provider's system.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Mapping status.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  Creation timestamp.
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string">
+  Last update timestamp.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider": "BRIDGE",
+    "customerId": "cust_ext_xyz789"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "cpc_abc123",
+  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "provider": "BRIDGE",
+  "customerId": "cust_ext_xyz789",
+  "status": "active",
+  "createdAt": "2026-04-15T10:30:00",
+  "updatedAt": "2026-04-15T10:30:00"
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Client already has a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,109 @@
+---
+title: "Virtual Wallets"
+description: "Centralize deposits and manage client balances with a secure virtual + holding wallet architecture."
+---
+
+## Overview
+
+CryptoMate's **Virtual Wallets** product lets businesses manage their clients' digital assets through an integrated **Wallet** and **Holding Wallet** system. Deposits are received on dedicated addresses, while the real assets are consolidated in a secure, company-managed holding wallet.
+
+The product is built on top of **Polygon**, **BNB Chain**, and **Tron**, providing a robust, transparent, and scalable foundation for business operations.
+
+## Core concepts
+
+<Columns cols={2}>
+  <Card title="Wallet" icon="inbox">
+    A deposit address where cryptocurrencies are received. Incoming funds are recorded as a **virtual balance** — a debt owed by the company to its client.
+  </Card>
+  <Card title="Holding Wallet" icon="vault">
+    The main repository for the real assets. Funds are automatically transferred here from the deposit wallet to maximize security and fund control.
+  </Card>
+</Columns>
+
+## Deposit-to-holding flow
+
+<Steps>
+  <Step title="Receive the deposit">
+    The client sends cryptocurrency to a unique wallet deposit address. The transaction is processed and recorded on the blockchain (Polygon, BNB, or Tron). The system registers the amount as a virtual balance that represents the company's debt to the client.
+  </Step>
+  <Step title="Transfer to the holding wallet">
+    Real funds move from the deposit wallet to the holding wallet automatically or via rules, centralizing assets in a secure company-managed address.
+  </Step>
+  <Step title="Virtual balance reflection">
+    The client sees their available virtual balance in real time and can use it per the platform's rules — transactions, payments, or internal operations.
+  </Step>
+  <Step title="Audit and transparency">
+    The entire flow is traceable and auditable through the blockchain, so every movement can be verified end-to-end.
+  </Step>
+</Steps>
+
+## Managing virtual wallets
+
+**Deposits and withdrawals.** Clients can deposit and withdraw funds as needed from their virtual wallets.
+
+**Withdrawals to external wallets.** When funds are withdrawn from a virtual wallet to an external address, the assets are deducted from the holding wallet, ensuring a real transfer of funds.
+
+**Transfers between virtual wallets.** Internal transfers between two virtual wallets are simple virtual balance movements — **no blockchain transactions occur**. This prevents unnecessary holding wallet deductions for in-ecosystem operations.
+
+## Managing the holding wallet
+
+<AccordionGroup>
+  <Accordion title="Deposit external funds">
+    Companies can deposit cryptocurrency directly into the holding wallet from external sources for flexible resource management.
+  </Accordion>
+  <Accordion title="Withdraw to external wallets">
+    Withdrawals are limited to the on-chain funds available in the holding wallet — no overdrafts are allowed. Keep sufficient balance to cover external withdrawals initiated from virtual wallets.
+  </Accordion>
+  <Accordion title="Transfer to a virtual wallet">
+    The company can credit a client's virtual wallet even without enough holding wallet balance. This increases the company's debt to the client and should be used deliberately.
+  </Accordion>
+</AccordionGroup>
+
+## Company clients and ramp operations
+
+### What is a company client?
+
+A **company client** is an end user that has completed KYC verification and can perform ramp operations (fiat-to-crypto and crypto-to-fiat).
+
+### Client-wallet relationship
+
+- **One wallet → one client.** Each virtual wallet is associated with exactly one client.
+- **One client → multiple wallets.** A client can own multiple wallets across blockchains or purposes.
+- **Active wallets only.** Only wallets in `active` status can be associated with a client.
+
+### Prerequisites for ramp operations
+
+<Steps>
+  <Step title="Client creation">
+    Complete KYC with personal ID documents, address verification, tax identification number (country-specific), and contact information.
+  </Step>
+  <Step title="Bank account setup">
+    For off-ramp operations, at least one verified bank account must be linked to the client.
+  </Step>
+  <Step title="Active wallet association">
+    At least one active virtual wallet must be created and associated with the client.
+  </Step>
+</Steps>
+
+### On-ramp (fiat → crypto)
+
+1. The client initiates an on-ramp request and receives fiat deposit information.
+2. Funds are received and verified.
+3. The equivalent amount of cryptocurrency is credited to the client's virtual balance.
+4. The real assets are held in the holding wallet; the client's virtual balance reflects ownership.
+
+### Off-ramp (crypto → fiat)
+
+1. The client initiates a withdrawal from their virtual wallet to their bank account.
+2. The system deducts the virtual balance.
+3. Real cryptocurrency is transferred out of the holding wallet for fiat conversion.
+4. Fiat currency is sent to the client's linked bank account.
+
+<Card
+  title="Virtual Wallets API reference"
+  icon="terminal"
+  href="/api-reference/introduction"
+  horizontal
+>
+  Explore endpoints for wallets, holding, configuration, and ramps.
+</Card>

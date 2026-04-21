@@ -1,0 +1,26 @@
+---
+title: "List provider customer links"
+description: "List all provider customer links for a client."
+api: "GET /management/clients/{clientId}/providers"
+---
+
+Retrieves all provider customer links for a specific client. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Response
+
+Returns an array of provider customer link objects. See [Create provider customer link](/api-reference/management/clients/create-provider-customer) for the field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>

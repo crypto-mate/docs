@@ -1,13 +1,22 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "CryptoMate",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#703493",
+    "light": "#9D5CC3",
+    "dark": "#480F6A"
   },
   "favicon": "/favicon.svg",
+  "api": {
+    "mdx": {
+      "server": "https://api.sandbox.cryptomate.me",
+      "auth": {
+        "method": "key",
+        "name": "X-API-KEY"
+      }
+    }
+  },
   "navigation": {
     "tabs": [
       {
@@ -18,87 +27,288 @@
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "authentication"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Products",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "products/treasury",
+              "products/virtual-wallets",
+              "products/cards"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Integration",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "integration/webhooks",
+              "integration/errors"
             ]
           }
         ]
       },
       {
         "tab": "API reference",
-        "groups": [
+        "anchors": [
           {
-            "group": "API documentation",
+            "anchor": "Introduction",
+            "icon": "book-open",
             "pages": [
               "api-reference/introduction"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "anchor": "Treasury",
+            "icon": "vault",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/treasury/index",
+              {
+                "group": "Accounts",
+                "pages": [
+                  "api-reference/treasury/accounts/list-accounts",
+                  "api-reference/treasury/accounts/create-account",
+                  "api-reference/treasury/accounts/update-account",
+                  "api-reference/treasury/accounts/delete-account"
+                ]
+              },
+              {
+                "group": "Wallets",
+                "pages": [
+                  "api-reference/treasury/wallets/list-wallets",
+                  "api-reference/treasury/wallets/get-wallet",
+                  "api-reference/treasury/wallets/create-wallet",
+                  "api-reference/treasury/wallets/update-wallet",
+                  "api-reference/treasury/wallets/get-wallet-balance",
+                  "api-reference/treasury/wallets/transfer-token",
+                  "api-reference/treasury/wallets/delete-wallet"
+                ]
+              },
+              {
+                "group": "Tokens",
+                "pages": [
+                  "api-reference/treasury/tokens/list-tokens-by-blockchain",
+                  "api-reference/treasury/tokens/list-custom-tokens"
+                ]
+              },
+              {
+                "group": "Transactions",
+                "pages": [
+                  "api-reference/treasury/transactions/search-transactions"
+                ]
+              }
+            ]
+          },
+          {
+            "anchor": "Virtual Wallets",
+            "icon": "wallet",
+            "pages": [
+              "api-reference/virtual-wallets/index",
+              {
+                "group": "Wallets",
+                "pages": [
+                  "api-reference/virtual-wallets/wallets/list-virtual-wallets",
+                  "api-reference/virtual-wallets/wallets/get-virtual-wallet",
+                  "api-reference/virtual-wallets/wallets/create-virtual-wallet",
+                  "api-reference/virtual-wallets/wallets/update-virtual-wallet",
+                  "api-reference/virtual-wallets/wallets/delete-virtual-wallet",
+                  "api-reference/virtual-wallets/wallets/list-virtual-wallets-balances",
+                  "api-reference/virtual-wallets/wallets/get-virtual-wallet-balance",
+                  "api-reference/virtual-wallets/wallets/withdraw-from-virtual-wallet",
+                  "api-reference/virtual-wallets/wallets/set-virtual-wallet-enabled",
+                  "api-reference/virtual-wallets/wallets/override-virtual-balance",
+                  "api-reference/virtual-wallets/wallets/associate-client-to-wallet"
+                ]
+              },
+              {
+                "group": "Holding",
+                "pages": [
+                  "api-reference/virtual-wallets/holding/get-holding-wallet",
+                  "api-reference/virtual-wallets/holding/get-holding-wallet-balances",
+                  "api-reference/virtual-wallets/holding/withdraw-from-holding-wallet"
+                ]
+              },
+              {
+                "group": "Configuration",
+                "pages": [
+                  "api-reference/virtual-wallets/configuration/list-available-blockchains",
+                  "api-reference/virtual-wallets/configuration/list-ramp-on-fiat-assets"
+                ]
+              },
+              {
+                "group": "Ramps",
+                "pages": [
+                  "api-reference/virtual-wallets/ramps/create-credit-card-ramp-on",
+                  "api-reference/virtual-wallets/ramps/update-ramp-transfer",
+                  "api-reference/virtual-wallets/ramps/get-ramp-transfer-receipt",
+                  {
+                    "group": "Bank Ramps",
+                    "pages": [
+                      "api-reference/virtual-wallets/ramps/bank-ramps/simulate-bank-ramp-on",
+                      "api-reference/virtual-wallets/ramps/bank-ramps/create-bank-ramp-on",
+                      "api-reference/virtual-wallets/ramps/bank-ramps/cancel-bank-ramp-on",
+                      "api-reference/virtual-wallets/ramps/bank-ramps/simulate-bank-ramp-off",
+                      "api-reference/virtual-wallets/ramps/bank-ramps/create-bank-ramp-off"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Transactions",
+                "pages": [
+                  "api-reference/virtual-wallets/transactions/get-wallet-movements"
+                ]
+              }
+            ]
+          },
+          {
+            "anchor": "Cards",
+            "icon": "credit-card",
+            "pages": [
+              "api-reference/cards/index",
+              {
+                "group": "Virtual Cards",
+                "pages": [
+                  "api-reference/cards/virtual-cards/list-cards",
+                  "api-reference/cards/virtual-cards/get-card",
+                  "api-reference/cards/virtual-cards/create-card",
+                  "api-reference/cards/virtual-cards/delete-card",
+                  "api-reference/cards/virtual-cards/get-card-top-up-wallets",
+                  "api-reference/cards/virtual-cards/get-card-pan-html",
+                  "api-reference/cards/virtual-cards/set-limits",
+                  "api-reference/cards/virtual-cards/update-email",
+                  "api-reference/cards/virtual-cards/update-phone",
+                  "api-reference/cards/virtual-cards/update-pin",
+                  "api-reference/cards/virtual-cards/set-frozen",
+                  "api-reference/cards/virtual-cards/unblock-card",
+                  "api-reference/cards/virtual-cards/reissue-card",
+                  "api-reference/cards/virtual-cards/rotate-deposit-wallet",
+                  "api-reference/cards/virtual-cards/get-virtual-balances",
+                  "api-reference/cards/virtual-cards/override-virtual-balance",
+                  "api-reference/cards/virtual-cards/set-3ds-configuration",
+                  "api-reference/cards/virtual-cards/respond-3ds-authorization"
+                ]
+              },
+              {
+                "group": "Transactions",
+                "pages": [
+                  "api-reference/cards/transactions/search-transactions",
+                  "api-reference/cards/transactions/get-transactions-pdf"
+                ]
+              },
+              {
+                "group": "Holding",
+                "pages": [
+                  "api-reference/cards/holding/get-balance",
+                  "api-reference/cards/holding/withdraw"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  {
+                    "group": "Simulate",
+                    "pages": [
+                      "api-reference/cards/webhooks/simulate/simulate-authorize",
+                      "api-reference/cards/webhooks/simulate/simulate-clearing"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "anchor": "Management",
+            "icon": "gear",
+            "pages": [
+              "api-reference/management/index",
+              {
+                "group": "Company",
+                "pages": [
+                  "api-reference/management/company/get-company",
+                  "api-reference/management/company/get-company-information",
+                  "api-reference/management/company/create-company",
+                  "api-reference/management/company/update-company",
+                  "api-reference/management/company/delete-company",
+                  "api-reference/management/company/re-enable-company",
+                  "api-reference/management/company/subscribe-webhook-url",
+                  "api-reference/management/company/subscribe-webhook-key"
+                ]
+              },
+              {
+                "group": "Clients",
+                "pages": [
+                  "api-reference/management/clients/get-all-clients",
+                  "api-reference/management/clients/get-client",
+                  "api-reference/management/clients/create-client",
+                  "api-reference/management/clients/create-business-client",
+                  "api-reference/management/clients/update-client",
+                  "api-reference/management/clients/delete-client",
+                  "api-reference/management/clients/enable-otp",
+                  "api-reference/management/clients/get-by-phone-whatsapp",
+                  "api-reference/management/clients/list-associated-persons",
+                  "api-reference/management/clients/get-pending-documents",
+                  "api-reference/management/clients/get-countries",
+                  "api-reference/management/clients/get-documentation-checklist",
+                  "api-reference/management/clients/get-identifications-by-country",
+                  "api-reference/management/clients/get-business-identifications-by-country",
+                  "api-reference/management/clients/get-business-industries",
+                  "api-reference/management/clients/get-occupation-codes",
+                  "api-reference/management/clients/create-provider-customer",
+                  "api-reference/management/clients/list-provider-customers",
+                  "api-reference/management/clients/get-provider-customer-by-provider",
+                  "api-reference/management/clients/update-provider-customer",
+                  "api-reference/management/clients/delete-provider-customer",
+                  {
+                    "group": "Bank Accounts",
+                    "pages": [
+                      "api-reference/management/clients/bank-accounts/list-bank-accounts",
+                      "api-reference/management/clients/bank-accounts/get-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-us-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-spei-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-sepa-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-pix-bank-account",
+                      "api-reference/management/clients/bank-accounts/delete-bank-account"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Operations",
+                "pages": [
+                  "api-reference/management/operations/list-operations",
+                  "api-reference/management/operations/get-operation"
+                ]
+              },
+              {
+                "group": "Blockchains",
+                "pages": [
+                  "api-reference/management/blockchains/list-blockchains"
+                ]
+              },
+              {
+                "group": "Configurations",
+                "pages": [
+                  "api-reference/management/configurations/get-payment-destination",
+                  "api-reference/management/configurations/upsert-payment-destination",
+                  "api-reference/management/configurations/delete-payment-destination"
+                ]
+              },
+              {
+                "group": "Contracted Products",
+                "pages": [
+                  "api-reference/management/contracted-products/get-contracted-product",
+                  "api-reference/management/contracted-products/get-contracted-and-used-products"
+                ]
+              }
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
+    "light": "/logo/logo-white.png",
+    "dark": "/logo/logo-white.png"
   },
   "contextual": {
     "options": [

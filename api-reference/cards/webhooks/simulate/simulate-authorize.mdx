@@ -1,0 +1,46 @@
+---
+title: "Simulate authorization webhook"
+description: "Simulate a card authorization webhook event for testing."
+api: "POST /cards/webhook/simulate/authorize"
+---
+
+Simulates a card authorization webhook notification for testing. Available in non-production environments only. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="card_id" type="string">
+  Card identifier to simulate the authorization against.
+</ParamField>
+
+<ParamField body="bill_amount" type="number">
+  Transaction amount in USD to simulate.
+</ParamField>
+
+## Response
+
+Returns HTTP 201 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/webhook/simulate/authorize" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "card_id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+    "bill_amount": 100.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 412 Card Not Found
+{
+  "code": "VAL",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>

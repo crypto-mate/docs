@@ -1,0 +1,38 @@
+---
+title: "List listed tokens by blockchain"
+description: "Retrieve supported tokens for a blockchain network."
+api: "GET /mpc/tokens/{blockchain}"
+---
+
+Retrieves all listed tokens for a specific blockchain network. Returned as a map of token symbol to smart contract address. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="blockchain" type="string" required>
+  The blockchain network. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ParamField>
+
+## Response
+
+Returns a JSON object where each key is a token symbol and each value is the token's smart contract address on the requested blockchain.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/tokens/POLYGON" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "USDC": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+  "USDT": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+  "WETH": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"
+}
+```
+
+</ResponseExample>

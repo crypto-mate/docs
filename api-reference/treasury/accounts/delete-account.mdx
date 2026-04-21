@@ -1,0 +1,48 @@
+---
+title: "Delete account"
+description: "Delete a treasury account and its associated wallets."
+api: "DELETE /mpc/accounts/{accountId}"
+---
+
+Deletes a treasury account and all associated wallets. The account must not have active balances. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="accountId" type="string" required>
+  The account ID to delete.
+</ParamField>
+
+## Response
+
+Returns HTTP 200 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/mpc/accounts/acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Resource not found"
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Account has wallets associated"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,50 @@
+---
+title: "Create or update payment destination"
+description: "Upsert payment destination configuration for a blockchain."
+api: "POST /management/configurations/payments"
+---
+
+Creates a new payment destination configuration or updates an existing one for a blockchain network. Requires an API key with access level 3 or higher.
+
+## Body
+
+<ParamField body="blockchain" type="string" required>
+  Blockchain network identifier.
+</ParamField>
+
+<ParamField body="paymentDepositAddress" type="string" required>
+  Blockchain address for payment deposits.
+</ParamField>
+
+<ParamField body="feeDepositAddress" type="string" required>
+  Blockchain address for fee deposits.
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/configurations/payments" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "blockchain": "polygon",
+    "paymentDepositAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "feeDepositAddress": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Invalid blockchain"
+}
+```
+
+</ResponseExample>

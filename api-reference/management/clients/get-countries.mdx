@@ -1,0 +1,44 @@
+---
+title: "Get supported countries"
+description: "List all supported countries and their subdivisions."
+api: "GET /management/clients/countries"
+---
+
+Retrieves a list of all supported countries with their subdivisions for client registration. Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="count" type="integer">
+  Total number of countries.
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  List of country details. Each item has `name`, `alpha3`, `postalCodeFormat`, and a `subdivisions` array.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/countries" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "count": 50,
+  "data": [
+    {
+      "name": "United States",
+      "alpha3": "USA",
+      "postalCodeFormat": "#####",
+      "subdivisions": []
+    }
+  ]
+}
+```
+
+</ResponseExample>

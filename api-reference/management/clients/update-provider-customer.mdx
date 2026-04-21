@@ -1,0 +1,51 @@
+---
+title: "Update provider customer link"
+description: "Update the external customer ID for an existing provider link."
+api: "PUT /management/clients/{clientId}/providers/{id}"
+---
+
+Updates the customer ID for an existing provider customer link. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the provider customer link.
+</ParamField>
+
+## Body
+
+<ParamField body="customerId" type="string" required>
+  Updated customer ID in the external provider's system.
+</ParamField>
+
+## Response
+
+See [Create provider customer link](/api-reference/management/clients/create-provider-customer) for the field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/cpc_abc123" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customerId": "cust_ext_updated_123"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "ClientProviderCustomer not found"
+}
+```
+
+</ResponseExample>

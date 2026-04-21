@@ -1,0 +1,64 @@
+---
+title: "Get card top-up wallets"
+description: "Retrieve wallets available for topping up a virtual card."
+api: "GET /cards/virtual-cards/{cardId}/top-up"
+---
+
+Retrieves the wallets available for topping up the virtual card, including supported tokens and ramp providers. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+Returns an array of top-up wallet objects.
+
+<ResponseField name="address" type="string">
+  Wallet address for deposits.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network for the wallet.
+</ResponseField>
+
+<ResponseField name="tokens" type="array">
+  List of supported tokens for deposits.
+</ResponseField>
+
+<ResponseField name="ramps" type="array">
+  List of ramp provider objects. Each contains `address`, `blockchain`, `memo`, and `tokens`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/top-up" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "address": "0x1234567890abcdef1234567890abcdef12345678",
+    "blockchain": "POLYGON",
+    "tokens": ["USDC", "USDT"],
+    "ramps": [
+      {
+        "address": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "blockchain": "POLYGON",
+        "memo": null,
+        "tokens": ["USDC"]
+      }
+    ]
+  }
+]
+```
+
+</ResponseExample>

@@ -1,0 +1,45 @@
+---
+title: "List accounts"
+description: "List all treasury accounts for the company."
+api: "GET /mpc/accounts/list"
+---
+
+Retrieves all treasury MPC accounts associated with the company. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of account objects.
+
+<ResponseField name="id" type="string">
+  Unique account identifier.
+</ResponseField>
+
+<ResponseField name="alias" type="string">
+  Friendly alias name for the account.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/accounts/list" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+    "alias": "Main Operating Account"
+  },
+  {
+    "id": "acc_7a2b4c10-6d5e-4f1a-b2c3-9f0e8d7c6b5a",
+    "alias": "Treasury Reserves"
+  }
+]
+```
+
+</ResponseExample>

@@ -1,0 +1,77 @@
+---
+title: "Webhooks"
+description: "Receive real-time notifications for deposits, card transactions, and wallet activity."
+---
+
+## Overview
+
+Webhooks let your system receive **real-time notifications** about events happening in CryptoMate — new deposits, card authorizations, withdrawals, and more. Notifications are delivered to an HTTP endpoint you configure in your environment.
+
+## Webhook payload structure
+
+Every webhook request shares a common envelope and an event-specific `data` object.
+
+| Field | Type | Description |
+|---|---|---|
+| `operation` | string | High-level operation type (e.g. `TREASURY`, `CARDS`, `VIRTUAL_WALLETS`) |
+| `sub_operation` | string | Specific activity within the operation |
+| `operation_id` | string | Unique identifier for this notification |
+| `status` | string | `SUCCESS` \| `CANCELLED` \| `FAILED` |
+| `reason` | string | Failure reason (present when `status` is `FAILED`) |
+| `data` | object | Event-specific payload; shape varies by event type |
+
+### Example
+
+```json
+{
+  "operation": "TREASURY",
+  "sub_operation": "DEPOSIT",
+  "operation_id": "ca0c57d2-b1c9-4bcd-9d5d-8d361cad6fdd",
+  "status": "SUCCESS",
+  "data": { }
+}
+```
+
+## Available events
+
+<AccordionGroup>
+  <Accordion title="General">
+    - New deposit received
+  </Accordion>
+  <Accordion title="Cards">
+    - Card transaction approval
+    - Card transaction declined
+    - Card transaction clearing pending
+    - Card transaction clearing failed
+    - Card transaction cleared
+    - Card transaction refund
+    - Card transaction reversal
+    - Card 3DS challenge
+  </Accordion>
+  <Accordion title="Virtual Wallets">
+    - Withdraw completed
+  </Accordion>
+</AccordionGroup>
+
+## Setup
+
+To start receiving notifications, configure a webhook endpoint capable of receiving and processing the payloads above.
+
+<Steps>
+  <Step title="Expose an HTTPS endpoint">
+    Host a publicly reachable HTTPS URL that accepts `POST` requests with a JSON body.
+  </Step>
+  <Step title="Register it in CryptoMate">
+    Register the endpoint from the [Dashboard](https://portal.cryptomate.me) so CryptoMate knows where to deliver events.
+  </Step>
+  <Step title="Acknowledge quickly">
+    Return a `2xx` response as soon as you've persisted the event. Do heavier processing asynchronously to avoid timeouts.
+  </Step>
+  <Step title="Handle retries idempotently">
+    Use `operation_id` to deduplicate events — the same webhook may be delivered more than once if your endpoint doesn't respond in time.
+  </Step>
+</Steps>
+
+<Tip>
+  For card transaction authorization, your endpoint has **1,200 ms** to respond with an approval or rejection before CryptoMate applies the default behavior.
+</Tip>

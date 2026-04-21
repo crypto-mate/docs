@@ -1,0 +1,28 @@
+---
+title: "List available blockchains"
+description: "List blockchains available for virtual wallet operations."
+api: "GET /virtual-wallets/config/blockchains/list"
+---
+
+Retrieves the list of blockchains available for virtual wallet operations. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of blockchain identifiers. Possible values include `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/virtual-wallets/config/blockchains/list" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+["ETHEREUM", "POLYGON", "BSC", "ARBITRUM", "OPTIMISM", "BASE", "AVALANCHE"]
+```
+
+</ResponseExample>

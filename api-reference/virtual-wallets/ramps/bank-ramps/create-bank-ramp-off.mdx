@@ -1,0 +1,115 @@
+---
+title: "Create bank ramp-off"
+description: "Withdraw cryptocurrency to a bank account."
+api: "POST /virtual-wallets/bank-ramps/ramp-off"
+---
+
+Creates and executes a bank ramp-off transaction to withdraw cryptocurrency to a bank account. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="wallet_id" type="string" required>
+  Virtual wallet identifier.
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  Amount in cryptocurrency to convert and withdraw.
+</ParamField>
+
+<ParamField body="bank_account_id" type="string" required>
+  Bank account identifier for withdrawal.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique ramp-off operation identifier.
+</ResponseField>
+
+<ResponseField name="state" type="string">
+  Current state of the operation.
+</ResponseField>
+
+<ResponseField name="source_payment_rail" type="string">
+  Source payment rail. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`.
+</ResponseField>
+
+<ResponseField name="source_currency" type="string">
+  Source currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+</ResponseField>
+
+<ResponseField name="destination_payment_rail" type="string">
+  Destination payment rail. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`.
+</ResponseField>
+
+<ResponseField name="destination_currency" type="string">
+  Destination currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+</ResponseField>
+
+<ResponseField name="amount" type="number">
+  Amount to be withdrawn.
+</ResponseField>
+
+<ResponseField name="blockchain_memo" type="string">
+  Blockchain transaction memo or reference.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-off" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "amount": 0.5,
+    "bank_account_id": "ba_xyz789"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "rampoff_abc123",
+  "state": "pending",
+  "source_payment_rail": "WIRE",
+  "source_currency": "USD",
+  "destination_payment_rail": "ACH",
+  "destination_currency": "USD",
+  "amount": 950.00,
+  "blockchain_memo": "WITHDRAWAL-REF-123"
+}
+```
+
+```json 400 Insufficient Balance
+{
+  "code": "APP_ERROR",
+  "message": "Failed to transfer ramp off of 0.5 of client client_ghi789: Insufficient balance"
+}
+```
+
+```json 400 Holding Wallet Balance
+{
+  "code": "APP_ERROR",
+  "message": "Failed to transfer ramp off of 0.5 of client client_ghi789: Not enough balance in holding wallet"
+}
+```
+
+```json 404 Wallet Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet not found"
+}
+```
+
+```json 404 Bank Account Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Bank account ba_xyz789 for company company_xyz789 not found"
+}
+```
+
+</ResponseExample>

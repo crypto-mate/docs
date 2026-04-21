@@ -1,0 +1,37 @@
+---
+title: "Get client by phone (WhatsApp)"
+description: "Look up a client by phone number with WhatsApp enabled."
+api: "GET /management/clients/by-phone-whatsapp"
+---
+
+Retrieves a client by their phone number when WhatsApp is enabled for that client. Requires an API key with access level 1 or higher.
+
+## Query parameters
+
+<ParamField query="fullPhoneNumber" type="string" required>
+  Full phone number including country code.
+</ParamField>
+
+## Response
+
+Returns the matching client. See [Get client by ID](/api-reference/management/clients/get-client) for the full field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/by-phone-whatsapp?fullPhoneNumber=14155551234" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with phone number and WhatsApp enabled"
+}
+```
+
+</ResponseExample>

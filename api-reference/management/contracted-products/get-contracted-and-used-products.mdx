@@ -1,0 +1,49 @@
+---
+title: "Get contracted and used products"
+description: "Retrieve contracted limits and current usage statistics."
+api: "GET /management/contracted-product/used"
+---
+
+Retrieves both contracted product limits and current usage statistics for the company. Requires an API key with access level 3 or higher.
+
+## Response
+
+<ResponseField name="treasuryWallets" type="object">
+  Treasury wallets usage. Contains `total` (contracted limit) and `used` (currently in use).
+</ResponseField>
+
+<ResponseField name="virtualWallets" type="object">
+  Virtual wallets usage. Contains `total` and `used`.
+</ResponseField>
+
+<ResponseField name="virtualCards" type="object">
+  Virtual cards usage. Contains `total` and `used`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/contracted-product/used" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "treasuryWallets": { "total": 10, "used": 4 },
+  "virtualWallets": { "total": 100, "used": 67 },
+  "virtualCards": { "total": 50, "used": 12 }
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company not found"
+}
+```
+
+</ResponseExample>

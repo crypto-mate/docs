@@ -1,0 +1,127 @@
+---
+title: "List associated persons"
+description: "List all associated persons for a business client."
+api: "GET /management/clients/{clientId}/associated-persons"
+---
+
+Retrieves all associated persons (owners, controllers, signers, directors) for a business client. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the business client.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique associated person identifier.
+</ResponseField>
+
+<ResponseField name="business_client_id" type="string">
+  Parent business client ID.
+</ResponseField>
+
+<ResponseField name="person_client_id" type="string">
+  Person client ID (if linked).
+</ResponseField>
+
+<ResponseField name="person_bridge_id" type="string">
+  Bridge provider person ID.
+</ResponseField>
+
+<ResponseField name="first_name" type="string">
+  First name.
+</ResponseField>
+
+<ResponseField name="middle_name" type="string">
+  Middle name.
+</ResponseField>
+
+<ResponseField name="last_name" type="string">
+  Last name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Email address.
+</ResponseField>
+
+<ResponseField name="phone" type="string">
+  Phone number.
+</ResponseField>
+
+<ResponseField name="birth_date" type="string">
+  Date of birth.
+</ResponseField>
+
+<ResponseField name="residential_address" type="object">
+  Residential address.
+</ResponseField>
+
+<ResponseField name="has_ownership" type="boolean">
+  Whether the person has ownership.
+</ResponseField>
+
+<ResponseField name="has_control" type="boolean">
+  Whether the person has control.
+</ResponseField>
+
+<ResponseField name="is_signer" type="boolean">
+  Whether the person is a signer.
+</ResponseField>
+
+<ResponseField name="is_director" type="boolean">
+  Whether the person is a director.
+</ResponseField>
+
+<ResponseField name="title" type="string">
+  Person's title.
+</ResponseField>
+
+<ResponseField name="relationship_established_at" type="string">
+  Date the relationship was established.
+</ResponseField>
+
+<ResponseField name="identifying_information" type="array">
+  Identifying information (without images).
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Creation timestamp.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Last update timestamp.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/associated-persons" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "ap_abc123",
+    "business_client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "email": "jane.smith@techstartup.io",
+    "birth_date": "1985-02-20",
+    "has_ownership": true,
+    "has_control": true,
+    "is_signer": true,
+    "is_director": false,
+    "created_at": "2026-04-15T10:30:00",
+    "updated_at": "2026-04-15T10:30:00"
+  }
+]
+```
+
+</ResponseExample>

@@ -1,0 +1,69 @@
+---
+title: "Subscribe webhook URL"
+description: "Configure the URL where the company will receive event notifications."
+api: "POST /management/companies/webhook/subscribe"
+---
+
+Configures or updates the webhook URL where the company will receive event notifications. Requires an API key with access level 3 or higher.
+
+## Body
+
+<ParamField body="url" type="string" required>
+  Webhook URL. Must be a valid HTTP/HTTPS URL.
+</ParamField>
+
+<ParamField body="webhook_key" type="string" required>
+  Secret key for webhook signature verification.
+</ParamField>
+
+## Response
+
+<ResponseField name="name" type="string">
+  Company name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Company contact email address.
+</ResponseField>
+
+<ResponseField name="webhook_url" type="string">
+  Configured webhook URL.
+</ResponseField>
+
+<ResponseField name="webhook_key" type="string">
+  Webhook signing key.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/companies/webhook/subscribe" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://api.acme.com/webhooks",
+    "webhook_key": "wh_key_xyz789abc"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "name": "Acme Corporation",
+  "email": "contact@acme.com",
+  "webhook_url": "https://api.acme.com/webhooks",
+  "webhook_key": "wh_key_xyz789abc"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company not found"
+}
+```
+
+</ResponseExample>

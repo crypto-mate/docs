@@ -1,0 +1,145 @@
+---
+title: "Update client"
+description: "Update an existing individual client."
+api: "PUT /management/clients/{id}"
+---
+
+Updates the information of an existing client including personal details and communication preferences. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the client to update.
+</ParamField>
+
+## Body
+
+<ParamField body="company_id" type="string">
+  Company identifier.
+</ParamField>
+
+<ParamField body="phone_country_code" type="integer">
+  Phone country code.
+</ParamField>
+
+<ParamField body="phone_number" type="long">
+  Phone number.
+</ParamField>
+
+<ParamField body="username" type="string">
+  Client username.
+</ParamField>
+
+<ParamField body="first_name" type="string">
+  Client first name.
+</ParamField>
+
+<ParamField body="second_name" type="string">
+  Client second/middle name.
+</ParamField>
+
+<ParamField body="last_name" type="string">
+  Client last name.
+</ParamField>
+
+<ParamField body="otp" type="boolean">
+  Enable OTP authentication.
+</ParamField>
+
+<ParamField body="sms" type="boolean">
+  Enable SMS notifications.
+</ParamField>
+
+<ParamField body="whatsapp" type="boolean">
+  Enable WhatsApp notifications.
+</ParamField>
+
+<ParamField body="telegram" type="boolean">
+  Enable Telegram notifications.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Client email address.
+</ParamField>
+
+<ParamField body="gender" type="string">
+  Client gender.
+</ParamField>
+
+<ParamField body="birth_date" type="string">
+  Date of birth.
+</ParamField>
+
+<ParamField body="expiration_date" type="string">
+  Document expiration date.
+</ParamField>
+
+<ParamField body="address" type="object">
+  Physical address.
+</ParamField>
+
+<ParamField body="individual_identification" type="string">
+  Individual identification number.
+</ParamField>
+
+<ParamField body="individual_identification_type" type="string">
+  Individual identification type.
+</ParamField>
+
+<ParamField body="occupation" type="string">
+  Client occupation (required for Rain).
+</ParamField>
+
+<ParamField body="annual_salary" type="string">
+  Annual salary (required for Rain).
+</ParamField>
+
+<ParamField body="account_purpose" type="string">
+  Account purpose (required for Rain).
+</ParamField>
+
+<ParamField body="expected_monthly_volume" type="string">
+  Expected monthly volume (required for Rain).
+</ParamField>
+
+<ParamField body="documents" type="array">
+  Identity documents.
+</ParamField>
+
+## Response
+
+Returns the updated client. See [Get client by ID](/api-reference/management/clients/get-client) for the full field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe.new@example.com",
+    "sms": false
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with id: client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
+}
+```
+
+```json 412 Duplicate Client
+{
+  "code": "VAL",
+  "message": "Company client already exists for this company and phone number"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,50 @@
+---
+title: "Cards"
+description: "Issue virtual Visa cards backed by stablecoin collateral, with support for Apple Pay, Google Pay, and 3DS."
+---
+
+## Overview
+
+**Cards** is a virtual prepaid card product powered by cryptocurrency collateral. Designed for businesses, it uses **stablecoins on Polygon** as the backing asset: each card is linked to a stablecoin wallet, and funds are automatically converted to dollars at a 1:1 ratio, making integration with conventional payment networks seamless.
+
+## Card specifications
+
+- **Brand:** Visa
+- **Acceptance:** Apple Pay, Google Pay, and e-commerce platforms
+- **Security:** Protected by **3DS** to mitigate fraud
+
+## Operational models
+
+<Columns cols={2}>
+  <Card title="Top Up" icon="wallet">
+    Users load funds directly onto the card through a dedicated deposit wallet created exclusively for this purpose.
+  </Card>
+  <Card title="External authorization" icon="shield-check">
+    Your systems integrate via webhooks: for each transaction you have **1,200 ms** to authorize or reject it based on your own approval logic.
+  </Card>
+</Columns>
+
+## Issuance and flexibility
+
+Each business can issue as many cards as are available in their pack, enabling teams to scale deployment according to user demand.
+
+## Holding wallet mechanism
+
+A **holding wallet** backs every card transaction. A purchase only succeeds if the holding wallet has sufficient balance — otherwise the transaction is declined.
+
+### Withdrawals
+
+Funds can be withdrawn from the holding wallet to external accounts for independent use. A **minimum balance is always locked** to preserve capacity for at least one transaction, ensuring continuous payment capability.
+
+## Why CryptoMate Cards
+
+This solution combines the convenience of conventional cards with the flexibility of blockchain infrastructure, giving businesses a modern way to manage payments backed by crypto reserves.
+
+<Card
+  title="Cards API reference"
+  icon="terminal"
+  href="/api-reference/introduction"
+  horizontal
+>
+  Explore endpoints for virtual cards, transactions, and holding.
+</Card>

@@ -1,0 +1,69 @@
+---
+title: "Create company"
+description: "Create a new company in the system."
+api: "POST /management/companies"
+---
+
+Creates a new company in the system with initial configuration. This is a provisioning endpoint typically used during onboarding.
+
+## Body
+
+<ParamField body="name" type="string" required>
+  Company name.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Company contact email address.
+</ParamField>
+
+<ParamField body="webhook_url" type="string">
+  Webhook URL for receiving notifications.
+</ParamField>
+
+## Response
+
+<ResponseField name="name" type="string">
+  Company name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Company contact email address.
+</ResponseField>
+
+<ResponseField name="webhook_url" type="string">
+  Webhook URL for receiving notifications.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/companies" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Acme Corporation",
+    "email": "contact@acme.com",
+    "webhook_url": "https://api.acme.com/webhooks"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "name": "Acme Corporation",
+  "email": "contact@acme.com",
+  "webhook_url": "https://api.acme.com/webhooks"
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Company contact@acme.com already exists."
+}
+```
+
+</ResponseExample>

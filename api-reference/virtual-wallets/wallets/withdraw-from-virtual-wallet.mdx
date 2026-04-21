@@ -1,0 +1,77 @@
+---
+title: "Withdraw from virtual wallet"
+description: "Withdraw tokens from a virtual wallet to an external address."
+api: "POST /virtual-wallets/{walletId}/withdraw"
+---
+
+Withdraws tokens from a virtual wallet to a specified external address. This operation is idempotent. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="walletId" type="string" required>
+  Unique identifier of the virtual wallet.
+</ParamField>
+
+## Body
+
+<ParamField body="to_wallet_address" type="string" required>
+  Destination wallet address for the transfer.
+</ParamField>
+
+<ParamField body="token_address" type="string" required>
+  Token contract address on the blockchain.
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  Amount of tokens to transfer (maximum 6 decimal places).
+</ParamField>
+
+## Response
+
+<ResponseField name="transaction_hash" type="string">
+  On-chain transaction hash.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current transaction status.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/virtual-wallets/vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/withdraw" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to_wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "token_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "amount": 100.50
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "transaction_hash": "0x8a3d82e8f6c4e3f1b2d7a9c5e1f3b8d6a4c2e8f1",
+  "status": "PENDING"
+}
+```
+
+```json 302 Found
+{
+  "code": "WARNING",
+  "message": "Pending transaction"
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Cannot transfer tokens to token contract address"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,48 @@
+---
+title: "Set 3DS configuration"
+description: "Configure 3D Secure authentication settings for a virtual card."
+api: "POST /cards/virtual-cards/{cardId}/3ds-configuration"
+---
+
+Configures the 3D Secure (3DS) authentication strategy for a virtual card. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="type" type="string" required>
+  3D Secure configuration type. Possible values: `AUTOMATIC`, `FORWARDED`, `DISABLED`.
+</ParamField>
+
+## Response
+
+<ResponseField name="type" type="string">
+  The configured 3D Secure type.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/3ds-configuration" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "FORWARDED"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "type": "FORWARDED"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,74 @@
+---
+title: "List virtual wallets"
+description: "List all virtual wallets for a blockchain."
+api: "GET /virtual-wallets/list"
+---
+
+Retrieves all virtual wallets for the specified blockchain. Solana is not supported. Requires an API key with access level 1 or higher.
+
+## Query parameters
+
+<ParamField query="blockchain" type="string" required>
+  Blockchain to filter virtual wallets. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ParamField>
+
+## Response
+
+Returns an array of virtual wallet objects.
+
+<ResponseField name="id" type="string">
+  Unique virtual wallet identifier.
+</ResponseField>
+
+<ResponseField name="alias" type="string">
+  Wallet alias or display name.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  Associated client identifier.
+</ResponseField>
+
+<ResponseField name="wallet_address" type="string">
+  On-chain wallet address.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Whether the wallet is enabled.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/virtual-wallets/list?blockchain=POLYGON" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "alias": "Trading Wallet",
+    "client_id": "client_xyz789",
+    "wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "blockchain": "POLYGON",
+    "enabled": true
+  }
+]
+```
+
+```json 401 Unauthorized
+{
+  "code": "DENIED",
+  "message": "Solana blockchain is not supported for virtual wallet."
+}
+```
+
+</ResponseExample>

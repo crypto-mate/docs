@@ -1,0 +1,69 @@
+---
+title: "Get wallet"
+description: "Retrieve details for a single wallet."
+api: "GET /mpc/accounts/{accountId}/wallets/{walletId}"
+---
+
+Retrieves detailed information about a specific wallet. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="accountId" type="string" required>
+  The treasury account ID.
+</ParamField>
+
+<ParamField path="walletId" type="string" required>
+  The wallet ID.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique wallet identifier.
+</ResponseField>
+
+<ResponseField name="alias" type="string">
+  Friendly alias name for the wallet.
+</ResponseField>
+
+<ResponseField name="wallet_address" type="string">
+  Blockchain wallet address.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Whether the wallet is enabled for transactions.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/accounts/acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/wallets/wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "alias": "Primary Polygon Wallet",
+  "wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "blockchain": "POLYGON",
+  "enabled": true
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet with id `wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d` was not found."
+}
+```
+
+</ResponseExample>

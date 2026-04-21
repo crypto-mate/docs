@@ -1,0 +1,60 @@
+---
+title: "Rotate deposit wallet"
+description: "Create a new deposit wallet for a card and deprecate the previous one."
+api: "POST /cards/virtual-cards/{cardId}/deposit-wallet/rotate"
+---
+
+Creates a new deposit wallet for the card and logically deletes the previous one. Only applicable to `TOP_UP` cards. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="address" type="string">
+  Wallet address for deposits.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network for the wallet.
+</ResponseField>
+
+<ResponseField name="tokens" type="array">
+  List of supported tokens for deposits.
+</ResponseField>
+
+<ResponseField name="ramps" type="array">
+  List of ramp providers for this wallet.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/deposit-wallet/rotate" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "address": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+  "blockchain": "POLYGON",
+  "tokens": ["USDC", "USDT"],
+  "ramps": []
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Only TOP_UP cards support deposit wallet rotation."
+}
+```
+
+</ResponseExample>

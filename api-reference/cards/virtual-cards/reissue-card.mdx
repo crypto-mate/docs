@@ -1,0 +1,56 @@
+---
+title: "Reissue virtual card"
+description: "Reissue a virtual card with a new PAN."
+api: "PUT /cards/virtual-cards/{cardId}/reissue"
+---
+
+Reissues a virtual card, generating a new card with a new Primary Account Number (PAN). Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+Returns the reissued virtual card object.
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="card_holder_name" type="string">
+  Name of the cardholder.
+</ResponseField>
+
+<ResponseField name="last4" type="string">
+  Last 4 digits of the new card number.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current card status.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/reissue" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "card_holder_name": "John Doe",
+  "type": "VIRTUAL",
+  "last4": "7890",
+  "status": "ACTIVE"
+}
+```
+
+</ResponseExample>

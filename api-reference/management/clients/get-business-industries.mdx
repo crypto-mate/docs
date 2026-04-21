@@ -1,0 +1,39 @@
+---
+title: "List business industries"
+description: "List available business industries (NAICS codes)."
+api: "GET /management/clients/business-industries"
+---
+
+Retrieves all available business industries (NAICS codes) for business client registration. Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="code" type="string">
+  Industry code.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Industry description.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/business-industries" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "code": "TECH",
+    "description": "Technology"
+  }
+]
+```
+
+</ResponseExample>

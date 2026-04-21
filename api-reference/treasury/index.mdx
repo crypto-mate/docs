@@ -1,0 +1,26 @@
+---
+title: "Overview"
+sidebarTitle: "Overview"
+description: "Manage MPC accounts, wallets, tokens, and transactions for on-chain treasury operations."
+---
+
+The Treasury API lets you create MPC-secured accounts, provision multi-chain wallets, inspect balances, transfer tokens, and search transaction history.
+
+All endpoints are authenticated with the `X-API-KEY` header. Read operations require an API key with access level 1 or higher; write operations (create, update, delete, transfer) require access level 2 or higher.
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="Accounts" icon="folder" href="/api-reference/treasury/accounts/create-account">
+    Create and manage MPC treasury accounts that group your wallets.
+  </Card>
+  <Card title="Wallets" icon="wallet" href="/api-reference/treasury/wallets/list-wallets">
+    Provision blockchain wallets, query balances, and transfer tokens.
+  </Card>
+  <Card title="Tokens" icon="coins" href="/api-reference/treasury/tokens/list-tokens-by-blockchain">
+    Discover listed tokens per blockchain and list your custom tokens.
+  </Card>
+  <Card title="Transactions" icon="receipt" href="/api-reference/treasury/transactions/search-transactions">
+    Search and paginate treasury movements across wallets.
+  </Card>
+</CardGroup>

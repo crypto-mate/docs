@@ -1,0 +1,73 @@
+---
+title: "Enable or disable virtual wallet"
+description: "Set the enabled status of a virtual wallet."
+api: "PATCH /virtual-wallets/{walletId}/set-enabled"
+---
+
+Sets the enabled status of a virtual wallet. Disabled wallets cannot be used for transactions. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="walletId" type="string" required>
+  Unique identifier of the virtual wallet.
+</ParamField>
+
+## Body
+
+<ParamField body="enabled" type="boolean" required>
+  Whether the wallet should be enabled.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique virtual wallet identifier.
+</ResponseField>
+
+<ResponseField name="alias" type="string">
+  Wallet alias.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  Associated client identifier.
+</ResponseField>
+
+<ResponseField name="wallet_address" type="string">
+  On-chain wallet address.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Updated enabled status.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/virtual-wallets/vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/set-enabled" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "enabled": false
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "alias": "Trading Wallet",
+  "client_id": "client_xyz789",
+  "wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "blockchain": "POLYGON",
+  "enabled": false
+}
+```
+
+</ResponseExample>

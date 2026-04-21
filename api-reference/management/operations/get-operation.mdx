@@ -1,0 +1,50 @@
+---
+title: "Get operation by ID"
+description: "Retrieve details of a specific operation."
+api: "GET /management/operations/{operationId}"
+---
+
+Retrieves details of a specific operation by its identifier. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="operationId" type="string" required>
+  Unique identifier of the operation to retrieve.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique operation identifier.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Operation description.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/operations/management" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "management",
+  "description": "Company management"
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Invalid operation"
+}
+```
+
+</ResponseExample>

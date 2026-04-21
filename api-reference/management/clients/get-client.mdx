@@ -1,0 +1,260 @@
+---
+title: "Get client by ID"
+description: "Retrieve a client by its unique identifier."
+api: "GET /management/clients/{id}"
+---
+
+Retrieves detailed information about a specific client by their unique identifier. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique client identifier.
+</ResponseField>
+
+<ResponseField name="company_id" type="string">
+  Company identifier.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Client type: `individual` or `business`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status.
+</ResponseField>
+
+<ResponseField name="phone_country_code" type="integer">
+  Phone country code.
+</ResponseField>
+
+<ResponseField name="phone_number" type="long">
+  Phone number.
+</ResponseField>
+
+<ResponseField name="first_name" type="string">
+  Client first name.
+</ResponseField>
+
+<ResponseField name="second_name" type="string">
+  Client second/middle name.
+</ResponseField>
+
+<ResponseField name="last_name" type="string">
+  Client last name.
+</ResponseField>
+
+<ResponseField name="gender" type="string">
+  Client gender.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Client email address.
+</ResponseField>
+
+<ResponseField name="birth_date" type="string">
+  Date of birth.
+</ResponseField>
+
+<ResponseField name="address" type="object">
+  Physical address (individual clients).
+</ResponseField>
+
+<ResponseField name="document_type" type="string">
+  Document type (e.g., `PASSPORT`, `DRIVERS_LICENSE`).
+</ResponseField>
+
+<ResponseField name="document_number" type="string">
+  Document identification number.
+</ResponseField>
+
+<ResponseField name="expiration_date" type="string">
+  Document expiration date.
+</ResponseField>
+
+<ResponseField name="individual_identification_type" type="string">
+  Individual identification type.
+</ResponseField>
+
+<ResponseField name="individual_identification" type="string">
+  Individual identification number.
+</ResponseField>
+
+<ResponseField name="otp" type="boolean">
+  Whether OTP is enabled.
+</ResponseField>
+
+<ResponseField name="sms" type="boolean">
+  Whether SMS is enabled.
+</ResponseField>
+
+<ResponseField name="whatsapp" type="boolean">
+  Whether WhatsApp is enabled.
+</ResponseField>
+
+<ResponseField name="telegram" type="boolean">
+  Whether Telegram is enabled.
+</ResponseField>
+
+<ResponseField name="username" type="string">
+  Client username.
+</ResponseField>
+
+<ResponseField name="wallet_ids" type="array">
+  Associated wallet IDs.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Creation timestamp.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Last update timestamp.
+</ResponseField>
+
+<ResponseField name="business_legal_name" type="string">
+  Business legal name (for business clients).
+</ResponseField>
+
+<ResponseField name="business_trade_name" type="string">
+  Business trade name (DBA).
+</ResponseField>
+
+<ResponseField name="business_description" type="string">
+  Business description.
+</ResponseField>
+
+<ResponseField name="business_type" type="string">
+  Business type.
+</ResponseField>
+
+<ResponseField name="business_industry" type="array">
+  Business NAICS industry codes.
+</ResponseField>
+
+<ResponseField name="is_dao" type="boolean">
+  Whether the business is a DAO.
+</ResponseField>
+
+<ResponseField name="registered_address" type="object">
+  Business registered address.
+</ResponseField>
+
+<ResponseField name="physical_address" type="object">
+  Business physical address.
+</ResponseField>
+
+<ResponseField name="identifying_information" type="array">
+  Business identifying information (tax IDs).
+</ResponseField>
+
+<ResponseField name="has_material_intermediary_ownership" type="boolean">
+  Whether there is material intermediary ownership.
+</ResponseField>
+
+<ResponseField name="ownership_threshold" type="integer">
+  Ownership threshold percentage.
+</ResponseField>
+
+<ResponseField name="signed_agreement_id" type="string">
+  Signed agreement identifier.
+</ResponseField>
+
+<ResponseField name="account_purpose" type="string">
+  Account purpose.
+</ResponseField>
+
+<ResponseField name="source_of_funds" type="string">
+  Source of funds.
+</ResponseField>
+
+<ResponseField name="estimated_annual_revenue_usd" type="string">
+  Estimated annual revenue bucket.
+</ResponseField>
+
+<ResponseField name="expected_monthly_payments_usd" type="integer">
+  Expected monthly payments (USD).
+</ResponseField>
+
+<ResponseField name="operates_in_prohibited_countries" type="boolean">
+  Whether operating in prohibited countries.
+</ResponseField>
+
+<ResponseField name="high_risk_activities" type="array">
+  Declared high-risk activities.
+</ResponseField>
+
+<ResponseField name="conducts_money_services" type="boolean">
+  Whether the business conducts money services.
+</ResponseField>
+
+<ResponseField name="acting_as_intermediary" type="boolean">
+  Whether the business acts as an intermediary.
+</ResponseField>
+
+<ResponseField name="primary_website" type="string">
+  Primary website URL.
+</ResponseField>
+
+<ResponseField name="other_websites" type="array">
+  Other website URLs.
+</ResponseField>
+
+<ResponseField name="rejection_code" type="string">
+  Rejection reason code if the client was rejected.
+</ResponseField>
+
+<ResponseField name="rejection_description" type="string">
+  Rejection description.
+</ResponseField>
+
+<ResponseField name="documents" type="array">
+  Identity documents.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "type": "individual",
+  "status": "ACTIVE",
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "phone_country_code": 1,
+  "phone_number": 4155551234,
+  "username": "johndoe123",
+  "otp": true,
+  "sms": true,
+  "whatsapp": false,
+  "telegram": false,
+  "created_at": "2026-04-15T10:30:00",
+  "updated_at": "2026-04-15T10:30:00"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with id: client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
+}
+```
+
+</ResponseExample>

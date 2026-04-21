@@ -1,0 +1,47 @@
+---
+title: "Create account"
+description: "Create a new treasury MPC account."
+api: "POST /mpc/accounts/create"
+---
+
+Creates a new treasury MPC account for managing wallets and assets. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="alias" type="string" required>
+  Friendly alias name for the account.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique account identifier.
+</ResponseField>
+
+<ResponseField name="alias" type="string">
+  Friendly alias name for the account.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/mpc/accounts/create" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "alias": "Main Operating Account"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "alias": "Main Operating Account"
+}
+```
+
+</ResponseExample>

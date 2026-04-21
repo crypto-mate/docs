@@ -1,0 +1,296 @@
+---
+title: "Create business client"
+description: "Create a new business client with compliance data."
+api: "POST /management/clients/business"
+---
+
+Creates a new business client for the company with business information, associated persons, compliance data, and documents. Requires an API key with access level 3 or higher.
+
+## Body
+
+<ParamField body="email" type="string" required>
+  Business email address.
+</ParamField>
+
+<ParamField body="business_legal_name" type="string" required>
+  Legal business name.
+</ParamField>
+
+<ParamField body="business_trade_name" type="string">
+  Business trade name (DBA).
+</ParamField>
+
+<ParamField body="business_description" type="string" required>
+  Business description.
+</ParamField>
+
+<ParamField body="business_type" type="string" required>
+  Business type. One of `corporation`, `llc`, `partnership`, `sole_proprietorship`, `non_profit`, `trust`, `other`.
+</ParamField>
+
+<ParamField body="business_industry" type="array" required>
+  List of NAICS industry codes. Must contain at least one entry.
+</ParamField>
+
+<ParamField body="is_dao" type="boolean">
+  Whether the business is a DAO.
+</ParamField>
+
+<ParamField body="registered_address" type="object" required>
+  Registered business address with `street_line_1`, `city`, `postal_code`, `country`.
+</ParamField>
+
+<ParamField body="physical_address" type="object">
+  Physical business address.
+</ParamField>
+
+<ParamField body="associated_persons" type="array" required>
+  List of associated persons. Must contain at least one entry. Each person includes `first_name`, `last_name`, `email`, `birth_date`, `residential_address`, optional roles (`has_ownership`, `has_control`, `is_signer`, `is_director`), `identifying_information`, and `documents`.
+</ParamField>
+
+<ParamField body="business_documents" type="array">
+  List of business documents.
+</ParamField>
+
+<ParamField body="identifying_information" type="array" required>
+  List of business identifying information (tax IDs: EIN, TIN, VAT, etc.). Must contain at least one entry. Each has `type`, `issuing_country`, `number`, optional `description`, `expiration`, `image_front`, `image_back`.
+</ParamField>
+
+<ParamField body="has_material_intermediary_ownership" type="boolean">
+  Whether there is material intermediary ownership.
+</ParamField>
+
+<ParamField body="ownership_threshold" type="integer">
+  Ownership threshold percentage.
+</ParamField>
+
+<ParamField body="account_purpose" type="string">
+  Account purpose.
+</ParamField>
+
+<ParamField body="account_purpose_other" type="string">
+  Other account purpose description.
+</ParamField>
+
+<ParamField body="source_of_funds" type="string">
+  Source of funds.
+</ParamField>
+
+<ParamField body="source_of_funds_description" type="string">
+  Description of source of funds.
+</ParamField>
+
+<ParamField body="estimated_annual_revenue_usd" type="string">
+  Estimated annual revenue bucket (USD).
+</ParamField>
+
+<ParamField body="expected_monthly_payments_usd" type="integer">
+  Expected monthly payments (USD).
+</ParamField>
+
+<ParamField body="operates_in_prohibited_countries" type="boolean">
+  Whether the business operates in prohibited countries.
+</ParamField>
+
+<ParamField body="high_risk_activities" type="array" required>
+  High-risk activities selection. Required (may be an empty list explicitly).
+</ParamField>
+
+<ParamField body="high_risk_activities_explanation" type="string">
+  Explanation of high-risk activities.
+</ParamField>
+
+<ParamField body="conducts_money_services" type="boolean">
+  Whether the business conducts money services.
+</ParamField>
+
+<ParamField body="conducts_money_services_using_platform" type="boolean">
+  Whether money services are conducted using the platform.
+</ParamField>
+
+<ParamField body="conducts_money_services_description" type="string">
+  Description of money services.
+</ParamField>
+
+<ParamField body="compliance_screening_explanation" type="string">
+  Compliance screening explanation.
+</ParamField>
+
+<ParamField body="acting_as_intermediary" type="boolean">
+  Whether the business acts as an intermediary.
+</ParamField>
+
+<ParamField body="regulated_activity" type="object">
+  Regulated activity details (free-form object).
+</ParamField>
+
+<ParamField body="primary_website" type="string" required>
+  Primary website URL.
+</ParamField>
+
+<ParamField body="other_websites" type="array">
+  List of other website URLs.
+</ParamField>
+
+<ParamField body="phone_country_code" type="integer">
+  Phone country code.
+</ParamField>
+
+<ParamField body="phone_number" type="long">
+  Phone number.
+</ParamField>
+
+<ParamField body="username" type="string">
+  Client username.
+</ParamField>
+
+<ParamField body="otp" type="boolean">
+  Enable OTP authentication.
+</ParamField>
+
+<ParamField body="sms" type="boolean">
+  Enable SMS notifications.
+</ParamField>
+
+<ParamField body="whatsapp" type="boolean">
+  Enable WhatsApp notifications.
+</ParamField>
+
+<ParamField body="telegram" type="boolean">
+  Enable Telegram notifications.
+</ParamField>
+
+## Response
+
+Returns the created business client. See [Get client by ID](/api-reference/management/clients/get-client) for the full field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/business" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "business@techstartup.io",
+    "business_legal_name": "TechStartup Solutions Inc.",
+    "business_trade_name": "TechStartup",
+    "business_description": "Software development company specializing in fintech solutions",
+    "business_type": "corporation",
+    "business_industry": ["541511"],
+    "registered_address": {
+      "street_line_1": "123 Main Street",
+      "city": "San Francisco",
+      "postal_code": "94102",
+      "state": "CA",
+      "country": "US"
+    },
+    "associated_persons": [
+      {
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "email": "jane.smith@techstartup.io",
+        "birth_date": "1985-02-20",
+        "residential_address": {
+          "street_line_1": "456 Oak Ave",
+          "city": "San Francisco",
+          "postal_code": "94102",
+          "country": "US"
+        },
+        "has_ownership": true,
+        "has_control": true,
+        "is_signer": true,
+        "identifying_information": [
+          { "type": "ssn", "issuing_country": "USA", "number": "123-45-6789" }
+        ]
+      }
+    ],
+    "identifying_information": [
+      { "type": "ein", "issuing_country": "USA", "number": "12-3456789" }
+    ],
+    "high_risk_activities": [],
+    "primary_website": "https://www.techstartup.io"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "type": "business",
+  "status": "PENDING",
+  "business_legal_name": "TechStartup Solutions Inc.",
+  "business_trade_name": "TechStartup",
+  "email": "business@techstartup.io",
+  "created_at": "2026-04-15T10:30:00",
+  "updated_at": "2026-04-15T10:30:00"
+}
+```
+
+```json 412 Invalid Business Type
+{
+  "code": "VAL",
+  "message": "Invalid business type: foo. Valid values are: corporation, llc, partnership, sole_proprietorship, non_profit, trust, other"
+}
+```
+
+```json 412 Missing Industry
+{
+  "code": "VAL",
+  "message": "At least one business industry is required"
+}
+```
+
+```json 412 Invalid Industry Code
+{
+  "code": "VAL",
+  "message": "Invalid business industry code: 999999"
+}
+```
+
+```json 412 Missing High Risk
+{
+  "code": "VAL",
+  "message": "High risk activities selection is required"
+}
+```
+
+```json 412 Missing Associated Person Control
+{
+  "code": "VAL",
+  "message": "At least one associated person must have control"
+}
+```
+
+```json 412 Missing Associated Person Signer
+{
+  "code": "VAL",
+  "message": "At least one associated person must be a signer"
+}
+```
+
+```json 412 Missing Legal Name
+{
+  "code": "VAL",
+  "message": "Business legal name is required for business clients"
+}
+```
+
+```json 412 Address Invalid
+{
+  "code": "VAL",
+  "message": "Registered address validation failed: state 'CA' does not belong to country 'US'"
+}
+```
+
+```json 412 Bridge Error
+{
+  "code": "VAL",
+  "message": "Error creating Bridge business customer: <downstream error message>"
+}
+```
+
+</ResponseExample>

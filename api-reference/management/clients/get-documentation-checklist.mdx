@@ -1,0 +1,68 @@
+---
+title: "Get documentation checklist"
+description: "Retrieve a client documentation checklist by ID."
+api: "GET /management/clients/documentation/{checklistId}"
+---
+
+Retrieves the documentation checklist required for client creation. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="checklistId" type="string" required>
+  Unique identifier of the documentation checklist.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Checklist identifier.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Checklist name.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Checklist description.
+</ResponseField>
+
+<ResponseField name="documentGroups" type="array">
+  List of document groups, each with `id`, `name`, `description`, `required`, and `validDocuments`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/documentation/checklist_abc123" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "checklist_abc123",
+  "name": "Standard KYC Verification",
+  "description": "Documents required for individual verification",
+  "documentGroups": [
+    {
+      "id": "dg_identity",
+      "name": "Identity Documents",
+      "description": "Government-issued identification documents",
+      "required": true,
+      "validDocuments": []
+    }
+  ]
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Checklist 'checklist_abc123' not found in CheckDoc service. Please ensure the checklist is configured."
+}
+```
+
+</ResponseExample>

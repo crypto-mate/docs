@@ -1,0 +1,43 @@
+---
+title: "Delete payment destination"
+description: "Remove payment destination configuration for a blockchain."
+api: "DELETE /management/configurations/payments/{blockchain}"
+---
+
+Removes the payment destination configuration for a specific blockchain network. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="blockchain" type="string" required>
+  Blockchain network identifier.
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/management/configurations/payments/polygon" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Invalid blockchain"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "No payment destination found for company with id comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23 and blockchain with id polygon"
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,29 @@
+---
+title: "Overview"
+sidebarTitle: "Overview"
+description: "Create and manage virtual wallets, holding wallets, on/off ramps, and transaction history."
+---
+
+The Virtual Wallets API lets you provision client-scoped virtual wallets, inspect balances, withdraw tokens, run fiat on/off ramps, and query wallet movements.
+
+All endpoints are authenticated with the `X-API-KEY` header. Read operations require access level 1; write operations (create, update, delete, withdraw, ramp) require access level 2 or higher. The Solana blockchain is not supported.
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="Wallets" icon="wallet" href="/api-reference/virtual-wallets/wallets/list-virtual-wallets">
+    Create, list, update, and delete virtual wallets; query balances and withdraw tokens.
+  </Card>
+  <Card title="Holding" icon="vault" href="/api-reference/virtual-wallets/holding/get-holding-wallet">
+    Inspect and withdraw from your company's holding wallets.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/api-reference/virtual-wallets/configuration/list-available-blockchains">
+    List supported blockchains and fiat assets for ramp operations.
+  </Card>
+  <Card title="Ramps" icon="arrow-right-arrow-left" href="/api-reference/virtual-wallets/ramps/create-credit-card-ramp-on">
+    Credit card ramp-on, bank ramp-on and ramp-off, transfer updates and receipts.
+  </Card>
+  <Card title="Transactions" icon="receipt" href="/api-reference/virtual-wallets/transactions/get-wallet-movements">
+    Paginate and filter movements for a virtual wallet.
+  </Card>
+</CardGroup>

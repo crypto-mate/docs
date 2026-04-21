@@ -1,0 +1,74 @@
+---
+title: "Get wallet balance"
+description: "Retrieve token balances held by a wallet."
+api: "GET /mpc/accounts/{accountId}/wallets/{walletId}/balance"
+---
+
+Retrieves the current balance of all tokens held by the wallet. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="accountId" type="string" required>
+  The treasury account ID.
+</ParamField>
+
+<ParamField path="walletId" type="string" required>
+  The wallet ID to retrieve balance from.
+</ParamField>
+
+## Response
+
+Returns an array of token balance objects.
+
+<ResponseField name="name" type="string">
+  Token name.
+</ResponseField>
+
+<ResponseField name="symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="balance" type="number">
+  Current balance amount.
+</ResponseField>
+
+<ResponseField name="token_address" type="string">
+  Smart contract address of the token.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/accounts/acc_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/wallets/wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/balance" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "balance": 1500.50,
+    "token_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+  },
+  {
+    "name": "Polygon",
+    "symbol": "MATIC",
+    "balance": 42.75,
+    "token_address": "0x0000000000000000000000000000000000001010"
+  }
+]
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet with id `wallet_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d` was not found."
+}
+```
+
+</ResponseExample>

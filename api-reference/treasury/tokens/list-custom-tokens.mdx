@@ -1,0 +1,61 @@
+---
+title: "List custom tokens"
+description: "Retrieve all custom tokens configured for the company."
+api: "GET /mpc/tokens/list"
+---
+
+Retrieves all custom tokens configured for the company. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of custom token objects.
+
+<ResponseField name="id" type="string">
+  Unique custom token identifier.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Token name.
+</ResponseField>
+
+<ResponseField name="symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Smart contract address of the token.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ResponseField>
+
+<ResponseField name="usd_price" type="number">
+  Current token price in USD.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/tokens/list" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "tok_5b8c2d10-3e4f-4a9b-8c1d-2e3f4a5b6c7d",
+    "name": "Example Token",
+    "symbol": "EXT",
+    "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "blockchain": "POLYGON",
+    "usd_price": 1.25
+  }
+]
+```
+
+</ResponseExample>

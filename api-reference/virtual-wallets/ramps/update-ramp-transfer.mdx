@@ -1,0 +1,102 @@
+---
+title: "Update ramp transfer"
+description: "Update the amount of a ramp transfer."
+api: "PATCH /virtual-wallets/ramps/transfer/{id}"
+---
+
+Updates the amount of an existing ramp transfer. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the ramp transfer.
+</ParamField>
+
+## Body
+
+<ParamField body="amount" type="number">
+  New transfer amount.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique event identifier.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Operation type (for example, `RAMP_ON`).
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Status. One of `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELLED`.
+</ResponseField>
+
+<ResponseField name="company_id" type="string">
+  Company identifier.
+</ResponseField>
+
+<ResponseField name="destination_wallet_id" type="string">
+  Destination wallet identifier.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  Client identifier.
+</ResponseField>
+
+<ResponseField name="origin_amount" type="number">
+  Original fiat amount.
+</ResponseField>
+
+<ResponseField name="origin_currency" type="string">
+  Original fiat currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+</ResponseField>
+
+<ResponseField name="origin_name" type="string">
+  Name of the originator.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/virtual-wallets/ramps/transfer/evt_a1b2c3d4e5f6" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 750.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "evt_a1b2c3d4e5f6",
+  "type": "RAMP_ON",
+  "status": "PENDING",
+  "company_id": "company_xyz789",
+  "destination_wallet_id": "vw_def456",
+  "client_id": "client_ghi789",
+  "origin_amount": 750.00,
+  "origin_currency": "USD",
+  "origin_name": "John Doe"
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "APP_ERROR",
+  "message": "It is not possible to update transfer with id: evt_a1b2c3d4e5f6 because it is not in PENDING state"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Ramp transfer with ID: evt_a1b2c3d4e5f6 not found"
+}
+```
+
+</ResponseExample>

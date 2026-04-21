@@ -1,0 +1,38 @@
+---
+title: "Unblock virtual card"
+description: "Remove the blocked status from a virtual card."
+api: "PATCH /cards/virtual-cards/{cardId}/unblock"
+---
+
+Removes the blocked status from a virtual card, restoring its ability to authorize transactions. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="blocked" type="boolean">
+  Whether the card is blocked. Returns `false` on successful unblock.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/unblock" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "blocked": false
+}
+```
+
+</ResponseExample>

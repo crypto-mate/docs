@@ -1,0 +1,79 @@
+---
+title: "Update company"
+description: "Update the company profile."
+api: "PUT /management/companies"
+---
+
+Updates the company details including name, contact information, and webhook settings. Requires an API key with access level 3 or higher.
+
+## Body
+
+<ParamField body="name" type="string">
+  Company name.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Company contact email address.
+</ParamField>
+
+<ParamField body="webhook_url" type="string">
+  Webhook URL for receiving notifications.
+</ParamField>
+
+<ParamField body="webhook_key" type="string">
+  Secret key for webhook signature verification.
+</ParamField>
+
+## Response
+
+<ResponseField name="name" type="string">
+  Company name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Company contact email address.
+</ResponseField>
+
+<ResponseField name="webhook_url" type="string">
+  Webhook URL for receiving notifications.
+</ResponseField>
+
+<ResponseField name="webhook_key" type="string">
+  Secret key used for webhook signature verification.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/management/companies" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Acme Corporation",
+    "email": "contact@acme.com",
+    "webhook_url": "https://api.acme.com/webhooks",
+    "webhook_key": "wh_key_abc123xyz"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "name": "Acme Corporation",
+  "email": "contact@acme.com",
+  "webhook_url": "https://api.acme.com/webhooks",
+  "webhook_key": "wh_key_abc123xyz"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company not found"
+}
+```
+
+</ResponseExample>

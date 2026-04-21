@@ -1,80 +1,105 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Make your first request to the CryptoMate API in a few minutes."
 ---
 
-## Get started in three steps
+This quickstart walks you through the minimum steps to authenticate against the CryptoMate API and make your first call from the **Sandbox** environment.
 
-Get your documentation site running locally and make your first customization.
+## 1. Create an account
 
-### Step 1: Set up your local environment
+Sign up on the [CryptoMate Dashboard](https://portal.cryptomate.me) and complete the onboarding for your organization. Once you're in, you'll have access to both environments:
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+- **Sandbox** — safe playground, no real-world blockchain impact. Use it for development and testing.
+- **Production** — live transactions recorded on the main blockchain.
 
-### Step 2: Deploy your changes
+<Tip>
+  Always build and test your integration in Sandbox before switching to Production.
+</Tip>
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+## 2. Generate an API key
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+From the Dashboard, open the **API Keys** section and create a new key.
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+When creating the key you can:
 
-### Step 3: Go live
+- Scope its **permissions** to only the products and actions your integration needs
+- Restrict it to a list of **allowed IPs** (recommended for backend services)
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+Copy the key immediately and store it in a secure location (environment variable, secret manager, etc.). You won't be able to see it again.
+
+<Warning>
+  Never commit API keys to source control or embed them in client-side code.
+</Warning>
+
+For a deeper dive, see [API Keys & Access Security](/authentication).
+
+## 3. Make your first request
+
+Include your API key in the `X-API-KEY` header of every request.
+
+<CodeGroup>
+
+```bash cURL
+curl https://api.cryptomate.me/v1/blockchains \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+```javascript Node.js
+const res = await fetch("https://api.cryptomate.me/v1/blockchains", {
+  headers: {
+    "X-API-KEY": process.env.CRYPTOMATE_API_KEY,
+  },
+});
+
+const blockchains = await res.json();
+console.log(blockchains);
+```
+
+```python Python
+import os
+import requests
+
+res = requests.get(
+    "https://api.cryptomate.me/v1/blockchains",
+    headers={"X-API-KEY": os.environ["CRYPTOMATE_API_KEY"]},
+)
+
+print(res.json())
+```
+
+</CodeGroup>
+
+A successful response returns a `2xx` status code and a JSON body. If something goes wrong, inspect the `code` and `message` fields and note the `X-Trace-Id` header — see [Errors](/integration/errors).
+
+## 4. Configure a webhook (optional)
+
+Most production integrations need to react to events asynchronously (a deposit arrives, a card transaction is authorized, a withdrawal completes). Expose an HTTPS endpoint and register it from the Dashboard to start receiving events.
+
+See [Webhooks](/integration/webhooks) for the payload format and the list of available events.
+
+## 5. Pick a product and go deep
+
+Once you can authenticate and receive webhooks, continue with the guide for the product you're integrating:
+
+<Columns cols={3}>
+  <Card title="Treasury" icon="vault" href="/products/treasury">
+    Manage digital assets across multiple blockchains.
+  </Card>
+  <Card title="Virtual Wallets" icon="wallet" href="/products/virtual-wallets">
+    Centralize client deposits with a holding wallet architecture.
+  </Card>
+  <Card title="Cards" icon="credit-card" href="/products/cards">
+    Issue Visa cards backed by stablecoin collateral.
+  </Card>
+</Columns>
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
+<Card
+  title="API Reference"
+  icon="terminal"
+  href="/api-reference/introduction"
+  horizontal
+>
+  Browse every endpoint with request and response examples.
 </Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

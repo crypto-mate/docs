@@ -1,0 +1,50 @@
+---
+title: "Get holding balance"
+description: "Retrieve the current balance and deposit details of the card holding account."
+api: "GET /cards/holding/balance"
+---
+
+Retrieves the current warranty balance and deposit information for the card holding account. Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="warranty_balance" type="number">
+  Current warranty balance in USD.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network used for deposits.
+</ResponseField>
+
+<ResponseField name="deposit_address" type="string">
+  Deposit wallet address.
+</ResponseField>
+
+<ResponseField name="deposit_tokens" type="object">
+  Map of supported deposit token symbols to their contract addresses.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/holding/balance" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "warranty_balance": 10000.00,
+  "blockchain": "POLYGON",
+  "deposit_address": "0x1234567890abcdef1234567890abcdef12345678",
+  "deposit_tokens": {
+    "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    "USDT": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
+  }
+}
+```
+
+</ResponseExample>

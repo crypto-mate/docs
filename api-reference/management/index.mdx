@@ -1,0 +1,35 @@
+---
+title: "Overview"
+sidebarTitle: "Overview"
+description: "Manage your company, clients, bank accounts, blockchains, configurations, and contracted product usage."
+---
+
+The Management API lets you administer your CryptoMate account: update company details and webhooks, create and manage end-clients (individual and business), link clients to external provider customer IDs, register client bank accounts across payment rails (US/ACH, SPEI, SEPA, PIX), configure payment destinations, and inspect operations, blockchains, and contracted product usage.
+
+All endpoints are authenticated with the `X-API-KEY` header. Most write endpoints require an API key with access level 3; read endpoints typically require access level 1 or higher.
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="Company" icon="building" href="/api-reference/management/company/get-company">
+    Retrieve and update your company profile and webhook subscription.
+  </Card>
+  <Card title="Clients" icon="users" href="/api-reference/management/clients/get-all-clients">
+    Create individual or business clients, manage provider mappings, and upload identity documents.
+  </Card>
+  <Card title="Bank accounts" icon="building-columns" href="/api-reference/management/clients/bank-accounts/list-bank-accounts">
+    Register US/ACH, SPEI, SEPA, or PIX bank accounts for your clients.
+  </Card>
+  <Card title="Operations" icon="list" href="/api-reference/management/operations/list-operations">
+    Inspect the operations catalog available in the platform.
+  </Card>
+  <Card title="Blockchains" icon="link" href="/api-reference/management/blockchains/list-blockchains">
+    List the blockchain networks supported by the platform.
+  </Card>
+  <Card title="Configurations" icon="gear" href="/api-reference/management/configurations/get-payment-destination">
+    Configure per-blockchain payment and fee deposit addresses.
+  </Card>
+  <Card title="Contracted products" icon="box" href="/api-reference/management/contracted-products/get-contracted-product">
+    Review contracted limits and current product usage.
+  </Card>
+</CardGroup>

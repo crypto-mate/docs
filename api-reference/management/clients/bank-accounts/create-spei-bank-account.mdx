@@ -1,0 +1,84 @@
+---
+title: "Create SPEI bank account"
+description: "Register a Mexican SPEI bank account for a client."
+api: "POST /management/clients/{clientId}/banks/spei"
+---
+
+Creates a new Mexican SPEI bank account for the specified client. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="bankName" type="string">
+  Name of the bank.
+</ParamField>
+
+<ParamField body="accountAlias" type="string">
+  User-friendly alias for the account.
+</ParamField>
+
+<ParamField body="bankHolderName" type="string">
+  Account holder's full name.
+</ParamField>
+
+<ParamField body="accountNumber" type="string">
+  CLABE number (18 digits).
+</ParamField>
+
+<ParamField body="address" type="object">
+  Account holder's address.
+</ParamField>
+
+## Response
+
+See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the full field list. SPEI accounts expose the CLABE as `clabe`.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/spei" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bankName": "BBVA Bancomer",
+    "accountAlias": "Primary SPEI Account",
+    "bankHolderName": "Juan Carlos Rodriguez",
+    "accountNumber": "012180001234567897",
+    "address": {
+      "streetLine1": "Av. Insurgentes Sur 1602",
+      "city": "Ciudad de México",
+      "postalCode": "03940",
+      "country": "MX"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "ba_def456",
+  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bankName": "BBVA Bancomer",
+  "bankHolderName": "Juan Carlos Rodriguez",
+  "type": "SPEI",
+  "currency": "MXN",
+  "clabe": "012180001234567897"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client does not have a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>

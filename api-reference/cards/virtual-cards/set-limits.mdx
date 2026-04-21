@@ -1,0 +1,77 @@
+---
+title: "Update card limits"
+description: "Update daily, weekly, and monthly spending limits for a virtual card."
+api: "PATCH /cards/virtual-cards/{cardId}/limits"
+---
+
+Updates the daily, weekly, and monthly spending limits for a virtual card. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="daily_limit" type="number">
+  Daily spending limit in USD.
+</ParamField>
+
+<ParamField body="weekly_limit" type="number">
+  Weekly spending limit in USD.
+</ParamField>
+
+<ParamField body="monthly_limit" type="number">
+  Monthly spending limit in USD.
+</ParamField>
+
+## Response
+
+Returns the updated virtual card object.
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="daily_limit" type="number">
+  Updated daily spending limit.
+</ResponseField>
+
+<ResponseField name="weekly_limit" type="number">
+  Updated weekly spending limit.
+</ResponseField>
+
+<ResponseField name="monthly_limit" type="number">
+  Updated monthly spending limit.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/limits" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "daily_limit": 1500.00,
+    "weekly_limit": 7500.00,
+    "monthly_limit": 25000.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "card_holder_name": "John Doe",
+  "status": "ACTIVE",
+  "daily_limit": 1500.00,
+  "weekly_limit": 7500.00,
+  "monthly_limit": 25000.00
+}
+```
+
+</ResponseExample>

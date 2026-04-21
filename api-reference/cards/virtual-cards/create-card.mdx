@@ -1,0 +1,131 @@
+---
+title: "Create virtual card"
+description: "Create a new virtual card with limits and cardholder information."
+api: "POST /cards/virtual-cards/create"
+---
+
+Creates a new virtual card with the specified limits and cardholder information. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="card_holder_name" type="string" required>
+  Name of the cardholder.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Email address for card notifications.
+</ParamField>
+
+<ParamField body="approval_method" type="string" required>
+  Transaction approval method. Possible values: `NONE`, `WEBHOOK`, `TOP_UP`, `DEFI`.
+</ParamField>
+
+<ParamField body="phone_country_code" type="integer" required>
+  Phone country code for OTP authentication.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Phone number for OTP authentication (without country code).
+</ParamField>
+
+<ParamField body="daily_limit" type="number">
+  Daily spending limit in USD.
+</ParamField>
+
+<ParamField body="weekly_limit" type="number">
+  Weekly spending limit in USD.
+</ParamField>
+
+<ParamField body="monthly_limit" type="number">
+  Monthly spending limit in USD.
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  Additional metadata key-value pairs for the card.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="card_holder_name" type="string">
+  Name of the cardholder.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Card type.
+</ResponseField>
+
+<ResponseField name="last4" type="string">
+  Last 4 digits of the card number.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current card status.
+</ResponseField>
+
+<ResponseField name="approval_method" type="string">
+  Transaction approval method.
+</ResponseField>
+
+<ResponseField name="daily_limit" type="number">
+  Daily spending limit in USD.
+</ResponseField>
+
+<ResponseField name="weekly_limit" type="number">
+  Weekly spending limit in USD.
+</ResponseField>
+
+<ResponseField name="monthly_limit" type="number">
+  Monthly spending limit in USD.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "card_holder_name": "John Doe",
+    "email": "cardholder@example.com",
+    "approval_method": "TOP_UP",
+    "phone_country_code": 1,
+    "phone": "5551234567",
+    "daily_limit": 1000.00,
+    "weekly_limit": 5000.00,
+    "monthly_limit": 20000.00,
+    "metadata": {
+      "department": "engineering"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "card_holder_name": "John Doe",
+  "type": "VIRTUAL",
+  "last4": "4242",
+  "status": "ACTIVE",
+  "approval_method": "TOP_UP",
+  "daily_limit": 1000.00,
+  "weekly_limit": 5000.00,
+  "monthly_limit": 20000.00
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "The current limit for this product has been reached. Please increase the limit."
+}
+```
+
+</ResponseExample>

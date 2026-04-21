@@ -1,0 +1,99 @@
+---
+title: "Create SEPA bank account"
+description: "Register a European SEPA bank account for a client."
+api: "POST /management/clients/{clientId}/banks/sepa"
+---
+
+Creates a new European SEPA bank account for the specified client. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="bankName" type="string">
+  Name of the bank.
+</ParamField>
+
+<ParamField body="accountAlias" type="string">
+  User-friendly alias for the account.
+</ParamField>
+
+<ParamField body="bankHolderFirstName" type="string">
+  Account holder's first name.
+</ParamField>
+
+<ParamField body="bankHolderLastName" type="string">
+  Account holder's last name.
+</ParamField>
+
+<ParamField body="accountNumber" type="string">
+  IBAN (International Bank Account Number).
+</ParamField>
+
+<ParamField body="bic" type="string">
+  BIC/SWIFT code.
+</ParamField>
+
+<ParamField body="country" type="string">
+  ISO country code.
+</ParamField>
+
+<ParamField body="address" type="object">
+  Account holder's address.
+</ParamField>
+
+## Response
+
+See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the full field list. SEPA accounts expose `iban` and `bic`.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/sepa" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bankName": "Deutsche Bank",
+    "accountAlias": "Primary SEPA Account",
+    "bankHolderFirstName": "Hans",
+    "bankHolderLastName": "Mueller",
+    "accountNumber": "DE89370400440532013000",
+    "bic": "DEUTDEFF",
+    "country": "DE",
+    "address": {
+      "streetLine1": "Friedrichstrasse 100",
+      "city": "Berlin",
+      "postalCode": "10117",
+      "country": "DE"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "ba_ghi789",
+  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bankName": "Deutsche Bank",
+  "type": "SEPA",
+  "currency": "EUR",
+  "iban": "DE89370400440532013000",
+  "bic": "DEUTDEFF"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client does not have a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>

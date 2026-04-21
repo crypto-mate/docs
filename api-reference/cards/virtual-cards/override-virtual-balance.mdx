@@ -1,0 +1,51 @@
+---
+title: "Override virtual balance"
+description: "Manually override the virtual balance of a card."
+api: "PATCH /cards/virtual-cards/{cardId}/virtual-balance"
+---
+
+Manually overrides the virtual balance of a card. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="virtual_balance" type="number" required>
+  Virtual balance amount in USD. Must be greater than or equal to 0.
+</ParamField>
+
+## Response
+
+Returns the new virtual balance as a JSON number.
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/virtual-balance" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "virtual_balance": 2500.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+2500.00
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "The provided virtual balance amount cannot be negative. Please enter a valid non-negative value."
+}
+```
+
+</ResponseExample>

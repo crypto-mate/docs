@@ -1,0 +1,39 @@
+---
+title: "List occupation codes"
+description: "List available occupation codes."
+api: "GET /management/clients/occupation-codes"
+---
+
+Retrieves all available occupation codes for individual client registration. Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="code" type="string">
+  Occupation code.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Occupation description.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/occupation-codes" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "code": "11-1011",
+    "description": "Chief Executives"
+  }
+]
+```
+
+</ResponseExample>

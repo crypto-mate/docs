@@ -1,0 +1,59 @@
+---
+title: "List all operations"
+description: "Retrieve the complete operations catalog."
+api: "GET /management/operations/list"
+---
+
+Retrieves a complete list of all available operations in the system. Requires an API key with access level 3 or higher.
+
+## Response
+
+<ResponseField name="id" type="string">
+  Operation identifier.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Operation description.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/operations/list" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "treasury",
+    "description": "Treasury operations"
+  },
+  {
+    "id": "payments",
+    "description": "Payments operations"
+  },
+  {
+    "id": "virtual_wallets",
+    "description": "Virtual wallets operations"
+  },
+  {
+    "id": "cards",
+    "description": "Credit cards operations"
+  },
+  {
+    "id": "management",
+    "description": "Company management"
+  },
+  {
+    "id": "nft_media",
+    "description": "NFT media"
+  }
+]
+```
+
+</ResponseExample>

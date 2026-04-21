@@ -1,0 +1,42 @@
+---
+title: "Get ramp transfer receipt PDF"
+description: "Download a PDF receipt for a ramp transfer."
+api: "GET /virtual-wallets/ramps/transfer/{transferId}/receipt/pdf"
+---
+
+Generates and retrieves a PDF receipt for a ramp transfer. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="transferId" type="string" required>
+  Unique identifier of the ramp transfer.
+</ParamField>
+
+## Response
+
+Returns binary PDF content (`application/pdf`).
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/virtual-wallets/ramps/transfer/evt_a1b2c3d4e5f6/receipt/pdf" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  --output receipt.pdf
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```text 200 OK
+Binary PDF content (application/pdf).
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Could not get transfer receipt due to status awaiting_funds"
+}
+```
+
+</ResponseExample>

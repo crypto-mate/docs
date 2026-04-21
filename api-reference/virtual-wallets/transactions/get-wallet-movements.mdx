@@ -1,0 +1,106 @@
+---
+title: "Get wallet movements"
+description: "Retrieve paginated transaction history for a virtual wallet."
+api: "GET /virtual-wallets/{walletId}/movements"
+---
+
+Retrieves transaction history and movements for a virtual wallet including deposits, withdrawals, user withdrawals, virtual balance overrides, and ramp transfers. Supports pagination. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="walletId" type="string" required>
+  Unique identifier of the virtual wallet.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="paging_state_token" type="string">
+  Pagination state token for fetching the next page.
+</ParamField>
+
+<ParamField query="sort_order" type="string">
+  Sort order for movements. `ASC` or `DESC`.
+</ParamField>
+
+<ParamField query="size" type="integer">
+  Number of movements to retrieve per page.
+</ParamField>
+
+<ParamField query="blockchain" type="string">
+  Filter movements by blockchain. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ParamField>
+
+## Response
+
+<ResponseField name="movements" type="array">
+  Array of movement records.
+  <Expandable title="movement">
+    <ResponseField name="id" type="string">
+      Unique movement identifier.
+    </ResponseField>
+    <ResponseField name="date" type="string">
+      Date and time of the movement (ISO 8601).
+    </ResponseField>
+    <ResponseField name="operation" type="string">
+      Type of operation. One of `DEPOSIT`, `WITHDRAWAL`, `USER_WITHDRAWAL`, `OVERRIDE_VIRTUAL_BALANCE`, `RAMP_ON_TRANSFER`, `RAMP_OFF_TRANSFER`.
+    </ResponseField>
+    <ResponseField name="operation_id" type="string">
+      External operation identifier.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Current status. One of `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED`, `CANCELLED`.
+    </ResponseField>
+    <ResponseField name="wallet_id" type="string">
+      Virtual wallet identifier.
+    </ResponseField>
+    <ResponseField name="blockchain" type="string">
+      Blockchain network.
+    </ResponseField>
+    <ResponseField name="transaction_hash" type="string">
+      On-chain transaction hash, if applicable.
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Transaction amount.
+    </ResponseField>
+    <ResponseField name="data" type="object">
+      Additional operation-specific data.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="paging_state_token" type="string">
+  Token for retrieving the next page of results.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/virtual-wallets/vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/movements?size=20&sort_order=DESC&blockchain=POLYGON" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "movements": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "date": "2026-04-19T14:30:00",
+      "operation": "DEPOSIT",
+      "operation_id": "op_xyz789",
+      "status": "COMPLETED",
+      "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "blockchain": "POLYGON",
+      "transaction_hash": "0x8a3d82e8f6c4e3f1b2d7a9c5e1f3b8d6a4c2e8f1",
+      "amount": 100.50,
+      "data": {}
+    }
+  ],
+  "paging_state_token": "eyJsYXN0X2lkIjoxMjM0NX0="
+}
+```
+
+</ResponseExample>

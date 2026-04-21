@@ -1,0 +1,64 @@
+---
+title: "Get client pending documents"
+description: "Retrieve pending or rejected documents for a client."
+api: "GET /management/clients/{clientId}/pending-documents"
+---
+
+Retrieves all pending or rejected documents for a specific client. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Response
+
+<ResponseField name="documents" type="array">
+  List of pending documents. Each item includes `provider`, `type`, `name`, `description`, `requireImage`, `requireBackImage`, `requireNumber`, `requireExpiration`, and `issueReasons`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/pending-documents" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "documents": [
+    {
+      "provider": "BRIDGE",
+      "type": "PASSPORT",
+      "name": "Passport",
+      "description": "A valid government-issued passport",
+      "requireImage": true,
+      "requireBackImage": false,
+      "requireNumber": true,
+      "requireExpiration": true,
+      "issueReasons": ["image_unclear"]
+    }
+  ]
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client not found: client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
+}
+```
+
+```json 412 No Pending
+{
+  "code": "VAL",
+  "message": "No pending documents for client, due to status: ACTIVE"
+}
+```
+
+</ResponseExample>

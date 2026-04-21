@@ -1,0 +1,66 @@
+---
+title: "Withdraw from holding"
+description: "Withdraw funds from the card holding account to a wallet address."
+api: "POST /cards/holding/withdraw"
+---
+
+Withdraws funds from the card holding account to the specified wallet address. Requires an API key with access level 3 or higher.
+
+<Note>
+This endpoint is currently not implemented and will return HTTP 500. The payload and response shapes below reflect the planned contract.
+</Note>
+
+## Body
+
+<ParamField body="to_wallet_address" type="string" required>
+  Destination wallet address for the withdrawal.
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  Amount to withdraw. Up to 10 integer digits and 6 decimal places.
+</ParamField>
+
+## Response
+
+<ResponseField name="transaction_hash" type="string">
+  On-chain transaction hash.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Transaction status. Possible values: `PENDING`, `COMPLETED`, `FAILED`.
+</ResponseField>
+
+<ResponseField name="simple_error_message" type="string">
+  Simple error message if the transaction failed.
+</ResponseField>
+
+<ResponseField name="detailed_error_message" type="string">
+  Detailed error message with additional context.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/holding/withdraw" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to_wallet_address": "0x1234567890abcdef1234567890abcdef12345678",
+    "amount": 100.50
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "transaction_hash": "0xabc123def456abc123def456abc123def456abc123def456abc123def456abcd",
+  "status": "PENDING",
+  "simple_error_message": null,
+  "detailed_error_message": null
+}
+```
+
+</ResponseExample>

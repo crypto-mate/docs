@@ -1,0 +1,57 @@
+---
+title: "Get holding wallet balances"
+description: "List token balances for the holding wallet."
+api: "GET /virtual-wallets/holding/balance"
+---
+
+Retrieves all token balances for the holding wallet on the specified blockchain. Solana is not supported. Requires an API key with access level 1 or higher.
+
+## Query parameters
+
+<ParamField query="blockchain" type="string" required>
+  Blockchain to filter the holding wallet balances. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ParamField>
+
+## Response
+
+Returns an array of balance objects.
+
+<ResponseField name="name" type="string">
+  Token name.
+</ResponseField>
+
+<ResponseField name="symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="balance" type="number">
+  Current balance amount.
+</ResponseField>
+
+<ResponseField name="token_address" type="string">
+  Smart contract address of the token.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/virtual-wallets/holding/balance?blockchain=POLYGON" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "balance": 25000.00,
+    "token_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+  }
+]
+```
+
+</ResponseExample>

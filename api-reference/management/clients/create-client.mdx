@@ -1,0 +1,240 @@
+---
+title: "Create client"
+description: "Create a new individual client for the company."
+api: "POST /management/clients"
+---
+
+Creates a new individual client for the company with personal information, contact preferences, and optional identity documents. Requires an API key with access level 3 or higher.
+
+## Body
+
+<ParamField body="phone_country_code" type="integer">
+  Phone country code.
+</ParamField>
+
+<ParamField body="phone_number" type="long">
+  Phone number.
+</ParamField>
+
+<ParamField body="username" type="string">
+  Client username.
+</ParamField>
+
+<ParamField body="first_name" type="string">
+  Client first name.
+</ParamField>
+
+<ParamField body="second_name" type="string">
+  Client middle or second name.
+</ParamField>
+
+<ParamField body="last_name" type="string">
+  Client last name.
+</ParamField>
+
+<ParamField body="otp" type="boolean">
+  Enable OTP authentication.
+</ParamField>
+
+<ParamField body="sms" type="boolean">
+  Enable SMS notifications.
+</ParamField>
+
+<ParamField body="whatsapp" type="boolean">
+  Enable WhatsApp notifications.
+</ParamField>
+
+<ParamField body="telegram" type="boolean">
+  Enable Telegram notifications.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Client email address.
+</ParamField>
+
+<ParamField body="gender" type="string">
+  Client gender.
+</ParamField>
+
+<ParamField body="birth_date" type="string">
+  Date of birth (yyyy-mm-dd).
+</ParamField>
+
+<ParamField body="expiration_date" type="string">
+  Document expiration date (yyyy-mm-dd).
+</ParamField>
+
+<ParamField body="address" type="object">
+  Physical address object with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+</ParamField>
+
+<ParamField body="individual_identification" type="string">
+  Individual identification number (e.g., SSN, Tax ID).
+</ParamField>
+
+<ParamField body="individual_identification_type" type="string">
+  Individual identification type (e.g., `SSN`).
+</ParamField>
+
+<ParamField body="bank_ramp" type="boolean">
+  Enable bank ramp functionality.
+</ParamField>
+
+<ParamField body="credit_card_ramp" type="boolean">
+  Enable credit card ramp functionality.
+</ParamField>
+
+<ParamField body="individual_cards" type="boolean">
+  Enable individual cards (Rain) functionality.
+</ParamField>
+
+<ParamField body="occupation" type="string">
+  Client occupation (required for Rain).
+</ParamField>
+
+<ParamField body="annual_salary" type="string">
+  Client annual salary (required for Rain).
+</ParamField>
+
+<ParamField body="account_purpose" type="string">
+  Account purpose (required for Rain).
+</ParamField>
+
+<ParamField body="expected_monthly_volume" type="string">
+  Expected monthly volume (required for Rain).
+</ParamField>
+
+<ParamField body="documents" type="array">
+  List of identity documents with fields `id`, `name`, `description`, `issuing_country`, `number`, `image_front`, `image_back`.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique client identifier.
+</ResponseField>
+
+<ResponseField name="company_id" type="string">
+  Company identifier.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Client type: `individual` or `business`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status.
+</ResponseField>
+
+<ResponseField name="first_name" type="string">
+  Client first name.
+</ResponseField>
+
+<ResponseField name="last_name" type="string">
+  Client last name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Client email.
+</ResponseField>
+
+<ResponseField name="phone_country_code" type="integer">
+  Phone country code.
+</ResponseField>
+
+<ResponseField name="phone_number" type="long">
+  Phone number.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Creation timestamp.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Last update timestamp.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone_country_code": 1,
+    "phone_number": 4155551234,
+    "username": "johndoe123",
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "birth_date": "1990-05-15",
+    "otp": true,
+    "sms": true,
+    "address": {
+      "street_line_1": "123 Main Street",
+      "city": "San Francisco",
+      "postal_code": "94102",
+      "state": "CA",
+      "country": "US"
+    },
+    "individual_identification": "123-45-6789",
+    "individual_identification_type": "SSN"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "type": "individual",
+  "status": "PENDING",
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "phone_country_code": 1,
+  "phone_number": 4155551234,
+  "created_at": "2026-04-15T10:30:00",
+  "updated_at": "2026-04-15T10:30:00"
+}
+```
+
+```json 412 Duplicate Client
+{
+  "code": "VAL",
+  "message": "Company client already exists for this company and phone number"
+}
+```
+
+```json 412 Address Invalid
+{
+  "code": "VAL",
+  "message": "Address validation failed: state 'CA' does not belong to country 'US'"
+}
+```
+
+```json 412 Screening Failed
+{
+  "code": "VAL",
+  "message": "Client registration could not be completed due to compliance requirements. Please contact support for more information."
+}
+```
+
+```json 412 Screening Review
+{
+  "code": "VAL",
+  "message": "Client requires manual screening review. The account creation is temporarily on hold pending compliance team verification. You will be notified once the review is complete and your account is activated."
+}
+```
+
+```json 412 Bridge Error
+{
+  "code": "VAL",
+  "message": "Error creating Bridge customer: <downstream error message>"
+}
+```
+
+</ResponseExample>

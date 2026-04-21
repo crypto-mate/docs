@@ -1,0 +1,64 @@
+---
+title: "List virtual wallet balances"
+description: "List aggregated balances across virtual wallets for a blockchain."
+api: "GET /virtual-wallets/virtual-balances"
+---
+
+Retrieves balances for all virtual wallets on the specified blockchain. Solana is not supported. Requires an API key with access level 1 or higher.
+
+## Query parameters
+
+<ParamField query="blockchain" type="string" required>
+  Blockchain to filter balances. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ParamField>
+
+## Response
+
+Returns an array of balance objects.
+
+<ResponseField name="name" type="string">
+  Token name.
+</ResponseField>
+
+<ResponseField name="symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="balance" type="number">
+  Current balance amount.
+</ResponseField>
+
+<ResponseField name="token_address" type="string">
+  Smart contract address of the token.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/virtual-wallets/virtual-balances?blockchain=POLYGON" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "balance": 1500.50,
+    "token_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+  }
+]
+```
+
+```json 401 Unauthorized
+{
+  "code": "DENIED",
+  "message": "Solana blockchain is not supported for virtual wallet."
+}
+```
+
+</ResponseExample>

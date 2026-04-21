@@ -1,0 +1,57 @@
+---
+title: "Delete bank account"
+description: "Remove a bank account from a client."
+api: "DELETE /management/clients/{clientId}/banks/{bankId}"
+---
+
+Removes a bank account from the client's profile. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+<ParamField path="bankId" type="string" required>
+  Unique identifier of the bank account to delete.
+</ParamField>
+
+## Response
+
+Returns the deleted bank account. See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/ba_abc123" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "ba_abc123",
+  "companyId": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "clientId": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bankName": "Chase Bank",
+  "bankHolderName": "John Michael Doe",
+  "accountAlias": "Primary Checking",
+  "type": "ACH",
+  "currency": "USD",
+  "accountNumber": "123456789",
+  "routingNumber": "021000021",
+  "accountType": "checking"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Bank account ba_abc123 for company comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23 not found"
+}
+```
+
+</ResponseExample>

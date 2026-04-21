@@ -1,0 +1,96 @@
+---
+title: "Simulate bank ramp-off"
+description: "Preview conversion rates and fees for a bank ramp-off."
+api: "POST /virtual-wallets/bank-ramps/ramp-off/simulate"
+---
+
+Simulates a bank ramp-off (crypto to fiat) to preview conversion rates, fees, and final amounts before execution. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="wallet_id" type="string" required>
+  Virtual wallet identifier.
+</ParamField>
+
+<ParamField body="bank_account_id" type="string" required>
+  Bank account identifier for withdrawal.
+</ParamField>
+
+<ParamField body="amount" type="number" required>
+  Amount in cryptocurrency to convert and withdraw.
+</ParamField>
+
+## Response
+
+<ResponseField name="original_amount" type="number">
+  Original crypto amount to convert.
+</ResponseField>
+
+<ResponseField name="original_currency" type="string">
+  Original cryptocurrency token. One of `USDC`, `USDT`, `DAI`, `ETH`, `BTC`, `MATIC`, `BNB`, `SOL`.
+</ResponseField>
+
+<ResponseField name="exchange_rate" type="number">
+  Exchange rate applied.
+</ResponseField>
+
+<ResponseField name="converted_amount" type="number">
+  Amount after currency conversion.
+</ResponseField>
+
+<ResponseField name="service_fee" type="number">
+  Service fee charged.
+</ResponseField>
+
+<ResponseField name="final_amount" type="number">
+  Final fiat amount after fees.
+</ResponseField>
+
+<ResponseField name="final_currency" type="string">
+  Final fiat currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-off/simulate" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "bank_account_id": "ba_xyz789",
+    "amount": 0.5
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "original_amount": 0.5,
+  "original_currency": "USDC",
+  "exchange_rate": 1.05,
+  "converted_amount": 955.00,
+  "service_fee": 5.00,
+  "final_amount": 950.00,
+  "final_currency": "USD"
+}
+```
+
+```json 404 Wallet Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Wallet not found"
+}
+```
+
+```json 404 Bank Account Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Bank account ba_xyz789 for company company_xyz789 not found"
+}
+```
+
+</ResponseExample>

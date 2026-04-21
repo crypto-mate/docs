@@ -1,0 +1,62 @@
+---
+title: "Get payment destination"
+description: "Retrieve payment destination configuration for a blockchain."
+api: "GET /management/configurations/payments/{blockchain}"
+---
+
+Retrieves the payment destination configuration for a specific blockchain network. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="blockchain" type="string" required>
+  Blockchain network identifier (e.g., `ETHEREUM`, `POLYGON`, `SOLANA`, `BITCOIN`).
+</ParamField>
+
+## Response
+
+<ResponseField name="paymentDepositAddress" type="string">
+  Blockchain address where payment deposits are received.
+</ResponseField>
+
+<ResponseField name="feeDepositAddress" type="string">
+  Blockchain address where fee deposits are received.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/configurations/payments/polygon" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "paymentDepositAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+  "feeDepositAddress": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+  "blockchain": "polygon"
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Invalid blockchain"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "No payment destination found for company with id comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23 and blockchain with id polygon"
+}
+```
+
+</ResponseExample>

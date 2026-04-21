@@ -1,0 +1,55 @@
+---
+title: "Delete virtual card"
+description: "Permanently delete a virtual card."
+api: "DELETE /cards/virtual-cards/{cardId}"
+---
+
+Permanently deletes a virtual card. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="card_holder_name" type="string">
+  Name of the cardholder.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Final card status (typically `DELETED`).
+</ResponseField>
+
+<ResponseField name="last4" type="string">
+  Last 4 digits of the card number.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23" \
+  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "card_holder_name": "John Doe",
+  "type": "VIRTUAL",
+  "last4": "4242",
+  "status": "DELETED",
+  "approval_method": "TOP_UP"
+}
+```
+
+</ResponseExample>
