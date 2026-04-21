@@ -16,11 +16,11 @@ Always build and test against Sandbox first. See [Quickstart](/quickstart) for t
 
 ## Authentication
 
-All requests are authenticated with an API key sent in the `X-API-KEY` header.
+All requests are authenticated with an API key sent in the `x-api-key` header.
 
 ```bash
 curl https://api.cryptomate.me/... \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
 ```
 
 Keys are issued from the [CryptoMate Portal](https://portal.cryptomate.me) and can be scoped with feature-level permissions and IP allowlists. See [API Keys & Access Security](/authentication) for details.

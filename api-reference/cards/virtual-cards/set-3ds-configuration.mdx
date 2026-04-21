@@ -28,7 +28,7 @@ Configures the 3D Secure (3DS) authentication strategy for a virtual card. Requi
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/3ds-configuration" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "type": "FORWARDED"

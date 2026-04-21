@@ -34,7 +34,7 @@ Configures or updates the webhook authentication key used to verify webhook noti
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/management/companies/webhook/key" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "key": "wh_key_xyz789abc"

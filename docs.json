@@ -13,7 +13,7 @@
       "server": "https://api.sandbox.cryptomate.me",
       "auth": {
         "method": "key",
-        "name": "X-API-KEY"
+        "name": "x-api-key"
       }
     }
   },

@@ -92,7 +92,7 @@ Creates a new US bank account for the specified client with ACH transfer capabil
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/us" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "bank_name": "Chase Bank",

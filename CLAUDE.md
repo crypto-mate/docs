@@ -67,7 +67,7 @@ api: "<METHOD> <path>"
 <RequestExample>
 ```bash cURL
 curl -X <METHOD> "https://api.cryptomate.me<path>" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" ...
+  -H "x-api-key: $CRYPTOMATE_API_KEY" ...
 ```
 </RequestExample>
 
@@ -103,7 +103,7 @@ The API Layer is configured with `PropertyNamingStrategy.SNAKE_CASE`, so every J
 **Leave as-is:**
 
 - Path variables in URL templates — `/mpc/accounts/{accountId}/wallets/{walletId}`. These are literal `@RequestMapping` placeholders in Spring, not JSON.
-- Header names — `X-API-KEY`, `X-Webhook-Key`, `X-Request-Timestamp`, `X-Trace-Id`, `Idempotency-Key`, `Content-Type`.
+- Header names — `x-api-key`, `X-Webhook-Key`, `X-Request-Timestamp`, `X-Trace-Id`, `Idempotency-Key`, `Content-Type`.
 - Enum values — `POLYGON`, `PENDING`, `SUCCESS`, `FAILED`, `TOP_UP`, `NOT_FOUND`, `VAL`, `APP_ERROR`, etc. These are already uppercase / constant-case.
 - Error codes inside the `"code"` JSON value — same as above.
 - Example UUID / hex / email / amount values.
@@ -124,7 +124,7 @@ Example — the Java model `Cards_CreateVirtualCardApiRequest.cardHolderName` sh
 }
 ```
 
-The "Try it" playground uses `docs.json` → `api.mdx.server` (Sandbox base URL) and `api.mdx.auth` (`X-API-KEY` header). Don't duplicate that config per file.
+The "Try it" playground uses `docs.json` → `api.mdx.server` (Sandbox base URL) and `api.mdx.auth` (`x-api-key` header). Don't duplicate that config per file.
 
 ## Architecture the content maps to
 

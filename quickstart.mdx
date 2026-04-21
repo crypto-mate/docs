@@ -35,19 +35,19 @@ For a deeper dive, see [API Keys & Access Security](/authentication).
 
 ## 3. Make your first request
 
-Include your API key in the `X-API-KEY` header of every request.
+Include your API key in the `x-api-key` header of every request.
 
 <CodeGroup>
 
 ```bash cURL
 curl https://api.cryptomate.me/v1/blockchains \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY"
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
 ```
 
 ```javascript Node.js
 const res = await fetch("https://api.cryptomate.me/v1/blockchains", {
   headers: {
-    "X-API-KEY": process.env.CRYPTOMATE_API_KEY,
+    "x-api-key": process.env.CRYPTOMATE_API_KEY,
   },
 });
 
@@ -61,7 +61,7 @@ import requests
 
 res = requests.get(
     "https://api.cryptomate.me/v1/blockchains",
-    headers={"X-API-KEY": os.environ["CRYPTOMATE_API_KEY"]},
+    headers={"x-api-key": os.environ["CRYPTOMATE_API_KEY"]},
 )
 
 print(res.json())

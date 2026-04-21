@@ -86,7 +86,7 @@ Creates a new virtual card with the specified limits and cardholder information.
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "card_holder_name": "John Doe",

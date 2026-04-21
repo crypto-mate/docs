@@ -42,7 +42,7 @@ This endpoint is currently not implemented and will return HTTP 500. The payload
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/cards/holding/withdraw" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "to_wallet_address": "0x1234567890abcdef1234567890abcdef12345678",

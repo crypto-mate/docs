@@ -38,7 +38,7 @@ Configures or updates the webhook URL where the company will receive event notif
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/management/companies/webhook/subscribe" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://api.acme.com/webhooks",

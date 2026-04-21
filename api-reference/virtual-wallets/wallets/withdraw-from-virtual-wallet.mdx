@@ -40,7 +40,7 @@ Withdraws tokens from a virtual wallet to a specified external address. This ope
 
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/virtual-wallets/vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/withdraw" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "to_wallet_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",

@@ -60,7 +60,7 @@ Updates the amount of an existing ramp transfer. Requires an API key with access
 
 ```bash cURL
 curl -X PATCH "https://api.cryptomate.me/virtual-wallets/ramps/transfer/evt_a1b2c3d4e5f6" \
-  -H "X-API-KEY: $CRYPTOMATE_API_KEY" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "amount": 750.00
