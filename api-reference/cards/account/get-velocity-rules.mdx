@@ -1,0 +1,59 @@
+---
+title: "Get velocity rules"
+description: "Retrieve the purchase rate-limit rules configured for your card account."
+api: "GET /cards/account/configuration/velocity-rules"
+---
+
+Returns the list of velocity rules currently configured for your company. Each rule defines a maximum number of approved authorizations allowed within a given time window, applied per individual card. If no rules are configured the response contains an empty array.
+
+Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="rules" type="array">
+  List of velocity rules. Up to 5 rules per company.
+
+  <Expandable title="Rule object">
+    <ResponseField name="max_authorizations" type="integer">
+      Maximum number of approved authorizations allowed within the time window.
+    </ResponseField>
+
+    <ResponseField name="time_window_seconds" type="integer">
+      Duration of the sliding time window in seconds.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl "https://api.cryptomate.me/cards/account/configuration/velocity-rules" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "rules": [
+    {
+      "max_authorizations": 3,
+      "time_window_seconds": 60
+    },
+    {
+      "max_authorizations": 10,
+      "time_window_seconds": 3600
+    }
+  ]
+}
+```
+
+```json 200 OK (no rules)
+{
+  "rules": []
+}
+```
+
+</ResponseExample>

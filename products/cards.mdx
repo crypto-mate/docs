@@ -59,11 +59,26 @@ Cards is the most event-heavy product. Every authorization, clearing, refund, re
 
 See [Webhooks](/integration/webhooks) for the full envelope, authentication via `X-Webhook-Key`, the 1,200 ms deadline on authorization, and payload examples.
 
+## Velocity rules
+
+Velocity rules let you define purchase rate limits at the account level to protect against fraud and card probing. Each rule specifies a maximum number of approved authorizations allowed within a sliding time window, applied **per card**.
+
+You can configure up to **5 rules** per company. When any rule is triggered during an authorization, the transaction is **declined** and the card is automatically **blocked** until manually unblocked. Unblocking the card also resets its authorization counter, ensuring the card can resume normal operation immediately.
+
+If no rules are configured, no rate-limit validation is applied.
+
+| Rule field | Description |
+|---|---|
+| `max_authorizations` | Maximum approved authorizations within the window (integer ≥ 1) |
+| `time_window_seconds` | Sliding time window duration in seconds (integer ≥ 1, unique per rule) |
+
+Rules can be managed via the Portal (Cards → Configuration → Purchase Limits) or via the [Account API](/api-reference/cards/account/get-velocity-rules).
+
 <Card
   title="Cards API reference"
   icon="terminal"
   href="/api-reference/cards/index"
   horizontal
 >
-  Explore endpoints for virtual cards, transactions, and holding.
+  Explore endpoints for virtual cards, transactions, holding, and account configuration.
 </Card>

@@ -1,0 +1,30 @@
+---
+title: "Delete velocity rules"
+description: "Remove all purchase rate-limit rules from your card account."
+api: "DELETE /cards/account/configuration/velocity-rules"
+---
+
+Removes all velocity rules configured for your company. Once deleted, no rate-limit validation is applied to card authorizations.
+
+Requires an API key with access level 2 or higher.
+
+## Response
+
+Returns `204 No Content` on success. No response body.
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/cards/account/configuration/velocity-rules" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```text 204 No Content
+(empty body)
+```
+
+</ResponseExample>
