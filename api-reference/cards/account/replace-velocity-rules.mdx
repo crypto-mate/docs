@@ -1,0 +1,109 @@
+---
+title: "Replace velocity rules"
+description: "Set the full list of purchase rate-limit rules for your card account."
+api: "PUT /cards/account/configuration/velocity-rules"
+---
+
+Replaces the entire set of velocity rules for your company. You can configure up to **5 rules**. Each rule limits the number of approved card authorizations within a sliding time window, applied independently per card.
+
+When a card exceeds any rule during an authorization, the transaction is **declined** and the card is **blocked** until manually unblocked. Unblocking the card also resets its authorization counter.
+
+Sending an empty `rules` array removes all rules — no validation occurs if no rules are configured.
+
+Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="rules" type="array" required>
+  Full set of velocity rules to apply. Up to 5 rules. Each rule must have a unique `time_window_seconds` value.
+
+  <Expandable title="Rule object">
+    <ParamField body="max_authorizations" type="integer" required>
+      Maximum number of approved authorizations allowed within the time window. Must be ≥ 1.
+    </ParamField>
+
+    <ParamField body="time_window_seconds" type="integer" required>
+      Duration of the sliding time window in seconds. Must be ≥ 1. No two rules may share the same value.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Response
+
+Returns the updated list of rules as stored.
+
+<ResponseField name="rules" type="array">
+  <Expandable title="Rule object">
+    <ResponseField name="max_authorizations" type="integer">
+      Maximum approved authorizations within the window.
+    </ResponseField>
+
+    <ResponseField name="time_window_seconds" type="integer">
+      Time window duration in seconds.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Errors
+
+| Code | Description |
+|------|-------------|
+| `VELOCITY_RULES_LIMIT_EXCEEDED` | More than 5 rules provided. |
+| `VELOCITY_RULES_DUPLICATE_WINDOW` | Two or more rules share the same `time_window_seconds`. |
+| `VALIDATION_ERROR` | A field is missing or has an invalid value (e.g. `max_authorizations < 1`). |
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/cards/account/configuration/velocity-rules" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rules": [
+      { "max_authorizations": 3, "time_window_seconds": 60 },
+      { "max_authorizations": 10, "time_window_seconds": 3600 }
+    ]
+  }'
+```
+
+```bash Clear all rules
+curl -X PUT "https://api.cryptomate.me/cards/account/configuration/velocity-rules" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "rules": [] }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "rules": [
+    {
+      "max_authorizations": 3,
+      "time_window_seconds": 60
+    },
+    {
+      "max_authorizations": 10,
+      "time_window_seconds": 3600
+    }
+  ]
+}
+```
+
+```json 400 Duplicate window
+{
+  "code": "VELOCITY_RULES_DUPLICATE_WINDOW",
+  "message": "Two or more rules share the same time_window_seconds value."
+}
+```
+
+```json 400 Limit exceeded
+{
+  "code": "VELOCITY_RULES_LIMIT_EXCEEDED",
+  "message": "A maximum of 5 velocity rules are allowed per company."
+}
+```
+
+</ResponseExample>

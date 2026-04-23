@@ -204,6 +204,14 @@
                 ]
               },
               {
+                "group": "Account",
+                "pages": [
+                  "api-reference/cards/account/get-velocity-rules",
+                  "api-reference/cards/account/replace-velocity-rules",
+                  "api-reference/cards/account/delete-velocity-rules"
+                ]
+              },
+              {
                 "group": "Webhooks",
                 "pages": [
                   {
