@@ -298,7 +298,6 @@
                 "group": "Configurations",
                 "pages": [
                   "api-reference/management/configurations/get-payment-destination",
-                  "api-reference/management/configurations/upsert-payment-destination",
                   "api-reference/management/configurations/delete-payment-destination"
                 ]
               },
