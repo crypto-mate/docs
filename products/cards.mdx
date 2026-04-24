@@ -56,6 +56,7 @@ Cards is the most event-heavy product. Every authorization, clearing, refund, re
 | `visa_direct_deposit` | A Visa Direct deposit credited the card. |
 | `warranty_withdraw` | A withdrawal from the card's warranty/holding balance completed. |
 | `notification_3ds_authorization` | A 3DS challenge was triggered for the cardholder. |
+| `card_blocked_by_velocity` | A card was automatically blocked after a velocity rule triggered. Sent once per `ACTIVE → BLOCKED` transition. |
 
 See [Webhooks](/integration/webhooks) for the full envelope, authentication via `X-Webhook-Key`, the 1,200 ms deadline on authorization, and payload examples.
 
@@ -73,6 +74,8 @@ If no rules are configured, no rate-limit validation is applied.
 | `time_window_seconds` | Sliding time window duration in seconds (integer ≥ 1, unique per rule) |
 
 Rules can be managed via the Portal (Cards → Configuration → Purchase Limits) or via the [Account API](/api-reference/cards/account/get-velocity-rules).
+
+When a velocity rule blocks a card, CryptoMate sends a [`card_blocked_by_velocity`](/integration/webhooks#card_blocked_by_velocity-card-blocked-by-velocity-rule) webhook to your endpoint so your systems can react in real time (alert the cardholder, open a fraud investigation, etc.).
 
 <Card
   title="Cards API reference"

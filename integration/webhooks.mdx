@@ -276,6 +276,54 @@ Sent on a warranty/holding-wallet withdrawal, success or failure (see `status`).
 }
 ```
 
+#### `card_blocked_by_velocity` — card blocked by velocity rule
+
+Sent exactly once when a card transitions from `ACTIVE` to `BLOCKED` because a velocity rule was triggered. Indicates a possible fraud attempt or card probing. Up to 10 retries with exponential backoff.
+
+<Warning>
+  If your webhook handler validates `event_type` against an allowlist, add `card_blocked_by_velocity` to avoid rejecting this event.
+</Warning>
+
+```json
+{
+  "product": "cards",
+  "event_type": "card_blocked_by_velocity",
+  "operation_id": "c1f5a9e0-3d12-4a78-8d9b-0a6e8c4e2b11",
+  "status": "success",
+  "company_id": "a7d2f1b3-9e48-4a1b-8d72-5b3c2a1d8f03",
+  "data": {
+    "card_id": "c1f5a9e0-3d12-4a78-8d9b-0a6e8c4e2b11",
+    "company_id": "a7d2f1b3-9e48-4a1b-8d72-5b3c2a1d8f03",
+    "blocked_at": "2026-04-23T19:42:17.123Z",
+    "triggered_rule": {
+      "max_authorizations": 1,
+      "time_window_seconds": 60
+    },
+    "last_authorization_id": "4a5b6c7d-e8f9-0a1b-2c3d-4e5f6a7b8c9d"
+  }
+}
+```
+
+| `data` field | Type | Description |
+|---|---|---|
+| `card_id` | uuid | Internal identifier of the blocked card |
+| `company_id` | uuid | Company that owns the card |
+| `blocked_at` | ISO 8601 (UTC) | Exact moment the card was blocked on the server |
+| `triggered_rule.max_authorizations` | integer | Maximum approved authorizations the rule allowed |
+| `triggered_rule.time_window_seconds` | integer | Sliding time window the rule applied to |
+| `last_authorization_id` | string \| null | `lifecycleEventId` of the authorization that triggered the rule. May be null. |
+
+**Notes:**
+- `operation_id` equals `card_id` because the block is not tied to a specific transaction.
+- Subsequent authorizations on an already-blocked card do **not** emit another `card_blocked_by_velocity` — they are declined via the normal card status flow.
+- Use the tuple `(company_id, card_id, blocked_at)` as an idempotency key in your handler.
+- To unblock the card, call [`PATCH /api/cards/{id}/unblock`](/api-reference/cards/virtual-cards/unblock-card). Unblocking also resets the velocity counter.
+
+**Suggested actions on receipt:**
+- Notify the cardholder by email or SMS.
+- Optionally block other cards linked to the same user in your system.
+- Open a case in your fraud management system for investigation.
+
 #### `notification_3ds_authorization` — 3DS challenge code
 
 Informational event containing the code the cardholder needs for a 3DS challenge. No retry, no approval decision.
