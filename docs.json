@@ -26,6 +26,7 @@
             "group": "Getting started",
             "pages": [
               "index",
+              "portal-onboarding",
               "quickstart",
               "authentication"
             ]

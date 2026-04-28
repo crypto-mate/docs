@@ -1,0 +1,117 @@
+---
+title: "Portal onboarding"
+description: "Set up your CryptoMate account from the invitation email to your first webhook in under 10 minutes."
+---
+
+This guide walks an account administrator through the portal setup flow — from accepting the invitation email to configuring webhooks — before writing a single line of code.
+
+<Steps>
+
+<Step title="Accept the invitation">
+
+CryptoMate sends an invitation email to the admin address registered during onboarding. Open it and click **Set your password** to activate your account.
+
+After setting a password you'll land on the [CryptoMate Portal](https://portal.cryptomate.me) dashboard, where both environments are accessible:
+
+- **Sandbox** — isolated playground with no real-world blockchain impact. Use it for development and testing.
+- **Production** — live environment where transactions settle on-chain.
+
+<Tip>
+  If the email doesn't arrive within a few minutes, check your spam folder. The sender is `noreply@cryptomate.me`.
+</Tip>
+
+</Step>
+
+<Step title="Navigate to Settings">
+
+In the left sidebar, click **Settings**. This is your control panel for the entire company account. From here you can manage:
+
+- **Company** — legal name, tax ID, and compliance information
+- **Users** — team members and their access roles
+- **Products** — contracted products and usage limits
+- **Webhooks** — endpoint URL for platform event notifications
+- **API Keys** — keys used by your backend to authenticate API requests
+
+</Step>
+
+<Step title="Load your company information">
+
+Open **Settings → Company** and fill in your organization's details:
+
+- Legal name and trading name
+- Country of incorporation
+- Tax ID / registration number
+- Any compliance documents requested during onboarding
+
+Save the form once complete.
+
+<Warning>
+  Some fields are locked after initial submission and require a support request to update. Double-check legal name and tax ID before saving.
+</Warning>
+
+</Step>
+
+<Step title="Create your team users">
+
+Open **Settings → Users** and click **Invite user**. Enter the team member's email address and assign a role:
+
+| Role | Access |
+|------|--------|
+| **Admin** | Full access — can manage users, settings, and all products |
+| **Operator** | Can operate products but cannot change company settings or manage users |
+| **Read-only** | View access only — suitable for finance or compliance reviewers |
+
+Each invitee receives their own email to set a password. Repeat for every person who needs portal access.
+
+<Tip>
+  Follow the principle of least privilege. Only assign **Admin** to the people who genuinely need to manage account settings.
+</Tip>
+
+</Step>
+
+<Step title="Review your contracted products">
+
+Open **Settings → Products** to see the products your company has contracted with CryptoMate, along with their current usage versus contracted limits.
+
+| Product | What it enables |
+|---------|----------------|
+| **Treasury** | Move digital assets across blockchains from company-owned wallets |
+| **Active Management** | Manage per-client virtual wallets with a holding wallet architecture |
+| **Cards** | Issue Visa virtual cards backed by stablecoin collateral |
+
+This gives you a clear picture of what's available before you start building. For a deeper explanation of each product, see the [Products](/products/treasury) section.
+
+</Step>
+
+<Step title="Configure your webhook URL">
+
+Open **Settings → Webhooks** and enter the HTTPS URL of the endpoint your backend exposes to receive events.
+
+CryptoMate delivers real-time notifications to this URL for every significant platform action — deposits, card authorizations, withdrawals, client status changes, and more.
+
+<Tip>
+  During development, use a tool like [ngrok](https://ngrok.com) or a staging server to expose a local endpoint. Switch to your production URL before going live.
+</Tip>
+
+<Warning>
+  The URL must be publicly reachable over HTTPS and respond with an HTTP `2xx` status code within 30 seconds. Failed deliveries are retried with exponential backoff.
+</Warning>
+
+For the full event catalog and payload format, see [Webhooks](/integration/webhooks).
+
+</Step>
+
+</Steps>
+
+## You're ready to integrate
+
+Your account is set up. The next step is generating an API key and making your first request.
+
+<Card
+  title="Quickstart — make your first API call"
+  icon="terminal"
+  href="/quickstart"
+  horizontal
+>
+  Set up your API key and send your first authenticated request in minutes.
+</Card>
