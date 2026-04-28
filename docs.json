@@ -27,7 +27,6 @@
             "pages": [
               "index",
               "portal-onboarding",
-              "quickstart",
               "authentication"
             ]
           },

@@ -1,9 +1,9 @@
 ---
-title: "Portal onboarding"
-description: "Set up your CryptoMate account from the invitation email to your first webhook in under 10 minutes."
+title: "Quickstart"
+description: "From invitation email to your first authenticated API request in under 10 minutes."
 ---
 
-This guide walks an account administrator through the portal setup flow — from accepting the invitation email to configuring webhooks — before writing a single line of code.
+This guide walks you through the full onboarding flow — setting up your portal account, configuring your company, and making your first API call.
 
 <Steps>
 
@@ -101,17 +101,84 @@ For the full event catalog and payload format, see [Webhooks](/integration/webho
 
 </Step>
 
+<Step title="Generate an API key">
+
+Open **Settings → API Keys** and create a new key. When creating it you can:
+
+- Scope its **permissions** to only the products and actions your integration needs
+- Restrict it to a list of **allowed IPs** (recommended for backend services)
+
+Copy the key immediately and store it in a secure location — an environment variable or secret manager. You won't be able to see it again.
+
+<Warning>
+  Never commit API keys to source control or embed them in client-side code.
+</Warning>
+
+For a deeper dive into key management and permissions, see [API Keys & Access Security](/authentication).
+
+</Step>
+
+<Step title="Make your first request">
+
+Include your API key in the `x-api-key` header of every request. A good smoke test is listing the supported blockchains — it requires no product-specific permissions.
+
+<CodeGroup>
+
+```bash cURL
+curl https://api.cryptomate.me/v1/blockchains \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+```javascript Node.js
+const res = await fetch("https://api.cryptomate.me/v1/blockchains", {
+  headers: {
+    "x-api-key": process.env.CRYPTOMATE_API_KEY,
+  },
+});
+
+const blockchains = await res.json();
+console.log(blockchains);
+```
+
+```python Python
+import os
+import requests
+
+res = requests.get(
+    "https://api.cryptomate.me/v1/blockchains",
+    headers={"x-api-key": os.environ["CRYPTOMATE_API_KEY"]},
+)
+
+print(res.json())
+```
+
+</CodeGroup>
+
+A successful response returns a `2xx` status code and a JSON body. If something goes wrong, inspect the `code` and `message` fields and note the `X-Trace-Id` header — see [Errors](/integration/errors).
+
+</Step>
+
 </Steps>
 
-## You're ready to integrate
+## Pick a product and go deep
 
-Your account is set up. The next step is generating an API key and making your first request.
+<Columns cols={3}>
+  <Card title="Treasury" icon="vault" href="/products/treasury">
+    Manage digital assets across multiple blockchains.
+  </Card>
+  <Card title="Active Management" icon="wallet" href="/products/virtual-wallets">
+    Centralize client deposits with a holding wallet architecture.
+  </Card>
+  <Card title="Cards" icon="credit-card" href="/products/cards">
+    Issue Visa cards backed by stablecoin collateral.
+  </Card>
+</Columns>
 
 <Card
-  title="Quickstart — make your first API call"
+  title="API Reference"
   icon="terminal"
-  href="/quickstart"
+  href="/api-reference/introduction"
   horizontal
 >
-  Set up your API key and send your first authenticated request in minutes.
+  Browse every endpoint with request and response examples.
 </Card>
