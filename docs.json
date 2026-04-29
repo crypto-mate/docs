@@ -44,6 +44,12 @@
               "integration/webhooks",
               "integration/errors"
             ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/deposit-recovery"
+            ]
           }
         ]
       },

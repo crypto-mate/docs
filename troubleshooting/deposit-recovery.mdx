@@ -1,0 +1,47 @@
+---
+title: "Deposit recovery"
+description: "What happens when a deposit is sent on the wrong network or with an unlisted token, and how to recover the funds."
+---
+
+CryptoMate wallets only accept deposits on the networks and tokens explicitly configured for your account. If a deposit arrives outside those parameters, the funds cannot be credited automatically and require a manual recovery process.
+
+## Situations that require recovery
+
+### Wrong network
+
+The same token exists on multiple blockchains (e.g. USDC on Ethereum, Polygon, and Tron). Sending funds on a network that is not enabled for the destination wallet means the deposit lands at the wallet address on an unsupported chain and cannot be detected or credited by the platform.
+
+### Unlisted token
+
+If a token that is not part of CryptoMate's supported token list is sent to a wallet address, the platform has no mechanism to recognize or credit the transfer.
+
+## Recovery process
+
+Manual fund recovery is available upon request. Because it requires direct on-chain intervention by the CryptoMate operations team, the following conditions apply:
+
+<Warning>
+  Recovery is performed **at the client's expense**. Network fees and operational costs associated with the recovery will be deducted from the recovered amount before crediting.
+</Warning>
+
+To initiate a recovery, contact CryptoMate customer support with the following information:
+
+- The wallet address that received the deposit
+- The transaction hash (txid) of the deposit
+- The network and token involved
+- The amount sent
+
+<Tip>
+  The more detail you provide upfront, the faster the recovery team can assess the situation. Recoveries are evaluated case by case — not all situations may be recoverable depending on the network and token involved.
+</Tip>
+
+## How to contact support
+
+Reach out to the CryptoMate support team through the channel provided during your onboarding. Include **"Fund Recovery Request"** in the subject line so the request is routed to the right team immediately.
+
+## Prevention
+
+The best way to avoid recovery situations is to validate the network and token before sending:
+
+- Always confirm the **exact network** enabled for the destination wallet before initiating a transfer — check **Settings → Products** in the Portal or use the [List available blockchains](/api-reference/virtual-wallets/configuration/list-available-blockchains) endpoint.
+- Only send tokens that appear in your contracted product's supported token list.
+- For programmatic deposits, use the deposit wallet address returned by the API for the specific product and blockchain — never reuse addresses across products or networks.
