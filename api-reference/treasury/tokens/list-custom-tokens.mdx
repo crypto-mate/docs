@@ -34,6 +34,10 @@ Returns an array of custom token objects.
   Current token price in USD.
 </ResponseField>
 
+<ResponseField name="decimals" type="integer">
+  Number of decimal places used by the token contract.
+</ResponseField>
+
 <RequestExample>
 
 ```bash cURL
@@ -53,7 +57,8 @@ curl -X GET "https://api.cryptomate.me/mpc/tokens/list" \
     "symbol": "EXT",
     "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     "blockchain": "POLYGON",
-    "usd_price": 1.25
+    "usd_price": 1.25,
+    "decimals": 6
   }
 ]
 ```
