@@ -90,13 +90,6 @@
                 ]
               },
               {
-                "group": "Tokens",
-                "pages": [
-                  "api-reference/treasury/tokens/list-tokens-by-blockchain",
-                  "api-reference/treasury/tokens/list-custom-tokens"
-                ]
-              },
-              {
                 "group": "Transactions",
                 "pages": [
                   "api-reference/treasury/transactions/search-transactions"
@@ -297,7 +290,9 @@
               {
                 "group": "Blockchains",
                 "pages": [
-                  "api-reference/management/blockchains/list-blockchains"
+                  "api-reference/management/blockchains/list-blockchains",
+                  "api-reference/management/blockchains/list-tokens-by-blockchain",
+                  "api-reference/management/blockchains/list-custom-tokens"
                 ]
               },
               {

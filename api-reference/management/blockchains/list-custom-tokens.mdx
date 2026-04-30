@@ -1,0 +1,106 @@
+---
+title: "List custom tokens"
+description: "Retrieve all custom tokens configured for the company."
+api: "GET /mpc/tokens/list"
+---
+
+Retrieves all custom tokens configured for the company. Requires an API key with access level 1 or higher.
+
+## Overview
+
+Custom tokens extend the platform's default token support for the **Treasury** and **Active Management** products. They allow you to operate with ERC-20 or equivalent contracts that are not part of the platform's built-in token list.
+
+Each blockchain ships with a set of default tokens defined in the platform's core library. These are the tokens supported out of the box, per environment:
+
+### Production (mainnet)
+
+| Blockchain | Symbol | Name | Contract address |
+|---|---|---|---|
+| Polygon | USDC | USD Coin | `0x3c499c542cef5e3811e1192ce70d8cc03d5c3359` |
+| Polygon | USDT | Tether USD | `0xc2132D05D31c914a87C6611C10748AEb04B58e8F` |
+| BNB Chain | USDC | USD Coin | `0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d` |
+| BNB Chain | BUSD | Binance USD | `0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56` |
+| BNB Chain | BSC-USD | Binance USD | `0x55d398326f99059fF775485246999027B3197955` |
+| Tron | USDT | Tether USD | `TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t` |
+| RSK | USDT | Tether USD | `0xef213441a85df4d7acbdae0cf78004e1e486bb96` |
+| Solana | USDC | USD Coin | `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v` |
+| Solana | USDT | Tether USD | `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB` |
+| Stellar | USDC | USD Coin | `GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN` |
+
+### Sandbox (testnet)
+
+| Blockchain | Symbol | Name | Contract address |
+|---|---|---|---|
+| Polygon | USDC | USD Coin | `0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582` |
+| Polygon | USDT | Tether USD | `0xc7e9CDd039614DD17D4Db59f91D7C258d0aDc9a5` |
+| BNB Chain | USDC | USD Coin | `0x89C8da7569085D406800C473619d0c6B7AC0CE8E` |
+| BNB Chain | BUSD | Binance USD | `0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee` |
+| Tron | USDT | Tether USD | `TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs` |
+| RSK | USDT | Tether USD | `0x4d5a316d23ebe168d8f887b4447bf8dbfa4901cc` |
+| Solana | USDC | USD Coin | `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU` |
+| Solana | USDT | Tether USD | `EJwZgeZrdC8TXTQbQBoL6bfuAnFUUy1PVCMB4DYPzVaS` |
+
+If you need to operate with a token that is not in the default list, you can register a custom token. Custom tokens are scoped to your company and apply only to the **Treasury** and **Active Management** products.
+
+<Note>
+  Custom tokens can only be created from the Portal under [**Management → Tokens**](https://portal.cryptomate.me/management/tokens). The API provides read-only access to the list of configured custom tokens.
+</Note>
+
+## Response
+
+Returns an array of custom token objects.
+
+<ResponseField name="id" type="string">
+  Unique custom token identifier.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Token name.
+</ResponseField>
+
+<ResponseField name="symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Smart contract address of the token.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network. One of `ETHEREUM`, `POLYGON`, `BSC`, `ARBITRUM`, `OPTIMISM`, `BASE`, `AVALANCHE`.
+</ResponseField>
+
+<ResponseField name="usd_price" type="number">
+  Current token price in USD.
+</ResponseField>
+
+<ResponseField name="decimals" type="integer">
+  Number of decimal places used by the token contract.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/mpc/tokens/list" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "tok_5b8c2d10-3e4f-4a9b-8c1d-2e3f4a5b6c7d",
+    "name": "Example Token",
+    "symbol": "EXT",
+    "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "blockchain": "POLYGON",
+    "usd_price": 1.25,
+    "decimals": 6
+  }
+]
+```
+
+</ResponseExample>
