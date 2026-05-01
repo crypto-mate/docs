@@ -1,0 +1,146 @@
+---
+title: "Get transaction"
+description: "Retrieve detailed information for a specific card transaction."
+api: "GET /cards/transactions/{cardId}/{transactionId}"
+---
+
+Returns the full detail of a single card transaction by its ID. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+<ParamField path="transactionId" type="string" required>
+  Transaction identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique transaction identifier (UUID).
+</ResponseField>
+
+<ResponseField name="datetime" type="string">
+  Transaction timestamp (ISO-8601).
+</ResponseField>
+
+<ResponseField name="operation" type="string">
+  Type of card operation. Possible values: `AUTHORIZATION`, `CLEARING`, `REFUND`, `REVERSAL`.
+</ResponseField>
+
+<ResponseField name="bill_amount" type="number">
+  Amount charged in the billing currency.
+</ResponseField>
+
+<ResponseField name="bill_currency" type="string">
+  Billing currency code (e.g. `USD`).
+</ResponseField>
+
+<ResponseField name="transaction_amount" type="number">
+  Amount in the original transaction currency.
+</ResponseField>
+
+<ResponseField name="transaction_currency" type="string">
+  Original transaction currency code (e.g. `EUR`).
+</ResponseField>
+
+<ResponseField name="exchange_rate" type="number">
+  Exchange rate applied, rounded to 6 decimal places.
+</ResponseField>
+
+<ResponseField name="merchant_name" type="string">
+  Name of the merchant.
+</ResponseField>
+
+<ResponseField name="original_balance" type="number">
+  Card balance before the transaction.
+</ResponseField>
+
+<ResponseField name="new_balance" type="number">
+  Card balance after the transaction.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Transaction status. Possible values: `SUCCESS`, `PENDING`, `FAILED`.
+</ResponseField>
+
+<ResponseField name="decline_reason" type="object">
+  Present when the transaction was declined. Contains `response_code` and `description`.
+</ResponseField>
+
+<ResponseField name="fee_fx_provider" type="number">
+  FX fee charged by the provider.
+</ResponseField>
+
+<ResponseField name="fee_fx_client" type="number">
+  FX fee charged to the client.
+</ResponseField>
+
+<ResponseField name="fee_atm_provider" type="number">
+  ATM fee charged by the provider.
+</ResponseField>
+
+<ResponseField name="fee_atm_client" type="number">
+  ATM fee charged to the client.
+</ResponseField>
+
+<ResponseField name="fee_deposit_provider" type="number">
+  Deposit fee charged by the provider.
+</ResponseField>
+
+<ResponseField name="fee_deposit_client" type="number">
+  Deposit fee charged to the client.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "datetime": "2026-04-15T10:30:00",
+  "operation": "CLEARING",
+  "bill_amount": 100.00,
+  "bill_currency": "USD",
+  "transaction_amount": 85.50,
+  "transaction_currency": "EUR",
+  "exchange_rate": 1.169591,
+  "merchant_name": "Amazon.com",
+  "original_balance": 5000.00,
+  "new_balance": 4900.00,
+  "status": "SUCCESS",
+  "decline_reason": null,
+  "fee_fx_provider": 0.50,
+  "fee_fx_client": 0.75,
+  "fee_atm_provider": 0.00,
+  "fee_atm_client": 0.00,
+  "fee_deposit_provider": 0.00,
+  "fee_deposit_client": 0.00
+}
+```
+
+```json 404 Not Found
+{
+  "code": "APP_ERROR",
+  "message": "Transaction not found."
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": "AUTH_ERROR",
+  "message": "Invalid or missing API key."
+}
+```
+
+</ResponseExample>
