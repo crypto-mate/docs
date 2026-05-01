@@ -1,0 +1,68 @@
+---
+title: "Rate Limiting"
+description: "Understand CryptoMate's rate limits, the 429 response format, and how to implement a safe retry strategy."
+---
+
+## Overview
+
+CryptoMate enforces rate limits on all API endpoints to ensure fair access across integrations. Two independent limits apply to every request:
+
+- **Per IP** — based on the originating client IP address, always applied.
+- **Per company** — based on the company resolved from your `x-api-key` header, applied whenever a valid API key is present.
+
+Both limits must be satisfied for a request to proceed. Exceeding either one returns an immediate `429 Too Many Requests` response.
+
+## Limits
+
+| Scope | Limit | Window |
+|---|---|---|
+| Per IP address | 15 requests | 1 second |
+| Per company (API key) | 15 requests | 1 second |
+
+Limits are tracked independently — a single request counts against both your IP quota and your company quota at the same time.
+
+## 429 response
+
+When a limit is exceeded, the API returns HTTP `429` with the following body:
+
+```json
+{
+  "error_code": "TOO_MANY_REQUESTS",
+  "message": "Rate limit exceeded. Maximum 15 requests per 1 seconds allowed"
+}
+```
+
+No `Retry-After` header is included in the response.
+
+## Retry strategy
+
+Implement **exponential backoff** when you receive a `429`. A simple approach:
+
+```javascript
+async function requestWithBackoff(fn, maxRetries = 4) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const response = await fn();
+    if (response.status !== 429) return response;
+    const delay = Math.min(100 * 2 ** attempt, 5000); // 100 ms → 200 → 400 → 800 → 5000
+    await new Promise(r => setTimeout(r, delay));
+  }
+  throw new Error("Rate limit retries exhausted");
+}
+```
+
+<Tip>
+  If you are running batch operations, add a small pause between requests or process items in groups of 10–12 to stay safely under the 15 req/s ceiling.
+</Tip>
+
+## Excluded paths
+
+The following paths are exempt from rate limiting:
+
+| Path prefix | Notes |
+|---|---|
+| `/cards/webhook`, `/treasury/webhook`, `/virtual-wallets/webhook` | Webhook ingestion endpoints |
+| `/health`, `/actuator` | Infrastructure health checks |
+| `/swagger-ui`, `/api-docs` | API documentation |
+| `/portal`, `/dashboard` | Portal and dashboard routes |
+| `/geography`, `/geofence` | Geographic lookup endpoints |
+| `/events`, `/mail/inbound` | Event stream and inbound mail |

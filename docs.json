@@ -42,6 +42,7 @@
             "group": "Integration",
             "pages": [
               "integration/webhooks",
+              "integration/rate-limiting",
               "integration/errors"
             ]
           },
