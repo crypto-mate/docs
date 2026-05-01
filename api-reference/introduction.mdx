@@ -44,6 +44,10 @@ Failed requests return a JSON body with `code` and `message`. Each response (inc
 
 For the full list of HTTP status codes and error codes, see [Errors](/integration/errors).
 
+## Rate Limiting
+
+All endpoints are rate-limited to **15 requests per second** per IP address and per company. Exceeding the limit returns HTTP `429`. See [Rate Limiting](/integration/rate-limiting) for the response format and retry guidance.
+
 ## Idempotency
 
 Write endpoints that mutate state (transfers, ramps, card operations) support idempotency via the `Idempotency-Key` header. Repeating a request with the same key within the idempotency window returns the original result instead of executing a second time.

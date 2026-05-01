@@ -36,6 +36,7 @@ Failed requests return a JSON object with two fields:
 | `401` | The API Key is not authorized for this operation — check its configuration |
 | `404` | The requested resource does not exist — verify the identifier |
 | `412` | Internal validation failure — inspect the request body |
+| `429` | Rate limit exceeded — back off and retry; see [Rate Limiting](/integration/rate-limiting) |
 | `500` | Server-side issue — retry later and contact support if it persists |
 
 <Tip>
