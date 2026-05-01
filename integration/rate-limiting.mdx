@@ -10,7 +10,7 @@ CryptoMate enforces rate limits on all API endpoints to ensure fair access acros
 - **Per IP** — based on the originating client IP address, always applied.
 - **Per company** — based on the company resolved from your `x-api-key` header, applied whenever a valid API key is present.
 
-Both limits must be satisfied for a request to proceed. Exceeding either one returns an immediate `429 Too Many Requests` response.
+Both limits must be satisfied for a request to proceed. Exceeding either one triggers a penalty block with exponential backoff.
 
 ## Limits
 
@@ -21,37 +21,55 @@ Both limits must be satisfied for a request to proceed. Exceeding either one ret
 
 Limits are tracked independently — a single request counts against both your IP quota and your company quota at the same time.
 
+## Exponential backoff penalty
+
+When a limit is exceeded, the API applies a **progressive penalty block** that grows exponentially with each successive violation:
+
+| Violation | Block duration |
+|---|---|
+| 1st | 1 second |
+| 2nd | 2 seconds |
+| 3rd | 4 seconds |
+| 4th | 8 seconds |
+| … | … (doubles each time) |
+| 9th+ | 5 minutes (maximum) |
+
+While a block is active, all requests from that IP or company are rejected immediately — no quota is consumed. The violation count resets automatically after 1 hour of clean traffic.
+
 ## 429 response
 
-When a limit is exceeded, the API returns HTTP `429` with the following body:
+When rate limited, the API returns HTTP `429` with a `Retry-After` header indicating how many seconds to wait:
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 4
+```
 
 ```json
 {
   "error_code": "TOO_MANY_REQUESTS",
-  "message": "Rate limit exceeded. Maximum 15 requests per 1 seconds allowed"
+  "message": "Rate limit exceeded. Retry after 4 seconds"
 }
 ```
 
-No `Retry-After` header is included in the response.
-
 ## Retry strategy
 
-Implement **exponential backoff** when you receive a `429`. A simple approach:
+Always read the `Retry-After` header and wait that exact duration before retrying:
 
 ```javascript
-async function requestWithBackoff(fn, maxRetries = 4) {
+async function requestWithBackoff(fn, maxRetries = 5) {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     const response = await fn();
     if (response.status !== 429) return response;
-    const delay = Math.min(100 * 2 ** attempt, 5000); // 100 ms → 200 → 400 → 800 → 5000
-    await new Promise(r => setTimeout(r, delay));
+    const retryAfter = parseInt(response.headers.get("Retry-After") ?? "1", 10);
+    await new Promise(r => setTimeout(r, retryAfter * 1000));
   }
   throw new Error("Rate limit retries exhausted");
 }
 ```
 
 <Tip>
-  If you are running batch operations, add a small pause between requests or process items in groups of 10–12 to stay safely under the 15 req/s ceiling.
+  If you are running batch operations, add a small pause between requests or process items in groups of 10–12 to stay safely under the 15 req/s ceiling and avoid accumulating violations.
 </Tip>
 
 ## Excluded paths
