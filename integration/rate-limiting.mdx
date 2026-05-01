@@ -32,7 +32,7 @@ When a limit is exceeded, the API applies a **progressive penalty block** that g
 | 3rd | 4 seconds |
 | 4th | 8 seconds |
 | … | … (doubles each time) |
-| 12th+ | 1 hour (maximum) |
+| 9th+ | 5 minutes (maximum) |
 
 While a block is active, all requests from that IP or company are rejected immediately — no quota is consumed. The violation count resets automatically after 1 hour of clean traffic.
 
