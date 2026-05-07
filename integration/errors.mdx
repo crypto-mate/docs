@@ -9,21 +9,23 @@ This section describes how to handle errors while integrating with the CryptoMat
 
 ## Request tracing
 
-Every API response and webhook delivery includes an `X-Trace-Id` header. **Include this identifier in any support request** — it lets our team pinpoint the exact call in our logs.
+Every failing request includes a `trace_id` in the error response body that uniquely identifies the call. **Include it in any support request or troubleshooting conversation** — it gives us everything we need to find the failing request and figure out what went wrong.
 
 ## Error response format
 
-Failed requests return a JSON object with two fields:
+Failed requests return a JSON object with the following fields:
 
-- `code` — identifies the specific error type
-- `message` — human-readable description of the error
+- `code` — identifies the specific error type.
+- `message` — human-readable description of the error.
+- `trace_id` *(optional)* — unique identifier for the failing request, useful for troubleshooting.
 
 ### Example
 
 ```json
 {
-  "code": "API_ERROR",
-  "message": "Access denied. The API Key is not authorized to do this operation."
+  "code": "NOT_FOUND",
+  "message": "Resource not found",
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736"
 }
 ```
 
@@ -39,6 +41,10 @@ Failed requests return a JSON object with two fields:
 | `429` | Rate limit exceeded — back off and retry; see [Rate Limiting](/integration/rate-limiting) |
 | `500` | Server-side issue — retry later and contact support if it persists |
 
+## trace_id in the Portal
+
+When an action triggered from the **Portal** fails, the error dialog shows the `trace_id` alongside the error message so it can be copied and shared for troubleshooting.
+
 <Tip>
-  Always log `X-Trace-Id` alongside your own request identifiers. It turns a "the API is broken" ticket into a conversation we can resolve in minutes.
+  Always log the `trace_id` alongside your own request identifiers. It turns a "the API is broken" ticket into a conversation we can resolve in minutes.
 </Tip>
