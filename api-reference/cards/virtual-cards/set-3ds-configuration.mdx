@@ -15,7 +15,7 @@ Configures the 3D Secure (3DS) authentication strategy for a virtual card. Requi
 ## Body
 
 <ParamField body="type" type="string" required>
-  3D Secure configuration type. Possible values: `AUTOMATIC`, `FORWARDED`, `DISABLED`.
+  3D Secure configuration type. Possible values: `sms`, `webhook`.
 </ParamField>
 
 ## Response
@@ -31,7 +31,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4
   -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "type": "FORWARDED"
+    "type": "sms"
   }'
 ```
 
@@ -41,7 +41,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4
 
 ```json 200 OK
 {
-  "type": "FORWARDED"
+  "type": "sms"
 }
 ```
 
