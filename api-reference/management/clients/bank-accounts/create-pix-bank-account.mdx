@@ -39,11 +39,13 @@ Creates a new Brazilian PIX bank account for the specified client. Requires an A
 </ParamField>
 
 <ParamField body="country" type="string">
-  ISO country code.
+  ISO 3166-1 alpha-3 country code (e.g., `BRA`).
 </ParamField>
 
 <ParamField body="address" type="object">
-  Account holder's address.
+  Account holder's address with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+  
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California).
 </ParamField>
 
 ## Response
@@ -63,12 +65,13 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
     "bank_holder_last_name": "Silva",
     "pix_key": "customer@example.com",
     "document_number": "12345678900",
-    "country": "BR",
+    "country": "BRA",
     "address": {
       "streetLine1": "Av. Paulista 1000",
       "city": "São Paulo",
       "postal_code": "01310-100",
-      "country": "BR"
+      "state": "BRA-SP",
+      "country": "BRA"
     }
   }'
 ```

@@ -9,7 +9,7 @@ Retrieves all valid business identification document types (EIN, VAT, TIN, etc.)
 ## Path parameters
 
 <ParamField path="countryCode" type="string" required>
-  ISO country code (e.g., `US`, `MX`, `BR`).
+  ISO 3166-1 alpha-3 country code (e.g., `USA`, `MEX`, `BRA`).
 </ParamField>
 
 ## Response
@@ -25,7 +25,7 @@ Retrieves all valid business identification document types (EIN, VAT, TIN, etc.)
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.cryptomate.me/management/clients/business-identifications/US" \
+curl -X GET "https://api.cryptomate.me/management/clients/business-identifications/USA" \
   -H "x-api-key: $CRYPTOMATE_API_KEY"
 ```
 

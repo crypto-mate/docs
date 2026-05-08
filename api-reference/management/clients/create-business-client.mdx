@@ -37,15 +37,19 @@ Creates a new business client for the company with business information, associa
 </ParamField>
 
 <ParamField body="registered_address" type="object" required>
-  Registered business address with `street_line_1`, `city`, `postal_code`, `country`.
+  Registered business address with `street_line_1`, `city`, `postal_code`, `state`, `country`.
+  
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California).
 </ParamField>
 
 <ParamField body="physical_address" type="object">
-  Physical business address.
+  Physical business address with `street_line_1`, `city`, `postal_code`, `state`, `country`.
 </ParamField>
 
 <ParamField body="associated_persons" type="array" required>
   List of associated persons. Must contain at least one entry. Each person includes `first_name`, `last_name`, `email`, `birth_date`, `residential_address`, optional roles (`has_ownership`, `has_control`, `is_signer`, `is_director`), `identifying_information`, and `documents`.
+  
+  `residential_address.state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California). `residential_address.country` and `identifying_information.issuing_country` use ISO 3166-1 alpha-3 country codes (e.g., `USA`).
 </ParamField>
 
 <ParamField body="business_documents" type="array">
@@ -54,6 +58,8 @@ Creates a new business client for the company with business information, associa
 
 <ParamField body="identifying_information" type="array" required>
   List of business identifying information (tax IDs: EIN, TIN, VAT, etc.). Must contain at least one entry. Each has `type`, `issuing_country`, `number`, optional `description`, `expiration`, `image_front`, `image_back`.
+  
+  `issuing_country` uses ISO 3166-1 alpha-3 country codes (e.g., `USA`).
 </ParamField>
 
 <ParamField body="has_material_intermediary_ownership" type="boolean">
@@ -181,8 +187,8 @@ curl -X POST "https://api.cryptomate.me/management/clients/business" \
       "street_line_1": "123 Main Street",
       "city": "San Francisco",
       "postal_code": "94102",
-      "state": "CA",
-      "country": "US"
+      "state": "USA-CA",
+      "country": "USA"
     },
     "associated_persons": [
       {
@@ -194,7 +200,8 @@ curl -X POST "https://api.cryptomate.me/management/clients/business" \
           "street_line_1": "456 Oak Ave",
           "city": "San Francisco",
           "postal_code": "94102",
-          "country": "US"
+          "state": "USA-CA",
+          "country": "USA"
         },
         "has_ownership": true,
         "has_control": true,
@@ -282,7 +289,7 @@ curl -X POST "https://api.cryptomate.me/management/clients/business" \
 ```json 412 Address Invalid
 {
   "code": "VAL",
-  "message": "Registered address validation failed: state 'CA' does not belong to country 'US'"
+  "message": "Registered address validation failed: state 'USA-CA' does not belong to country 'BR'"
 }
 ```
 

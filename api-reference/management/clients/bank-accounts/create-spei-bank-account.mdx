@@ -31,7 +31,9 @@ Creates a new Mexican SPEI bank account for the specified client. Requires an AP
 </ParamField>
 
 <ParamField body="address" type="object">
-  Account holder's address.
+  Account holder's address with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+  
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California).
 </ParamField>
 
 ## Response
@@ -53,7 +55,8 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
       "streetLine1": "Av. Insurgentes Sur 1602",
       "city": "Ciudad de México",
       "postal_code": "03940",
-      "country": "MX"
+      "state": "MEX-CMX",
+      "country": "MEX"
     }
   }'
 ```

@@ -277,6 +277,7 @@
                       "api-reference/management/clients/bank-accounts/create-spei-bank-account",
                       "api-reference/management/clients/bank-accounts/create-sepa-bank-account",
                       "api-reference/management/clients/bank-accounts/create-pix-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-fps-bank-account",
                       "api-reference/management/clients/bank-accounts/delete-bank-account"
                     ]
                   }
