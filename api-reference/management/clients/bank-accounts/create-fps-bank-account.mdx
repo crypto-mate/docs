@@ -1,0 +1,140 @@
+---
+title: "Create FPS bank account"
+description: "Register a UK Faster Payments bank account for a client."
+api: "POST /management/clients/{clientId}/banks/fps"
+---
+
+Creates a new UK Faster Payments (FPS) bank account for the specified client. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="bank_name" type="string">
+  Name of the bank.
+</ParamField>
+
+<ParamField body="account_alias" type="string">
+  User-friendly alias for the account.
+</ParamField>
+
+<ParamField body="bank_holder_first_name" type="string">
+  Account holder's first name.
+</ParamField>
+
+<ParamField body="bank_holder_last_name" type="string">
+  Account holder's last name.
+</ParamField>
+
+<ParamField body="sort_code" type="string">
+  UK bank sort code (6 digits).
+</ParamField>
+
+<ParamField body="account_number" type="string">
+  UK bank account number (8 digits).
+</ParamField>
+
+<ParamField body="address" type="object">
+  Account holder's address.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Bank account identifier.
+</ResponseField>
+
+<ResponseField name="company_id" type="string">
+  Company identifier.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  Client identifier.
+</ResponseField>
+
+<ResponseField name="bank_name" type="string">
+  Bank name.
+</ResponseField>
+
+<ResponseField name="bank_holder_first_name" type="string">
+  Account holder's first name.
+</ResponseField>
+
+<ResponseField name="bank_holder_last_name" type="string">
+  Account holder's last name.
+</ResponseField>
+
+<ResponseField name="account_alias" type="string">
+  User-friendly alias.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Payment rail. `FPS` for UK accounts.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  Account currency. `GBP` for FPS accounts.
+</ResponseField>
+
+<ResponseField name="sort_code" type="string">
+  UK sort code.
+</ResponseField>
+
+<ResponseField name="account_number" type="string">
+  UK account number.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/fps" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bank_name": "Barclays",
+    "account_alias": "Primary UK Account",
+    "bank_holder_first_name": "John",
+    "bank_holder_last_name": "Smith",
+    "sort_code": "123456",
+    "account_number": "12345678",
+    "address": {
+      "streetLine1": "10 Downing Street",
+      "city": "London",
+      "postal_code": "SW1A 2AA",
+      "country": "GB"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201 Created
+{
+  "id": "ba_mno345",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "Barclays",
+  "bank_holder_first_name": "John",
+  "bank_holder_last_name": "Smith",
+  "account_alias": "Primary UK Account",
+  "type": "FPS",
+  "currency": "GBP",
+  "sort_code": "123456",
+  "account_number": "12345678"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client does not have a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>
