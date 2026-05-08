@@ -66,6 +66,8 @@ Creates a new individual client for the company with personal information, conta
 
 <ParamField body="address" type="object">
   Physical address object with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+  
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California).
 </ParamField>
 
 <ParamField body="individual_identification" type="string">
@@ -106,6 +108,8 @@ Creates a new individual client for the company with personal information, conta
 
 <ParamField body="documents" type="array">
   List of identity documents with fields `id`, `name`, `description`, `issuing_country`, `number`, `image_front`, `image_back`.
+  
+  `issuing_country` uses ISO 3166-1 alpha-3 country codes (e.g., `USA`).
 </ParamField>
 
 ## Response
@@ -174,8 +178,8 @@ curl -X POST "https://api.cryptomate.me/management/clients" \
       "street_line_1": "123 Main Street",
       "city": "San Francisco",
       "postal_code": "94102",
-      "state": "CA",
-      "country": "US"
+      "state": "USA-CA",
+      "country": "USA"
     },
     "individual_identification": "123-45-6789",
     "individual_identification_type": "SSN"

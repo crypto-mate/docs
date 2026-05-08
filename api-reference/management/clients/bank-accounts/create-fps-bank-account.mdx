@@ -39,7 +39,9 @@ Creates a new UK Faster Payments (FPS) bank account for the specified client. Re
 </ParamField>
 
 <ParamField body="address" type="object">
-  Account holder's address.
+  Account holder's address with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+  
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California).
 </ParamField>
 
 ## Response
@@ -102,10 +104,11 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
     "sort_code": "123456",
     "account_number": "12345678",
     "address": {
-      "streetLine1": "10 Downing Street",
+      "streetLine1": "Great Russell Street",
       "city": "London",
-      "postal_code": "SW1A 2AA",
-      "country": "GB"
+      "postal_code": "WC1B 3DG",
+      "state": "GBR-CMD",
+      "country": "GBR"
     }
   }'
 ```

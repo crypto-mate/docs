@@ -39,7 +39,9 @@ Creates a new US bank account for the specified client with ACH transfer capabil
 </ParamField>
 
 <ParamField body="address" type="object">
-  Account holder's address.
+  Account holder's address with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+  
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `USA-CA` for California).
 </ParamField>
 
 ## Response
@@ -105,8 +107,8 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
       "streetLine1": "123 Main Street",
       "city": "San Francisco",
       "postal_code": "94102",
-      "state": "CA",
-      "country": "US"
+      "state": "USA-CA",
+      "country": "USA"
     }
   }'
 ```
