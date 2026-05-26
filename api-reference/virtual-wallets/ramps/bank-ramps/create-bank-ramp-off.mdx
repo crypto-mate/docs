@@ -20,6 +20,10 @@ Creates and executes a bank ramp-off transaction to withdraw cryptocurrency to a
   Bank account identifier for withdrawal.
 </ParamField>
 
+<ParamField body="reference" type="string">
+  Bank statement reference (concept) for the transfer. Required when the destination bank account currency is `COP`; ignored otherwise. Maximum 18 characters.
+</ParamField>
+
 ## Response
 
 <ResponseField name="id" type="string">
@@ -31,19 +35,19 @@ Creates and executes a bank ramp-off transaction to withdraw cryptocurrency to a
 </ResponseField>
 
 <ResponseField name="source_payment_rail" type="string">
-  Source payment rail. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`.
+  Source payment rail. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`, `PIX`, `FASTER_PAYMENTS`, `CO_BANK_TRANSFER`, `BRE_B`.
 </ResponseField>
 
 <ResponseField name="source_currency" type="string">
-  Source currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+  Source cryptocurrency token. One of `USDC`, `USDT`.
 </ResponseField>
 
 <ResponseField name="destination_payment_rail" type="string">
-  Destination payment rail. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`.
+  Destination payment rail. One of `ACH`, `WIRE`, `SEPA`, `SPEI`, `PIX`, `FASTER_PAYMENTS`, `CO_BANK_TRANSFER`, `BRE_B`.
 </ResponseField>
 
 <ResponseField name="destination_currency" type="string">
-  Destination currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+  Destination currency. One of `USD`, `EUR`, `MXN`, `BRL`, `GBP`, `COP`.
 </ResponseField>
 
 <ResponseField name="amount" type="number">
@@ -67,6 +71,18 @@ curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-off" \
   }'
 ```
 
+```bash cURL (COP destination)
+curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-off" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "amount": 25,
+    "bank_account_id": "ba_co_abc123",
+    "reference": "INV-12345"
+  }'
+```
+
 </RequestExample>
 
 <ResponseExample>
@@ -75,12 +91,26 @@ curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-off" \
 {
   "id": "rampoff_abc123",
   "state": "pending",
-  "source_payment_rail": "WIRE",
-  "source_currency": "USD",
+  "source_payment_rail": "POLYGON",
+  "source_currency": "USDC",
   "destination_payment_rail": "ACH",
   "destination_currency": "USD",
   "amount": 950.00,
   "blockchain_memo": "WITHDRAWAL-REF-123"
+}
+```
+
+```json 400 Reference Too Long
+{
+  "code": "VAL",
+  "message": "reference must be at most 18 characters"
+}
+```
+
+```json 400 Reference Missing
+{
+  "code": "VAL",
+  "message": "reference is required for COP ramp-off"
 }
 ```
 

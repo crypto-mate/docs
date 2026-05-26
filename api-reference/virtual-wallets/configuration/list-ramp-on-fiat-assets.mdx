@@ -4,7 +4,7 @@ description: "List supported fiat currencies for ramp-on operations."
 api: "GET /virtual-wallets/config/ramp-on/fiat-assets/list"
 ---
 
-Retrieves the list of supported fiat currencies for ramp-on operations. Currently supports USD, MXN, and EUR. Requires an API key with access level 1 or higher.
+Retrieves the list of supported fiat currencies for ramp-on operations. Currently supports USD, EUR, MXN, BRL, GBP, and COP. Requires an API key with access level 1 or higher.
 
 ## Response
 
@@ -36,8 +36,11 @@ curl -X GET "https://api.cryptomate.me/virtual-wallets/config/ramp-on/fiat-asset
 ```json 200 OK
 [
   { "name": "United States Dollar", "code": "USD", "symbol": "$" },
+  { "name": "Euro", "code": "EUR", "symbol": "€" },
   { "name": "Mexican Peso", "code": "MXN", "symbol": "$" },
-  { "name": "Euro", "code": "EUR", "symbol": "€" }
+  { "name": "Brazilian Real", "code": "BRL", "symbol": "R$" },
+  { "name": "British Pound", "code": "GBP", "symbol": "£" },
+  { "name": "Colombian Peso", "code": "COP", "symbol": "$" }
 ]
 ```
 

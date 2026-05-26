@@ -1,0 +1,36 @@
+---
+title: "List CO account types"
+description: "Catalog of Colombian account sub-types for the CO Bank Transfer rail."
+api: "GET /management/clients/co-account-types"
+---
+
+Returns the catalog of Colombian account sub-types accepted by the CO Bank Transfer rail. Use this list to populate selectors when creating a [CO Bank Transfer bank account](/api-reference/management/clients/bank-accounts/create-co-bank-transfer-bank-account). The catalog is static; cache it on your side. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of account sub-type objects.
+
+<ResponseField name="value" type="string">
+  Sub-type identifier to send as `co_account_type` when creating a CO Bank Transfer bank account. One of `checking`, `savings`, `electronic_deposit`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/co-account-types" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  { "value": "checking" },
+  { "value": "savings" },
+  { "value": "electronic_deposit" }
+]
+```
+
+</ResponseExample>

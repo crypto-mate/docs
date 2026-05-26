@@ -1,0 +1,98 @@
+---
+title: "Create Bre-B bank account"
+description: "Register a Colombian Bre-B bank account for a client."
+api: "POST /management/clients/{clientId}/banks/bre-b"
+---
+
+Creates a new Colombian Bre-B bank account (COP) for the specified client. Bre-B uses a single key (`bre_b_key`) as the destination identifier and does not distinguish between individual and business clients. Requires an API key with access level 3 or higher.
+
+Virtual account numbers are not accepted as Bre-B keys.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Body
+
+<ParamField body="bank_name" type="string">
+  Name of the bank.
+</ParamField>
+
+<ParamField body="account_alias" type="string">
+  User-friendly alias for the account.
+</ParamField>
+
+<ParamField body="bank_holder_name" type="string">
+  Account holder full name (used for both individual and business clients).
+</ParamField>
+
+<ParamField body="bre_b_key" type="string">
+  Bre-B key. The destination identifier the customer's bank app will send funds to.
+</ParamField>
+
+<ParamField body="address" type="object">
+  Account holder's address with `street_line_1`, `street_line_2`, `city`, `postal_code`, `state`, `country`.
+
+  `state` uses ISO 3166-2 codes that identify country subdivisions in the format `{COUNTRY}-{SUBDIVISION}` (e.g., `COL-DC` for Bogotá D.C.).
+</ParamField>
+
+## Response
+
+See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the shared field list. Bre-B accounts expose `bre_b_key`. The `type` is `BRE_B` and the `currency` is `COP`.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/banks/bre-b" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bank_name": "Banco de Bogotá",
+    "account_alias": "Mi Bre-B",
+    "bank_holder_name": "María López",
+    "bre_b_key": "1234567890123456",
+    "address": {
+      "street_line_1": "Carrera 7 # 71-21",
+      "city": "Bogotá",
+      "postal_code": "110231",
+      "state": "COL-DC",
+      "country": "COL"
+    }
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201 Created
+{
+  "id": "ba_breb_abc123",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "Banco de Bogotá",
+  "bank_holder_name": "María López",
+  "account_alias": "Mi Bre-B",
+  "type": "BRE_B",
+  "currency": "COP",
+  "bre_b_key": "1234567890123456"
+}
+```
+
+```json 403 Missing Endorsements
+{
+  "code": "APP_ERROR",
+  "message": "Customer is missing required endorsements: cop"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Client does not have a customer ID for provider BRIDGE"
+}
+```
+
+</ResponseExample>

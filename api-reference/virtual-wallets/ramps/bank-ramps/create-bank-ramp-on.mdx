@@ -17,7 +17,15 @@ Creates and executes a bank ramp-on transaction to deposit fiat currency into a 
 </ParamField>
 
 <ParamField body="source_currency" type="string" required>
-  Source fiat currency. One of `BRL`, `USD`, `EUR`, `MXN`.
+  Source fiat currency. One of `USD`, `EUR`, `MXN`, `BRL`, `GBP`, `COP`.
+</ParamField>
+
+<ParamField body="payment_rail" type="string">
+  Payment rail. Required when `source_currency` is `COP`; ignored otherwise. One of `co_bank_transfer`, `bre_b`.
+</ParamField>
+
+<ParamField body="redirect_url" type="string">
+  URL to redirect the user to after the PSE flow completes. Required when `source_currency` is `COP` and `payment_rail` is `co_bank_transfer`; ignored otherwise.
 </ParamField>
 
 ## Response
@@ -35,11 +43,11 @@ Creates and executes a bank ramp-on transaction to deposit fiat currency into a 
 </ResponseField>
 
 <ResponseField name="currency" type="string">
-  Currency for the deposit. One of `BRL`, `USD`, `EUR`, `MXN`.
+  Currency for the deposit. One of `USD`, `EUR`, `MXN`, `BRL`, `GBP`, `COP`.
 </ResponseField>
 
 <ResponseField name="payment_rail" type="string">
-  Payment rail method. One of `PIX`, `WIRE`, `ACH`, `SEPA`, `SPEI`.
+  Payment rail method. One of `ACH`, `WIRE`, `SEPA`, `SPEI`, `PIX`, `FASTER_PAYMENTS`, `CO_BANK_TRANSFER`, `BRE_B`.
 </ResponseField>
 
 <ResponseField name="deposit_message" type="string">
@@ -78,9 +86,21 @@ Creates and executes a bank ramp-on transaction to deposit fiat currency into a 
   Base64-encoded QR code image for the deposit.
 </ResponseField>
 
+<ResponseField name="start_url" type="string">
+  PSE checkout URL. Only present when `payment_rail` is `CO_BANK_TRANSFER`. Redirect the user here to authorize the payment with their bank.
+</ResponseField>
+
+<ResponseField name="redirect_url" type="string">
+  Echo of the `redirect_url` sent in the request. Only present when `payment_rail` is `CO_BANK_TRANSFER`.
+</ResponseField>
+
+<ResponseField name="bre_b_key" type="string">
+  Destination Bre-B key to display to the user. Only present when `payment_rail` is `BRE_B`.
+</ResponseField>
+
 <RequestExample>
 
-```bash cURL
+```bash cURL (USD)
 curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-on" \
   -H "x-api-key: $CRYPTOMATE_API_KEY" \
   -H "Content-Type: application/json" \
@@ -91,11 +111,36 @@ curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-on" \
   }'
 ```
 
+```bash cURL (COP / PSE)
+curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-on" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "amount": 100000,
+    "source_currency": "COP",
+    "payment_rail": "co_bank_transfer",
+    "redirect_url": "https://example.com/ramp-callback"
+  }'
+```
+
+```bash cURL (COP / Bre-B)
+curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-on" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "wallet_id": "vw_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "amount": 100000,
+    "source_currency": "COP",
+    "payment_rail": "bre_b"
+  }'
+```
+
 </RequestExample>
 
 <ResponseExample>
 
-```json 200 OK
+```json 200 OK (USD / WIRE)
 {
   "id": "rampon_abc123",
   "state": "pending",
@@ -111,6 +156,43 @@ curl -X POST "https://api.cryptomate.me/virtual-wallets/bank-ramps/ramp-on" \
   "bank_beneficiary_address": "456 Beneficiary Ave",
   "br_code": null,
   "qr_code": null
+}
+```
+
+```json 200 OK (COP / PSE)
+{
+  "id": "rampon_pse_abc123",
+  "state": "pending",
+  "amount": 100000,
+  "currency": "COP",
+  "payment_rail": "CO_BANK_TRANSFER",
+  "start_url": "https://pse-checkout.bridge.xyz/sessions/abc123",
+  "redirect_url": "https://example.com/ramp-callback"
+}
+```
+
+```json 200 OK (COP / Bre-B)
+{
+  "id": "rampon_breb_abc123",
+  "state": "pending",
+  "amount": 100000,
+  "currency": "COP",
+  "payment_rail": "BRE_B",
+  "bre_b_key": "1234567890123456"
+}
+```
+
+```json 400 Missing Redirect URL
+{
+  "code": "VAL",
+  "message": "redirectUrl is required for CO Bank Transfer (PSE) ramp-on"
+}
+```
+
+```json 400 Invalid Payment Rail
+{
+  "code": "VAL",
+  "message": "paymentRail is required for COP ramp-on (must be 'co_bank_transfer' or 'bre_b')"
 }
 ```
 

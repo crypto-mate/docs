@@ -278,6 +278,10 @@
                       "api-reference/management/clients/bank-accounts/create-sepa-bank-account",
                       "api-reference/management/clients/bank-accounts/create-pix-bank-account",
                       "api-reference/management/clients/bank-accounts/create-fps-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-co-bank-transfer-bank-account",
+                      "api-reference/management/clients/bank-accounts/create-bre-b-bank-account",
+                      "api-reference/management/clients/bank-accounts/list-colombian-bank-codes",
+                      "api-reference/management/clients/bank-accounts/list-co-account-types",
                       "api-reference/management/clients/bank-accounts/delete-bank-account"
                     ]
                   }

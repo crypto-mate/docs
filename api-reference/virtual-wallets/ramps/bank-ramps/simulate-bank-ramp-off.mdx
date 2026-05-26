@@ -20,6 +20,10 @@ Simulates a bank ramp-off (crypto to fiat) to preview conversion rates, fees, an
   Amount in cryptocurrency to convert and withdraw.
 </ParamField>
 
+<ParamField body="reference" type="string">
+  Bank statement reference (concept) for the transfer. Required when the destination bank account currency is `COP`; ignored otherwise. Maximum 18 characters.
+</ParamField>
+
 ## Response
 
 <ResponseField name="original_amount" type="number">
@@ -47,7 +51,7 @@ Simulates a bank ramp-off (crypto to fiat) to preview conversion rates, fees, an
 </ResponseField>
 
 <ResponseField name="final_currency" type="string">
-  Final fiat currency. One of `BRL`, `USD`, `EUR`, `ARS`, `MXN`.
+  Final fiat currency. One of `USD`, `EUR`, `MXN`, `BRL`, `GBP`, `COP`.
 </ResponseField>
 
 <RequestExample>

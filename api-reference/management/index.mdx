@@ -4,7 +4,7 @@ sidebarTitle: "Overview"
 description: "Manage your company, clients, bank accounts, blockchains, configurations, and contracted product usage."
 ---
 
-The Management API lets you administer your CryptoMate account: update company details and webhooks, create and manage end-clients (individual and business), link clients to external provider customer IDs, register client bank accounts across payment rails (US/ACH, SPEI, SEPA, PIX), configure payment destinations, and inspect operations, blockchains, and contracted product usage.
+The Management API lets you administer your CryptoMate account: update company details and webhooks, create and manage end-clients (individual and business), link clients to external provider customer IDs, register client bank accounts across payment rails (US/ACH, SPEI, SEPA, PIX, FPS, CO Bank Transfer, Bre-B), configure payment destinations, and inspect operations, blockchains, and contracted product usage.
 
 All endpoints are authenticated with the `x-api-key` header. Most write endpoints require an API key with access level 3; read endpoints typically require access level 1 or higher.
 
@@ -18,7 +18,7 @@ All endpoints are authenticated with the `x-api-key` header. Most write endpoint
     Create individual or business clients, manage provider mappings, and upload identity documents.
   </Card>
   <Card title="Bank accounts" icon="building-columns" href="/api-reference/management/clients/bank-accounts/list-bank-accounts">
-    Register US/ACH, SPEI, SEPA, or PIX bank accounts for your clients.
+    Register US/ACH, SPEI, SEPA, PIX, FPS, CO Bank Transfer, or Bre-B bank accounts for your clients.
   </Card>
   <Card title="Operations" icon="list" href="/api-reference/management/operations/list-operations">
     Inspect the operations catalog available in the platform.

@@ -1,0 +1,46 @@
+---
+title: "List Colombian bank codes"
+description: "Catalog of Colombian bank codes accepted by the CO Bank Transfer rail."
+api: "GET /management/clients/colombian-bank-codes"
+---
+
+Returns the catalog of Colombian banks accepted by the CO Bank Transfer rail. Use this list to populate selectors when creating a [CO Bank Transfer bank account](/api-reference/management/clients/bank-accounts/create-co-bank-transfer-bank-account). The catalog is static; cache it on your side. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of bank code objects.
+
+<ResponseField name="code" type="string">
+  Bank code identifier (4 digits) to send as `bank_code` when creating a CO Bank Transfer bank account.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Bank display name in Spanish.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/colombian-bank-codes" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  { "code": "1001", "name": "Banco de Bogotá" },
+  { "code": "1002", "name": "Banco Popular" },
+  { "code": "1007", "name": "Bancolombia" },
+  { "code": "1013", "name": "BBVA Colombia" },
+  { "code": "1023", "name": "Banco de Occidente" },
+  { "code": "1051", "name": "Banco Davivienda" },
+  { "code": "1052", "name": "Banco AV Villas" },
+  { "code": "1507", "name": "Nequi" },
+  { "code": "1551", "name": "Daviplata" }
+]
+```
+
+</ResponseExample>

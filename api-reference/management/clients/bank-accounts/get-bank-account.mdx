@@ -18,7 +18,17 @@ Retrieves detailed information about a specific bank account. Requires an API ke
 
 ## Response
 
-See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the field list.
+See [Create US bank account](/api-reference/management/clients/bank-accounts/create-us-bank-account) for the shared field list. Each account exposes rail-specific fields depending on its `type`:
+
+- `ACH` → `account_number`, `routing_number`, `account_type`.
+- `SPEI` → `clabe`.
+- `SEPA` → `iban`, `bic`.
+- `PIX` → `pix_key`, `document_number`.
+- `FPS` → `sort_code`, `account_number`.
+- `CO_BANK_TRANSFER` → `bank_code`, `co_account_type`, `document_type`, `document_number`, `phone_number`.
+- `BRE_B` → `bre_b_key`.
+
+Business bank accounts (SEPA, FPS, CO Bank Transfer) also expose `business_name`.
 
 <RequestExample>
 
@@ -31,7 +41,7 @@ curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4
 
 <ResponseExample>
 
-```json 200 OK
+```json 200 OK (ACH)
 {
   "id": "ba_abc123",
   "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
@@ -44,6 +54,39 @@ curl -X GET "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-4
   "account_number": "123456789",
   "routing_number": "021000021",
   "account_type": "checking"
+}
+```
+
+```json 200 OK (CO Bank Transfer)
+{
+  "id": "ba_co_abc123",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "Bancolombia",
+  "bank_holder_name": "ACME Colombia SAS",
+  "account_alias": "Cuenta empresa COP",
+  "type": "CO_BANK_TRANSFER",
+  "currency": "COP",
+  "bank_code": "1007",
+  "co_account_type": "checking",
+  "document_type": "nit",
+  "document_number": "9001234567",
+  "phone_number": "+573001234567",
+  "business_name": "ACME Colombia SAS"
+}
+```
+
+```json 200 OK (Bre-B)
+{
+  "id": "ba_breb_abc123",
+  "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "bank_name": "Banco de Bogotá",
+  "bank_holder_name": "María López",
+  "account_alias": "Mi Bre-B",
+  "type": "BRE_B",
+  "currency": "COP",
+  "bre_b_key": "1234567890123456"
 }
 ```
 

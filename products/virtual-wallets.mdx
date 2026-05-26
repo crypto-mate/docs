@@ -103,6 +103,35 @@ A **company client** is an end user that has completed KYC verification and can 
 3. Real cryptocurrency is transferred out of the holding wallet for fiat conversion.
 4. Fiat currency is sent to the client's linked bank account.
 
+### Colombian Peso (COP) ramps
+
+COP ramps support two payment rails with different user experiences. You select the rail per operation by sending `payment_rail` in [Create bank ramp-on](/api-reference/virtual-wallets/ramps/bank-ramps/create-bank-ramp-on); for ramp-off the rail is inferred from the destination [bank account](/api-reference/management/clients/bank-accounts/list-bank-accounts).
+
+<Note>
+  All COP ramp-offs require a `reference` field (max 18 characters) — the concept that will appear on the recipient's bank statement.
+</Note>
+
+#### CO Bank Transfer (PSE)
+
+PSE (Pagos Seguros en Línea) is a redirect-based flow. When you create a ramp-on with `payment_rail: "co_bank_transfer"`, you must also send a `redirect_url` — the URL will send the user back to after they authorize the payment with their bank.
+
+1. You call [Create bank ramp-on](/api-reference/virtual-wallets/ramps/bank-ramps/create-bank-ramp-on) with `source_currency: "COP"`, `payment_rail: "co_bank_transfer"`, and a `redirect_url`.
+2. The response includes a `start_url` — redirect the user there to begin the PSE checkout in their bank's interface.
+3. The user selects their bank, logs in, and authorizes the COP transfer.
+4. After authorization the user is sent back to your `redirect_url`.
+5. Bridge processes the payment, credits the equivalent crypto amount to the virtual balance, and emits a `ramp_on` webhook event.
+
+#### Bre-B
+
+Bre-B is a key-based flow — no redirect. When you create a ramp-on with `payment_rail: "bre_b"`, the response includes a `bre_b_key` that you display to the user.
+
+1. You call [Create bank ramp-on](/api-reference/virtual-wallets/ramps/bank-ramps/create-bank-ramp-on) with `source_currency: "COP"` and `payment_rail: "bre_b"`.
+2. The response includes a `bre_b_key` — display it to the user so they can copy it.
+3. The user opens their bank app, chooses "Pay with Bre-B", pastes the key, and sends the COP.
+4. Bridge processes the payment, credits the equivalent crypto amount to the virtual balance, and emits a `ramp_on` webhook event.
+
+For ramp-off the client must have an existing Bre-B [bank account](/api-reference/management/clients/bank-accounts/create-bre-b-bank-account) registered with the destination Bre-B key. Funds are sent from the holding wallet to that account.
+
 ## Webhooks
 
 Active Management emits events with `product: "virtual_wallets"` so you can drive your UI and accounting as soon as funds move. Register a webhook URL and `webhook_key` from the Portal (or via the [Subscribe webhook URL](/api-reference/management/company/subscribe-webhook-url) and [Subscribe webhook key](/api-reference/management/company/subscribe-webhook-key) endpoints).

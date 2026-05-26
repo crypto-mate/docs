@@ -4,7 +4,7 @@ description: "Register a UK Faster Payments bank account for a client."
 api: "POST /management/clients/{clientId}/banks/fps"
 ---
 
-Creates a new UK Faster Payments (FPS) bank account for the specified client. Requires an API key with access level 3 or higher.
+Creates a new UK Faster Payments (FPS) bank account for the specified client. Supports both individual and business clients via mutually exclusive holder name fields. Requires an API key with access level 3 or higher.
 
 ## Path parameters
 
@@ -23,11 +23,15 @@ Creates a new UK Faster Payments (FPS) bank account for the specified client. Re
 </ParamField>
 
 <ParamField body="bank_holder_first_name" type="string">
-  Account holder's first name.
+  Account holder's first name. Required for individual clients; mutually exclusive with `business_name`.
 </ParamField>
 
 <ParamField body="bank_holder_last_name" type="string">
-  Account holder's last name.
+  Account holder's last name. Required for individual clients; mutually exclusive with `business_name`.
+</ParamField>
+
+<ParamField body="business_name" type="string">
+  Business name. Required for business clients; mutually exclusive with `bank_holder_first_name` + `bank_holder_last_name`.
 </ParamField>
 
 <ParamField body="sort_code" type="string">
@@ -62,12 +66,12 @@ Creates a new UK Faster Payments (FPS) bank account for the specified client. Re
   Bank name.
 </ResponseField>
 
-<ResponseField name="bank_holder_first_name" type="string">
-  Account holder's first name.
+<ResponseField name="bank_holder_name" type="string">
+  Account holder full name. For individual clients this is `bank_holder_first_name` + `bank_holder_last_name`; for business clients this is `business_name`.
 </ResponseField>
 
-<ResponseField name="bank_holder_last_name" type="string">
-  Account holder's last name.
+<ResponseField name="business_name" type="string">
+  Business name. Only present for business bank accounts.
 </ResponseField>
 
 <ResponseField name="account_alias" type="string">
@@ -123,13 +127,19 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
   "company_id": "comp_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
   "client_id": "client_a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
   "bank_name": "Barclays",
-  "bank_holder_first_name": "John",
-  "bank_holder_last_name": "Smith",
+  "bank_holder_name": "John Smith",
   "account_alias": "Primary UK Account",
   "type": "FPS",
   "currency": "GBP",
   "sort_code": "123456",
   "account_number": "12345678"
+}
+```
+
+```json 400 Owner Fields Invalid
+{
+  "code": "VAL",
+  "message": "Must provide either (bankHolderFirstName + bankHolderLastName) for individual or businessName for business"
 }
 ```
 

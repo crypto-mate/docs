@@ -4,7 +4,7 @@ description: "Register a European SEPA bank account for a client."
 api: "POST /management/clients/{clientId}/banks/sepa"
 ---
 
-Creates a new European SEPA bank account for the specified client. Requires an API key with access level 3 or higher.
+Creates a new European SEPA bank account for the specified client. Supports both individual and business clients via mutually exclusive holder name fields. Requires an API key with access level 3 or higher.
 
 ## Path parameters
 
@@ -23,11 +23,15 @@ Creates a new European SEPA bank account for the specified client. Requires an A
 </ParamField>
 
 <ParamField body="bank_holder_first_name" type="string">
-  Account holder's first name.
+  Account holder's first name. Required for individual clients; mutually exclusive with `business_name`.
 </ParamField>
 
 <ParamField body="bank_holder_last_name" type="string">
-  Account holder's last name.
+  Account holder's last name. Required for individual clients; mutually exclusive with `business_name`.
+</ParamField>
+
+<ParamField body="business_name" type="string">
+  Business name. Required for business clients; mutually exclusive with `bank_holder_first_name` + `bank_holder_last_name`.
 </ParamField>
 
 <ParamField body="account_number" type="string">
@@ -89,6 +93,13 @@ curl -X POST "https://api.cryptomate.me/management/clients/client_a1b2c3d4-e5f6-
   "currency": "EUR",
   "iban": "DE89370400440532013000",
   "bic": "DEUTDEFF"
+}
+```
+
+```json 400 Owner Fields Invalid
+{
+  "code": "VAL",
+  "message": "Must provide either (bankHolderFirstName + bankHolderLastName) for individual or businessName for business"
 }
 ```
 
