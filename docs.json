@@ -35,7 +35,8 @@
             "pages": [
               "products/treasury",
               "products/virtual-wallets",
-              "products/cards"
+              "products/cards",
+              "products/cards-configuration"
             ]
           },
           {

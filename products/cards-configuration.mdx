@@ -1,0 +1,223 @@
+---
+title: "Virtual Cards — Configuration Guide"
+description: "Everything you need to issue, fund, and configure virtual Visa cards for your business."
+---
+
+This guide walks through the full lifecycle of a virtual card: from issuance and funding, through per-card configuration and spending controls, to fraud protection and transaction visibility. All operations are available both via the API (API key auth) and the CryptoMate Portal.
+
+---
+
+## How it works
+
+Each virtual card is a **prepaid Visa card backed by stablecoin collateral**. At the account level, a single **holding wallet** on the Polygon network holds all funds. When a purchase is made, the holding wallet balance is verified and the appropriate amount is debited.
+
+```
+Holding wallet (USDC, Polygon)
+    └── Virtual Card A  ── purchase → authorization → settled
+    └── Virtual Card B  ── purchase → authorization → settled
+    └── Virtual Card C  ...
+```
+
+Cards are issued against a card pack. Each company has a maximum number of active cards based on their contracted product. You can check available capacity via [Get contracted product](/api-reference/management/contracted-products/get-contracted-product).
+
+---
+
+## Creating a card
+
+Use [Create virtual card](/api-reference/cards/virtual-cards/create-card) to issue a new card.
+
+The two required decisions at creation time are:
+
+### Approval method
+
+| Value | How purchases are approved |
+|---|---|
+| `TOP_UP` | The cardholder pre-loads funds onto the card's individual deposit wallet. Purchases are auto-approved against that balance. |
+| `WEBHOOK` | Each purchase triggers a real-time webhook to your endpoint. You have **1,200 ms** to respond with `"00"` / `"SUCCESS"` to approve or `"05"` to decline. Timeout = decline. |
+| `NONE` | CryptoMate approves transactions automatically against the holding wallet with no external intervention. |
+
+<Note>
+The `approval_method` cannot be changed after card creation. If the wrong method is set, delete the card and reissue.
+</Note>
+
+### Spending limits
+
+Set `daily_limit`, `weekly_limit`, and `monthly_limit` (in USD) at creation. These are enforced per card independently. You can update them at any time — see [Spending limits](#spending-limits) below.
+
+Omitting a limit means no limit is applied for that time window.
+
+---
+
+## Funding the account
+
+All cards draw from a shared **holding wallet**. Before cards can transact you must fund this wallet with USDC on Polygon.
+
+Retrieve the holding wallet deposit address via [Get holding balance](/api-reference/cards/holding/get-balance). The minimum deposit is **10 USD**.
+
+<Warning>
+A minimum balance is always locked in the holding wallet to preserve capacity for at least one transaction. Withdrawals that would breach this floor are rejected.
+</Warning>
+
+To return funds to your treasury, use [Withdraw from holding](/api-reference/cards/holding/withdraw).
+
+For cards using `TOP_UP` approval, each card also has a **personal deposit wallet**. Fetch those addresses with [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets). Deposits sent to these wallets are attributed to that specific card and used to settle its purchases.
+
+---
+
+## Managing cards
+
+### Spending limits
+
+Update per-card daily, weekly, and monthly limits independently with [Update card limits](/api-reference/cards/virtual-cards/set-limits). Changes take effect immediately on the next authorization.
+
+### Freeze and unfreeze
+
+Use [Freeze or unfreeze card](/api-reference/cards/virtual-cards/set-frozen) to temporarily block a card. A frozen card declines all purchase attempts until unfrozen. The card state moves between `ACTIVE` and `FROZEN` without losing its configuration.
+
+Useful for: temporary employee suspension, suspicious activity hold, cardholder request.
+
+### Unblocking after a velocity block
+
+If a [velocity rule](#velocity-rules) triggers, the card is automatically moved to `BLOCKED`. Manually unblock it with [Unblock card](/api-reference/cards/virtual-cards/unblock-card). Unblocking also resets the authorization counter so the card can transact immediately.
+
+### Reissuing a card
+
+[Reissue card](/api-reference/cards/virtual-cards/reissue-card) generates a new card number and CVV while keeping the same cardholder configuration, limits, and approval method. Use this when a card number is compromised. The old card is deactivated.
+
+### Updating contact information
+
+| What | Endpoint |
+|---|---|
+| Email for notifications | [Update email](/api-reference/cards/virtual-cards/update-email) |
+| Phone for OTP / 3DS SMS | [Update phone](/api-reference/cards/virtual-cards/update-phone) |
+| Card PIN | [Update PIN](/api-reference/cards/virtual-cards/update-pin) |
+
+### Rotating the deposit wallet
+
+If a `TOP_UP` card's deposit wallet address needs to be rotated (e.g. for compliance or security), use [Rotate deposit wallet](/api-reference/cards/virtual-cards/rotate-deposit-wallet). A new address is generated and associated with the card. The old address stops accepting deposits.
+
+### Deleting a card
+
+[Delete card](/api-reference/cards/virtual-cards/delete-card) permanently deactivates the card. Any remaining balance in the card's individual wallet is returned to the holding wallet. This action is irreversible.
+
+---
+
+## 3DS authentication
+
+3DS adds cardholder verification to e-commerce purchases. Two modes are available per card:
+
+| Mode | Behavior |
+|---|---|
+| `sms` | A one-time code is sent to the cardholder's registered phone. |
+| `webhook` | A webhook is sent to your endpoint with the OTP challenge. Your system delivers it via your own channel. |
+
+Configure the mode with [Set 3DS configuration](/api-reference/cards/virtual-cards/set-3ds-configuration).
+
+When a 3DS challenge fires, a `notification_3ds_authorization` webhook is delivered to your endpoint. For `webhook` mode, use [Respond to 3DS authorization](/api-reference/cards/virtual-cards/respond-3ds-authorization) to submit the OTP entered by the cardholder.
+
+---
+
+## Fraud protection
+
+### Velocity rules
+
+Velocity rules define rate limits at the **account level**, applied per individual card. They protect against card probing and rapid fraudulent use.
+
+Each rule specifies:
+- `max_authorizations` — the maximum number of **approved** authorizations allowed
+- `time_window_seconds` — the sliding window over which the count is measured
+
+You can configure up to **5 rules**. When any rule is breached, the transaction is declined and the card is automatically blocked.
+
+Manage rules with:
+- [Get velocity rules](/api-reference/cards/account/get-velocity-rules)
+- [Replace velocity rules](/api-reference/cards/account/replace-velocity-rules) — replaces the entire ruleset atomically
+- [Delete velocity rules](/api-reference/cards/account/delete-velocity-rules) — removes all rules
+
+Example ruleset — no more than 3 purchases per minute, or 20 per hour:
+
+```json
+{
+  "rules": [
+    { "max_authorizations": 3, "time_window_seconds": 60 },
+    { "max_authorizations": 20, "time_window_seconds": 3600 }
+  ]
+}
+```
+
+When a velocity block fires, a `card_blocked_by_velocity` webhook is sent to your endpoint.
+
+### Risk score fuse
+
+The risk score engine evaluates each purchase and may decline transactions that appear high-risk. When a trusted cardholder is incorrectly blocked (false positive), you can arm a **one-shot fuse** that bypasses risk evaluation for the **next single purchase** on that card. After that purchase fires, the fuse is automatically consumed and normal validation resumes.
+
+<Note>
+The fuse bypasses only the risk score check. All other controls (spending limits, velocity rules, frozen status, holding balance) still apply.
+</Note>
+
+| Operation | Endpoint |
+|---|---|
+| Arm the fuse | [Arm risk score fuse](/api-reference/cards/virtual-cards/arm-risk-score-fuse) |
+| Disarm before it fires | [Disarm risk score fuse](/api-reference/cards/virtual-cards/disarm-risk-score-fuse) |
+| Check fuse state | [Get risk score fuse state](/api-reference/cards/virtual-cards/get-risk-score-fuse) |
+
+---
+
+## Transactions
+
+### Searching transactions
+
+[Search transactions](/api-reference/cards/transactions/search-transactions) returns the transaction history for your account with filtering by card, date range, status, and more.
+
+[Get transaction](/api-reference/cards/transactions/get-transaction) returns the full detail of a single transaction by ID.
+
+### Accumulated spending
+
+[Get accumulated spending](/api-reference/cards/transactions/get-accumulated-spending) returns the total amount spent within a given period, useful for dashboards and limit management.
+
+### PDF statements
+
+[Export transactions PDF](/api-reference/cards/transactions/get-transactions-pdf) generates a downloadable statement for a date range.
+
+---
+
+## Webhooks reference
+
+Register your webhook URL and key via the Portal (Settings → Webhooks) or via [Subscribe webhook URL](/api-reference/management/company/subscribe-webhook-url).
+
+All card events arrive with `"product": "cards"` in the envelope.
+
+| Event | When it fires |
+|---|---|
+| `authorization` | A purchase needs your approval (WEBHOOK mode). Respond within **1,200 ms** with `"00"` / `"SUCCESS"` to approve or `"05"` to decline. |
+| `authorized` | A purchase was approved (TOP_UP / NONE mode, or your webhook approved it). |
+| `cleared` | An authorized purchase cleared and funds settled. |
+| `declined` | A purchase was declined (by your webhook, by velocity rules, by risk score, or by insufficient balance). |
+| `reversal` | An authorized purchase was reversed by the merchant or network. |
+| `refund` | A merchant refund was applied to the card. |
+| `deposit` | Funds arrived at a card's top-up wallet. |
+| `visa_direct_deposit` | A Visa Direct deposit credited the card. |
+| `warranty_withdraw` | A withdrawal from the holding balance completed. |
+| `notification_3ds_authorization` | A 3DS challenge was triggered. Deliver the OTP to the cardholder. |
+| `card_blocked_by_velocity` | A velocity rule triggered and blocked the card. Sent once per `ACTIVE → BLOCKED` transition. |
+
+See [Webhooks](/integration/webhooks) for the full envelope format and authentication.
+
+---
+
+## Quick reference
+
+| Goal | Endpoint |
+|---|---|
+| Issue a card | [POST /cards/virtual-cards/create](/api-reference/cards/virtual-cards/create-card) |
+| List all cards | [GET /cards/virtual-cards](/api-reference/cards/virtual-cards/list-cards) |
+| Get a card | [GET /cards/virtual-cards/{cardId}](/api-reference/cards/virtual-cards/get-card) |
+| Update spending limits | [PATCH /cards/virtual-cards/{cardId}/limits](/api-reference/cards/virtual-cards/set-limits) |
+| Freeze / unfreeze | [PATCH /cards/virtual-cards/{cardId}/frozen](/api-reference/cards/virtual-cards/set-frozen) |
+| Unblock after velocity | [POST /cards/virtual-cards/{cardId}/unblock](/api-reference/cards/virtual-cards/unblock-card) |
+| Reissue card number | [POST /cards/virtual-cards/{cardId}/reissue](/api-reference/cards/virtual-cards/reissue-card) |
+| Check holding balance | [GET /cards/holding/balance](/api-reference/cards/holding/get-balance) |
+| Withdraw from holding | [POST /cards/holding/withdraw](/api-reference/cards/holding/withdraw) |
+| Configure velocity rules | [PUT /cards/account/configuration/velocity-rules](/api-reference/cards/account/replace-velocity-rules) |
+| Arm risk score fuse | [POST /cards/virtual-cards/{cardId}/risk-score-fuse](/api-reference/cards/virtual-cards/arm-risk-score-fuse) |
+| Search transactions | [GET /cards/transactions](/api-reference/cards/transactions/search-transactions) |
