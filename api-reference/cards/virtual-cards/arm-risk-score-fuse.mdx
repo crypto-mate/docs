@@ -1,0 +1,75 @@
+---
+title: "Arm risk score fuse"
+description: "Arm a one-shot bypass fuse that skips risk score validation for the next purchase on a card."
+api: "POST /cards/virtual-cards/{cardId}/risk-score-fuse"
+---
+
+Arms a one-shot fuse on a virtual card. When the fuse is active, the **next purchase** on that card skips risk score validation and is automatically approved (subject to other checks). After that purchase fires, the fuse is consumed and risk validation resumes normally.
+
+Use this endpoint to temporarily unblock a trusted cardholder who is being incorrectly declined by the risk engine. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+<ParamField body="reason" type="string">
+  Optional reason for arming the fuse. Used for audit purposes.
+</ParamField>
+
+## Response
+
+<ResponseField name="card_id" type="string">
+  Card identifier the fuse is armed for.
+</ResponseField>
+
+<ResponseField name="company_id" type="string">
+  Company identifier that owns the card.
+</ResponseField>
+
+<ResponseField name="activated_by" type="string">
+  Identifier of who activated the fuse. For API requests this is the company ID.
+</ResponseField>
+
+<ResponseField name="activated_at" type="string">
+  ISO 8601 timestamp of when the fuse was armed.
+</ResponseField>
+
+<ResponseField name="channel" type="string">
+  Channel through which the fuse was armed. Always `API` for this endpoint.
+</ResponseField>
+
+<ResponseField name="reason" type="string">
+  Reason provided when arming the fuse, if any.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/risk-score-fuse" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reason": "Manual override for trusted transaction"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "card_id": "card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "company_id": "company_abc123",
+  "activated_by": "company_abc123",
+  "activated_at": "2026-05-31T14:30:00",
+  "channel": "API",
+  "reason": "Manual override for trusted transaction"
+}
+```
+
+</ResponseExample>

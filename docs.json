@@ -35,7 +35,8 @@
             "pages": [
               "products/treasury",
               "products/virtual-wallets",
-              "products/cards"
+              "products/cards",
+              "products/cards-configuration"
             ]
           },
           {
@@ -185,7 +186,10 @@
                   "api-reference/cards/virtual-cards/get-virtual-balances",
                   "api-reference/cards/virtual-cards/override-virtual-balance",
                   "api-reference/cards/virtual-cards/set-3ds-configuration",
-                  "api-reference/cards/virtual-cards/respond-3ds-authorization"
+                  "api-reference/cards/virtual-cards/respond-3ds-authorization",
+                  "api-reference/cards/virtual-cards/arm-risk-score-fuse",
+                  "api-reference/cards/virtual-cards/disarm-risk-score-fuse",
+                  "api-reference/cards/virtual-cards/get-risk-score-fuse"
                 ]
               },
               {

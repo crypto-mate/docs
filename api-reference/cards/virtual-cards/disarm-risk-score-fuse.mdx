@@ -1,0 +1,33 @@
+---
+title: "Disarm risk score fuse"
+description: "Disarm the risk score fuse, restoring normal risk validation immediately."
+api: "DELETE /cards/virtual-cards/{cardId}/risk-score-fuse"
+---
+
+Disarms the risk score fuse for a virtual card before it is consumed by a purchase. This immediately restores normal risk score validation. If no fuse is currently armed, the request still succeeds. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Response
+
+Returns HTTP 204 with no body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/risk-score-fuse" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 204 No Content
+```
+
+</ResponseExample>
