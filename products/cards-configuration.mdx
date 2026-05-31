@@ -34,7 +34,6 @@ The two required decisions at creation time are:
 |---|---|
 | `TOP_UP` | The cardholder pre-loads funds onto the card's individual deposit wallet. Purchases are auto-approved against that balance. |
 | `WEBHOOK` | Each purchase triggers a real-time webhook to your endpoint. You have **1,200 ms** to respond with `"00"` / `"SUCCESS"` to approve or `"05"` to decline. Timeout = decline. |
-| `NONE` | CryptoMate approves transactions automatically against the holding wallet with no external intervention. |
 
 <Note>
 The `approval_method` cannot be changed after card creation. If the wrong method is set, delete the card and reissue.
