@@ -17,7 +17,7 @@ Creates a new virtual card assigned to an individual client. Requires an API key
 </ParamField>
 
 <ParamField body="approval_method" type="string">
-  Transaction approval method. Possible values: `TopUp`, `Webhook`.
+  Transaction approval method. Possible values: `TOP_UP`, `WEBHOOK`.
 </ParamField>
 
 <ParamField body="daily_limit" type="number">
@@ -99,7 +99,7 @@ curl -X POST "https://api.cryptomate.me/cards/individual-cards/create" \
   -d '{
     "client_id": "client_abc123",
     "card_holder_name": "John Doe",
-    "approval_method": "TopUp",
+    "approval_method": "TOP_UP",
     "daily_limit": 100.00,
     "weekly_limit": 500.00,
     "monthly_limit": 2000.00
@@ -121,7 +121,7 @@ curl -X POST "https://api.cryptomate.me/cards/individual-cards/create" \
   "expiration_month": 12,
   "expiration_year": 2028,
   "card_holder_name": "JOHN DOE",
-  "approval_method": "TopUp",
+  "approval_method": "TOP_UP",
   "daily_limit": 100.00,
   "weekly_limit": 500.00,
   "monthly_limit": 2000.00,
