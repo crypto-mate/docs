@@ -1,0 +1,41 @@
+---
+title: "Get card types"
+description: "Retrieve available card types for individual cards."
+api: "GET /cards/individual-cards/types"
+---
+
+Returns the list of card types available for individual card creation. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of card type objects.
+
+<ResponseField name="code" type="string">
+  Type code to use in card creation requests.
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Human-readable description of the card type.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/types" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "code": "virtual",
+    "description": "Virtual Card"
+  }
+]
+```
+
+</ResponseExample>

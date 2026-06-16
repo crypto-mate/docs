@@ -1,0 +1,146 @@
+---
+title: "Create individual card"
+description: "Create a new virtual card for an individual client."
+api: "POST /cards/individual-cards/create"
+---
+
+Creates a new virtual card assigned to an individual client. Requires an API key with access level 2 or higher.
+
+## Body
+
+<ParamField body="client_id" type="string" required>
+  ID of the individual client the card will be assigned to.
+</ParamField>
+
+<ParamField body="card_holder_name" type="string" required>
+  Name printed on the card. Maximum 27 characters, letters and spaces only.
+</ParamField>
+
+<ParamField body="approval_method" type="string">
+  Transaction approval method. Possible values: `TopUp`, `Webhook`.
+</ParamField>
+
+<ParamField body="daily_limit" type="number">
+  Daily spending limit in USD.
+</ParamField>
+
+<ParamField body="weekly_limit" type="number">
+  Weekly spending limit in USD.
+</ParamField>
+
+<ParamField body="monthly_limit" type="number">
+  Monthly spending limit in USD.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="rain_card_id" type="string">
+  Rain provider card identifier.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  ID of the individual client the card belongs to.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Card type.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Card status. Possible values: `ACTIVE`, `FROZEN`, `INACTIVE`, `DELETED`, `EXPIRED`.
+</ResponseField>
+
+<ResponseField name="last4" type="string">
+  Last 4 digits of the card number.
+</ResponseField>
+
+<ResponseField name="expiration_month" type="integer">
+  Card expiration month.
+</ResponseField>
+
+<ResponseField name="expiration_year" type="integer">
+  Card expiration year.
+</ResponseField>
+
+<ResponseField name="card_holder_name" type="string">
+  Name printed on the card.
+</ResponseField>
+
+<ResponseField name="approval_method" type="string">
+  Transaction approval method.
+</ResponseField>
+
+<ResponseField name="daily_limit" type="number">
+  Daily spending limit in USD.
+</ResponseField>
+
+<ResponseField name="weekly_limit" type="number">
+  Weekly spending limit in USD.
+</ResponseField>
+
+<ResponseField name="monthly_limit" type="number">
+  Monthly spending limit in USD.
+</ResponseField>
+
+<ResponseField name="forwarded_3ds_type" type="string">
+  3DS challenge delivery method. Possible values: `sms`, `webhook`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/individual-cards/create" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "client_abc123",
+    "card_holder_name": "John Doe",
+    "approval_method": "TopUp",
+    "daily_limit": 100.00,
+    "weekly_limit": 500.00,
+    "monthly_limit": 2000.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201 Created
+{
+  "id": "icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "rain_card_id": "rain_9d3b2c10-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+  "client_id": "client_abc123",
+  "type": "Virtual",
+  "status": "ACTIVE",
+  "last4": "4242",
+  "expiration_month": 12,
+  "expiration_year": 2028,
+  "card_holder_name": "JOHN DOE",
+  "approval_method": "TopUp",
+  "daily_limit": 100.00,
+  "weekly_limit": 500.00,
+  "monthly_limit": 2000.00,
+  "forwarded_3ds_type": "sms"
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "VAL",
+  "message": "clientId must not be null"
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": "AUTH",
+  "message": "Invalid API key"
+}
+```
+
+</ResponseExample>

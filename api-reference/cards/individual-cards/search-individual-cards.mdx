@@ -1,0 +1,145 @@
+---
+title: "Search individual cards"
+description: "Retrieve a paginated list of individual cards with optional filters."
+api: "GET /cards/individual-cards/list/search"
+---
+
+Returns a paginated list of individual cards for the authenticated company. Supports filtering by status, type, client, and text search. Requires an API key with access level 1 or higher.
+
+## Query parameters
+
+<ParamField query="page" type="integer" default="0">
+  Page number (zero-based).
+</ParamField>
+
+<ParamField query="size" type="integer" default="10">
+  Number of results per page.
+</ParamField>
+
+<ParamField query="status" type="string[]">
+  Filter by card status. Repeatable. Possible values: `ACTIVE`, `FROZEN`, `INACTIVE`, `DELETED`, `EXPIRED`.
+</ParamField>
+
+<ParamField query="type" type="string[]">
+  Filter by card type. Repeatable. Possible values: `Virtual`, `Physical`.
+</ParamField>
+
+<ParamField query="client_id" type="string">
+  Filter cards belonging to a specific client.
+</ParamField>
+
+<ParamField query="search_type" type="string">
+  Type of text search to apply. Possible values: `CLIENT_ID`, `LAST4`.
+</ParamField>
+
+<ParamField query="search_text" type="string">
+  Text to search for. Used in combination with `search_type`.
+</ParamField>
+
+## Response
+
+<ResponseField name="content" type="object[]">
+  Array of individual card objects.
+
+  <Expandable title="Card object">
+    <ResponseField name="id" type="string">
+      Unique card identifier.
+    </ResponseField>
+    <ResponseField name="rain_card_id" type="string">
+      Rain provider card identifier.
+    </ResponseField>
+    <ResponseField name="client_id" type="string">
+      ID of the individual client the card belongs to.
+    </ResponseField>
+    <ResponseField name="type" type="string">
+      Card type.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Card status.
+    </ResponseField>
+    <ResponseField name="last4" type="string">
+      Last 4 digits of the card number.
+    </ResponseField>
+    <ResponseField name="expiration_month" type="integer">
+      Card expiration month.
+    </ResponseField>
+    <ResponseField name="expiration_year" type="integer">
+      Card expiration year.
+    </ResponseField>
+    <ResponseField name="card_holder_name" type="string">
+      Name printed on the card.
+    </ResponseField>
+    <ResponseField name="approval_method" type="string">
+      Transaction approval method.
+    </ResponseField>
+    <ResponseField name="daily_limit" type="number">
+      Daily spending limit in USD.
+    </ResponseField>
+    <ResponseField name="weekly_limit" type="number">
+      Weekly spending limit in USD.
+    </ResponseField>
+    <ResponseField name="monthly_limit" type="number">
+      Monthly spending limit in USD.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="page" type="integer">
+  Current page number.
+</ResponseField>
+
+<ResponseField name="size" type="integer">
+  Page size.
+</ResponseField>
+
+<ResponseField name="total_elements" type="integer">
+  Total number of cards matching the filters.
+</ResponseField>
+
+<ResponseField name="total_pages" type="integer">
+  Total number of pages.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/list/search?page=0&size=10&status=ACTIVE" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+```bash Search by last 4 digits
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/list/search?search_type=LAST4&search_text=4242" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "content": [
+    {
+      "id": "icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+      "rain_card_id": "rain_9d3b2c10-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+      "client_id": "client_abc123",
+      "type": "Virtual",
+      "status": "ACTIVE",
+      "last4": "4242",
+      "expiration_month": 12,
+      "expiration_year": 2028,
+      "card_holder_name": "JOHN DOE",
+      "approval_method": "TopUp",
+      "daily_limit": 100.00,
+      "weekly_limit": 500.00,
+      "monthly_limit": 2000.00
+    }
+  ],
+  "page": 0,
+  "size": 10,
+  "total_elements": 1,
+  "total_pages": 1
+}
+```
+
+</ResponseExample>
