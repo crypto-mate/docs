@@ -40,7 +40,7 @@ The API reference tab uses **anchors, not groups**, so clicking a product name (
 
 - **The product is called "Active Management"** in every user-facing label, but the URL slug (`/products/virtual-wallets`, `/api-reference/virtual-wallets/...`) was intentionally left as-is. The individual wallet entity is still called a "virtual wallet" — only change the product-level label, not entity references.
 - **Overview landing pages** use `title: "Overview"` + `sidebarTitle: "Overview"` so the anchor label doesn't get duplicated in the sidebar.
-- **Do not document** Payments, NFTs (Media NFT), or Individual Cards (Rain) — those products are deprecated. `portal/` Spring controllers are also internal-only; only controllers under `.../{domain}/api/controllers/` are public.
+- **Do not document** Payments or NFTs (Media NFT) — those products are deprecated. `portal/` Spring controllers are also internal-only; only controllers under `.../{domain}/api/controllers/` are public.
 
 ## Endpoint page structure
 
@@ -104,7 +104,7 @@ The API Layer is configured with `PropertyNamingStrategy.SNAKE_CASE`, so every J
 
 - Path variables in URL templates — `/mpc/accounts/{accountId}/wallets/{walletId}`. These are literal `@RequestMapping` placeholders in Spring, not JSON.
 - Header names — `x-api-key`, `X-Webhook-Key`, `X-Request-Timestamp`, `X-Trace-Id`, `Idempotency-Key`, `Content-Type`.
-- Enum values — `POLYGON`, `PENDING`, `SUCCESS`, `FAILED`, `TOP_UP`, `NOT_FOUND`, `VAL`, `APP_ERROR`, etc. These are already uppercase / constant-case.
+- Enum values — `POLYGON`, `PENDING`, `SUCCESS`, `FAILED`, `TOPUP`, `NOT_FOUND`, `VAL`, `APP_ERROR`, etc. These are already uppercase / constant-case.
 - Error codes inside the `"code"` JSON value — same as above.
 - Example UUID / hex / email / amount values.
 - Frontmatter `api:` path templates.
@@ -120,7 +120,7 @@ Example — the Java model `Cards_CreateVirtualCardApiRequest.cardHolderName` sh
 ```json
 {
   "card_holder_name": "John Doe",
-  "approval_method": "TOP_UP"
+  "approval_method": "TOPUP"
 }
 ```
 
@@ -149,3 +149,19 @@ When tracing a new endpoint's possible errors: start in the API Layer controller
 - Sentence case for headings.
 - Bold UI elements (e.g. Click **Settings**). Code formatting for file names, commands, paths, and identifiers.
 - One idea per sentence. Lead with the user's goal.
+
+## Language
+
+All documentation content must be written in **English** — page titles, descriptions, body text, table headers, callouts, and step labels. This applies to both product guides and API reference pages.
+
+## Product guides vs API reference
+
+Pages under `products/*.mdx` are **commercial-level guides** aimed at business users, not developers. They explain flows, concepts, and decisions in plain language.
+
+- No API calls, `curl` examples, endpoint paths, or HTTP methods.
+- No JSON bodies, field names, or request/response schemas.
+- No access levels or authentication details.
+- Explain *what* to do and *why* — not *how* to call it programmatically.
+- Link to the API reference for technical details when relevant, but keep the guide itself free of them.
+
+The API reference tab (`api-reference/**`) is where all technical detail lives. Product guides are the "what is this and how do I use it" layer on top.

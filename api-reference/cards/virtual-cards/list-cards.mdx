@@ -31,7 +31,7 @@ Returns an array of virtual card objects.
 </ResponseField>
 
 <ResponseField name="approval_method" type="string">
-  Transaction approval method. Possible values: `NONE`, `WEBHOOK`, `TOP_UP`, `DEFI`.
+  Transaction approval method. Possible values: `NONE`, `WEBHOOK`, `TOPUP`, `DEFI`.
 </ResponseField>
 
 <ResponseField name="daily_limit" type="number">
@@ -73,7 +73,7 @@ curl -X GET "https://api.cryptomate.me/cards/virtual-cards/list" \
     "type": "VIRTUAL",
     "last4": "4242",
     "status": "ACTIVE",
-    "approval_method": "TOP_UP",
+    "approval_method": "TOPUP",
     "daily_limit": 1000.00,
     "weekly_limit": 5000.00,
     "monthly_limit": 20000.00,

@@ -17,7 +17,7 @@ Creates a new virtual card with the specified limits and cardholder information.
 </ParamField>
 
 <ParamField body="approval_method" type="string" required>
-  Transaction approval method. Possible values: `WEBHOOK`, `TOP_UP`, `DEFI`.
+  Transaction approval method. Possible values: `WEBHOOK`, `TOPUP`, `DEFI`.
 </ParamField>
 
 <ParamField body="phone_country_code" type="integer" required>
@@ -91,7 +91,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
   -d '{
     "card_holder_name": "John Doe",
     "email": "cardholder@example.com",
-    "approval_method": "TOP_UP",
+    "approval_method": "TOPUP",
     "phone_country_code": 1,
     "phone": "5551234567",
     "daily_limit": 1000.00,
@@ -114,7 +114,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
   "type": "VIRTUAL",
   "last4": "4242",
   "status": "ACTIVE",
-  "approval_method": "TOP_UP",
+  "approval_method": "TOPUP",
   "daily_limit": 1000.00,
   "weekly_limit": 5000.00,
   "monthly_limit": 20000.00

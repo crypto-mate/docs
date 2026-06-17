@@ -51,7 +51,7 @@ The two required decisions at creation time are:
 
 | Value | How purchases are approved |
 |---|---|
-| `TOP_UP` | The cardholder pre-loads funds onto the card's individual deposit wallet. Purchases are auto-approved against that balance. |
+| `TOPUP` | The cardholder pre-loads funds onto the card's individual deposit wallet. Purchases are auto-approved against that balance. |
 | `WEBHOOK` | Each purchase triggers a real-time webhook to your endpoint. You have **1,200 ms** to respond with `"00"` / `"SUCCESS"` to approve or `"05"` to decline. Timeout = decline. |
 
 <Note>
@@ -78,7 +78,7 @@ A minimum balance is always locked in the holding wallet to preserve capacity fo
 
 To return funds to your treasury, use [Withdraw from holding](/api-reference/cards/holding/withdraw).
 
-For cards using `TOP_UP` approval, each card also has a **personal deposit wallet**. Fetch those addresses with [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets). Deposits sent to these wallets are attributed to that specific card and used to settle its purchases.
+For cards using `TOPUP` approval, each card also has a **personal deposit wallet**. Fetch those addresses with [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets). Deposits sent to these wallets are attributed to that specific card and used to settle its purchases.
 
 ---
 
@@ -112,7 +112,7 @@ If a [velocity rule](#velocity-rules) triggers, the card is automatically moved 
 
 ### Rotating the deposit wallet
 
-If a `TOP_UP` card's deposit wallet address needs to be rotated (e.g. for compliance or security), use [Rotate deposit wallet](/api-reference/cards/virtual-cards/rotate-deposit-wallet). A new address is generated and associated with the card. The old address stops accepting deposits.
+If a `TOPUP` card's deposit wallet address needs to be rotated (e.g. for compliance or security), use [Rotate deposit wallet](/api-reference/cards/virtual-cards/rotate-deposit-wallet). A new address is generated and associated with the card. The old address stops accepting deposits.
 
 ### Deleting a card
 
@@ -310,7 +310,7 @@ All card events arrive with `"product": "cards"` in the envelope.
 | Event | When it fires |
 |---|---|
 | `authorization` | A purchase needs your approval (WEBHOOK mode). Respond within **1,200 ms** with `"00"` / `"SUCCESS"` to approve or `"05"` to decline. Timeout = decline. |
-| `authorized` | A purchase was approved (TOP_UP / NONE mode, or your webhook approved it). |
+| `authorized` | A purchase was approved (TOPUP / NONE mode, or your webhook approved it). |
 | `cleared` | An authorized purchase cleared and funds settled. |
 | `declined` | A purchase was declined (by your webhook, by velocity rules, by risk score, or by insufficient balance). |
 | `reversal` | An authorized purchase was reversed by the merchant or network. |
