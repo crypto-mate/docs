@@ -40,6 +40,12 @@
             ]
           },
           {
+            "group": "Clients",
+            "pages": [
+              "clients/create-client-and-request-product"
+            ]
+          },
+          {
             "group": "Integration",
             "pages": [
               "integration/webhooks",
