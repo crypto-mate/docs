@@ -271,7 +271,7 @@
                 ]
               },
               {
-                "group": "Clients",
+                "group": "Clients (Deprecated)",
                 "pages": [
                   "api-reference/management/clients/get-all-clients",
                   "api-reference/management/clients/get-client",
@@ -311,6 +311,22 @@
                       "api-reference/management/clients/bank-accounts/delete-bank-account"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "Individual Clients",
+                "pages": [
+                  "api-reference/management/individual-clients/create-client",
+                  "api-reference/management/individual-clients/list-clients",
+                  "api-reference/management/individual-clients/get-client",
+                  "api-reference/management/individual-clients/update-client",
+                  "api-reference/management/individual-clients/delete-client",
+                  "api-reference/management/individual-clients/get-countries",
+                  "api-reference/management/individual-clients/get-identifications-by-country",
+                  "api-reference/management/individual-clients/list-products",
+                  "api-reference/management/individual-clients/request-product-enablement",
+                  "api-reference/management/individual-clients/complete-product-documentation",
+                  "api-reference/management/individual-clients/submit-product"
                 ]
               },
               {

@@ -1,0 +1,173 @@
+---
+title: "Create individual client"
+description: "Create a new individual client for the company."
+api: "POST /management/clients/individuals"
+---
+
+Creates a new individual client for the company with identity data and address. Documentation and products are enabled on demand after creation. Requires an API key with access level 1 or higher.
+
+## Body
+
+<ParamField body="first_name" type="string" required>
+  Client's first name.
+</ParamField>
+
+<ParamField body="second_name" type="string">
+  Client's second or middle name.
+</ParamField>
+
+<ParamField body="last_name" type="string" required>
+  Client's last name.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Client's email address. Must be a valid email.
+</ParamField>
+
+<ParamField body="birth_date" type="string" required>
+  Client's date of birth (`yyyy-mm-dd`).
+</ParamField>
+
+<ParamField body="address" type="object" required>
+  Client's physical address.
+
+  <Expandable title="address">
+    <ParamField body="street_line1" type="string" required>
+      Primary street address line.
+    </ParamField>
+    <ParamField body="street_line2" type="string">
+      Secondary address line (suite, apartment, etc.).
+    </ParamField>
+    <ParamField body="city" type="string" required>
+      City name.
+    </ParamField>
+    <ParamField body="postal_code" type="string" required>
+      Postal or ZIP code.
+    </ParamField>
+    <ParamField body="state" type="string" required>
+      State or province code. Use the subdivision code returned by [Get supported countries](/api-reference/management/individual-clients/get-countries).
+    </ParamField>
+    <ParamField body="state_code" type="string">
+      State numeric code.
+    </ParamField>
+    <ParamField body="country" type="string" required>
+      ISO 3166-1 alpha-3 country code (e.g., `ARG`, `USA`).
+    </ParamField>
+    <ParamField body="country_code" type="string">
+      Country numeric code.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="phone_country_code" type="integer">
+  Phone country code.
+</ParamField>
+
+<ParamField body="phone_number" type="long">
+  Phone number.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique client identifier.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Client type. Always `individual`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status (e.g., `pending`, `active`, `rejected`).
+</ResponseField>
+
+<ResponseField name="first_name" type="string">
+  Client's first name.
+</ResponseField>
+
+<ResponseField name="second_name" type="string">
+  Client's second or middle name.
+</ResponseField>
+
+<ResponseField name="last_name" type="string">
+  Client's last name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Client's email address.
+</ResponseField>
+
+<ResponseField name="birth_date" type="string">
+  Client's date of birth.
+</ResponseField>
+
+<ResponseField name="address" type="object">
+  Client's physical address with `street_line1`, `street_line2`, `city`, `postal_code`, `state`, `state_code`, `country`, `country_code`.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Creation timestamp.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Last update timestamp.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/management/clients/individuals" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Maria",
+    "second_name": "Julia",
+    "last_name": "Barber",
+    "email": "mjuliabarber@example.com",
+    "birth_date": "1984-11-21",
+    "address": {
+      "street_line1": "Florida 9860",
+      "city": "Del Viso",
+      "postal_code": "1669",
+      "state": "ARG-B",
+      "country": "ARG"
+    },
+    "phone_country_code": 54,
+    "phone_number": 1168860622
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201 Created
+{
+  "id": "4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG",
+  "type": "individual",
+  "status": "pending",
+  "first_name": "Maria",
+  "second_name": "Julia",
+  "last_name": "Barber",
+  "email": "mjuliabarber@example.com",
+  "birth_date": "1984-11-21",
+  "address": {
+    "street_line1": "Florida 9860",
+    "city": "Del Viso",
+    "postal_code": "1669",
+    "state": "ARG-B",
+    "country": "ARG"
+  },
+  "created_at": "2026-04-15T10:30:00",
+  "updated_at": "2026-04-15T10:30:00"
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "VAL",
+  "message": "Company client already exists for this company"
+}
+```
+
+</ResponseExample>

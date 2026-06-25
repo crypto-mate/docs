@@ -1,0 +1,37 @@
+---
+title: "Delete individual client"
+description: "Permanently delete an individual client."
+api: "DELETE /management/clients/individuals/{id}"
+---
+
+Permanently deletes a client and all associated data from the company. Requires an API key with access level 3 or higher.
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the client to delete.
+</ParamField>
+
+## Response
+
+Returns `204 No Content` on success with an empty body.
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.cryptomate.me/management/clients/individuals/4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with id: 4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG"
+}
+```
+
+</ResponseExample>
