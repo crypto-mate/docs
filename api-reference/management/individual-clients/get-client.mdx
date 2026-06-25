@@ -46,6 +46,14 @@ Retrieves detailed information about a specific individual client by their uniqu
   Client's date of birth.
 </ResponseField>
 
+<ResponseField name="phone_country_code" type="integer">
+  Phone country code.
+</ResponseField>
+
+<ResponseField name="phone_number" type="long">
+  Phone number.
+</ResponseField>
+
 <ResponseField name="address" type="object">
   Client's physical address with `street_line1`, `street_line2`, `city`, `postal_code`, `state`, `state_code`, `country`, `country_code`.
 </ResponseField>
@@ -79,6 +87,8 @@ curl -X GET "https://api.cryptomate.me/management/clients/individuals/4QWq1rQtjn
   "last_name": "Barber",
   "email": "mjuliabarber@example.com",
   "birth_date": "1984-11-21",
+  "phone_country_code": 54,
+  "phone_number": 1168860622,
   "address": {
     "street_line1": "Florida 9860",
     "city": "Del Viso",
