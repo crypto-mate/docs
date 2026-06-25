@@ -113,14 +113,6 @@ Creates a new individual client for the company with identity data and address. 
   Client's physical address with `street_line1`, `street_line2`, `city`, `postal_code`, `state`, `state_code`, `country`, `country_code`.
 </ResponseField>
 
-<ResponseField name="created_at" type="string">
-  Creation timestamp.
-</ResponseField>
-
-<ResponseField name="updated_at" type="string">
-  Last update timestamp.
-</ResponseField>
-
 <RequestExample>
 
 ```bash cURL
@@ -167,9 +159,7 @@ curl -X POST "https://api.cryptomate.me/management/clients/individuals" \
     "postal_code": "1669",
     "state": "ARG-B",
     "country": "ARG"
-  },
-  "created_at": "2026-04-15T10:30:00",
-  "updated_at": "2026-04-15T10:30:00"
+  }
 }
 ```
 
