@@ -1,0 +1,54 @@
+---
+title: "Get identification types by country"
+description: "List valid identification document types for a country."
+api: "GET /management/clients/individuals/identifications/{countryCode}"
+---
+
+Retrieves all valid identification document types for a specific country. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="countryCode" type="string" required>
+  ISO country code (e.g., `US`, `MX`, `BR`).
+</ParamField>
+
+## Response
+
+Returns an array of identification type objects.
+
+<ResponseField name="type" type="string">
+  Identification type code (e.g., `SSN`).
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Identification type description.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/individuals/identifications/US" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "type": "SSN",
+    "description": "Social Security Number"
+  }
+]
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Country not found or no identification types available"
+}
+```
+
+</ResponseExample>

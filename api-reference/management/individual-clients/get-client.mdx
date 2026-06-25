@@ -1,0 +1,101 @@
+---
+title: "Get individual client by ID"
+description: "Retrieve an individual client by its unique identifier."
+api: "GET /management/clients/individuals/{id}"
+---
+
+Retrieves detailed information about a specific individual client by their unique identifier. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique client identifier.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Client type. Always `individual`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Account status (e.g., `pending`, `active`, `rejected`).
+</ResponseField>
+
+<ResponseField name="first_name" type="string">
+  Client's first name.
+</ResponseField>
+
+<ResponseField name="second_name" type="string">
+  Client's second or middle name.
+</ResponseField>
+
+<ResponseField name="last_name" type="string">
+  Client's last name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Client's email address.
+</ResponseField>
+
+<ResponseField name="birth_date" type="string">
+  Client's date of birth.
+</ResponseField>
+
+<ResponseField name="address" type="object">
+  Client's physical address with `street_line1`, `street_line2`, `city`, `postal_code`, `state`, `state_code`, `country`, `country_code`.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Creation timestamp.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Last update timestamp.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/individuals/4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG",
+  "type": "individual",
+  "status": "active",
+  "first_name": "Maria",
+  "second_name": "Julia",
+  "last_name": "Barber",
+  "email": "mjuliabarber@example.com",
+  "birth_date": "1984-11-21",
+  "address": {
+    "street_line1": "Florida 9860",
+    "city": "Del Viso",
+    "postal_code": "1669",
+    "state": "ARG-B",
+    "country": "ARG"
+  },
+  "created_at": "2026-04-15T10:30:00",
+  "updated_at": "2026-04-15T10:30:00"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with id: 4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG"
+}
+```
+
+</ResponseExample>

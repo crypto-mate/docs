@@ -1,0 +1,138 @@
+---
+title: "List client products"
+description: "List every product enablement request of a client."
+api: "GET /management/clients/individuals/{clientId}/products"
+---
+
+Retrieves every product enablement request of the client, newest first and including the rejected history. Pending requests carry their missing requirements and rejected ones the rejection motive. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="clientId" type="string" required>
+  Unique identifier of the client.
+</ParamField>
+
+## Response
+
+Returns an array of product enablement requests.
+
+<ResponseField name="id" type="string">
+  Unique product enablement identifier.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  Client identifier.
+</ResponseField>
+
+<ResponseField name="product" type="string">
+  Enabled product. Possible values: `cards_individuals`, `ramps_cards`, `ramps_pix`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Status of the enablement request. Possible values: `requested`, `pending_documentation`, `in_kyc`, `enabled`, `rejected`.
+</ResponseField>
+
+<ResponseField name="missing_requirements" type="object">
+  Documents and data still required to enable the product.
+
+  <Expandable title="missing_requirements">
+    <ResponseField name="documents" type="array">
+      Document requirements that are still missing. Each item has `id`, `name`, `description`, `required`, and a `valid_documents` array describing accepted documents and their metadata fields.
+    </ResponseField>
+    <ResponseField name="data" type="array">
+      Data requirements that are still missing. Each item has `id`, `name`, `description`, `required`, and a `fields` array of `{ key, data_type, required }`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="rejection_code" type="string">
+  Rejection code when the request was rejected.
+</ResponseField>
+
+<ResponseField name="rejection_description" type="string">
+  Rejection motive when the request was rejected.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  Timestamp when the enablement request was created.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Timestamp when the enablement request was last updated.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/individuals/4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG/products" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "2VvyMx6rNLRB1W9euCyJGe46qyoiVPzh",
+    "client_id": "4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG",
+    "product": "cards_individuals",
+    "status": "pending_documentation",
+    "missing_requirements": {
+      "documents": [
+        {
+          "id": "identity_document",
+          "name": "Identity document",
+          "description": "A valid government-issued identity document",
+          "required": true,
+          "valid_documents": [
+            {
+              "id": "passport",
+              "name": "Passport",
+              "description": "A valid passport",
+              "required": true,
+              "require_image": true,
+              "require_back_image": false,
+              "metadata": [
+                {
+                  "id": "number",
+                  "name": "Document Number",
+                  "data_type": "STRING",
+                  "required": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "data": [
+        {
+          "id": "personal_information",
+          "name": "Personal information",
+          "description": "Personal information needed for KYC",
+          "required": true,
+          "fields": [
+            {
+              "key": "phone",
+              "data_type": "PHONE",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    "created_at": "2026-04-15T10:30:00",
+    "updated_at": "2026-04-15T10:30:00"
+  }
+]
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Company client not found with id: 4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG"
+}
+```
+
+</ResponseExample>

@@ -4,6 +4,10 @@ description: "Register a Colombian Bre-B bank account for a client."
 api: "POST /management/clients/{clientId}/banks/bre-b"
 ---
 
+<Warning>
+  **Deprecated.** This endpoint is no longer available in the public API and is kept for reference only.
+</Warning>
+
 Creates a new Colombian Bre-B bank account (COP) for the specified client. Bre-B uses a single key (`bre_b_key`) as the destination identifier and does not distinguish between individual and business clients. Requires an API key with access level 3 or higher.
 
 Virtual account numbers are not accepted as Bre-B keys.

@@ -1,0 +1,64 @@
+---
+title: "Get supported countries"
+description: "List all supported countries and their subdivisions."
+api: "GET /management/clients/individuals/countries"
+---
+
+Retrieves a list of all supported countries with their subdivisions for client registration. Use the returned `alpha3` and subdivision `code` values when building a client's address. Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="count" type="integer">
+  Total number of countries.
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  List of country details.
+
+  <Expandable title="data">
+    <ResponseField name="name" type="string">
+      Country name.
+    </ResponseField>
+    <ResponseField name="alpha3" type="string">
+      ISO 3166-1 alpha-3 country code.
+    </ResponseField>
+    <ResponseField name="postal_code_format" type="string">
+      Postal code format pattern.
+    </ResponseField>
+    <ResponseField name="subdivisions" type="array">
+      List of country subdivisions (states, provinces), each with `name` and `code`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/individuals/countries" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "count": 50,
+  "data": [
+    {
+      "name": "United States",
+      "alpha3": "USA",
+      "postal_code_format": "#####",
+      "subdivisions": [
+        {
+          "name": "California",
+          "code": "CA"
+        }
+      ]
+    }
+  ]
+}
+```
+
+</ResponseExample>

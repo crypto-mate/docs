@@ -1,0 +1,48 @@
+---
+title: "List individual clients"
+description: "Retrieve all individual clients for the company."
+api: "GET /management/clients/individuals"
+---
+
+Retrieves a list of all individual clients for the company. Requires an API key with access level 1 or higher.
+
+## Response
+
+Returns an array of individual client objects. See [Get individual client by ID](/api-reference/management/individual-clients/get-client) for the full field list.
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/management/clients/individuals" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "id": "4QWq1rQtjnLM0wMswTRY9AmM4XTvY4GG",
+    "type": "individual",
+    "status": "active",
+    "first_name": "Maria",
+    "second_name": "Julia",
+    "last_name": "Barber",
+    "email": "mjuliabarber@example.com",
+    "birth_date": "1984-11-21",
+    "address": {
+      "street_line1": "Florida 9860",
+      "city": "Del Viso",
+      "postal_code": "1669",
+      "state": "ARG-B",
+      "country": "ARG"
+    },
+    "created_at": "2026-04-15T10:30:00",
+    "updated_at": "2026-04-15T10:30:00"
+  }
+]
+```
+
+</ResponseExample>
