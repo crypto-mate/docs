@@ -101,16 +101,16 @@ Creates a new individual client for the company with identity data and address. 
   Client's date of birth.
 </ResponseField>
 
+<ResponseField name="phone_country_code" type="integer">
+  Phone country code.
+</ResponseField>
+
+<ResponseField name="phone_number" type="long">
+  Phone number.
+</ResponseField>
+
 <ResponseField name="address" type="object">
   Client's physical address with `street_line1`, `street_line2`, `city`, `postal_code`, `state`, `state_code`, `country`, `country_code`.
-</ResponseField>
-
-<ResponseField name="created_at" type="string">
-  Creation timestamp.
-</ResponseField>
-
-<ResponseField name="updated_at" type="string">
-  Last update timestamp.
 </ResponseField>
 
 <RequestExample>
@@ -151,15 +151,15 @@ curl -X POST "https://api.cryptomate.me/management/clients/individuals" \
   "last_name": "Barber",
   "email": "mjuliabarber@example.com",
   "birth_date": "1984-11-21",
+  "phone_country_code": 54,
+  "phone_number": 1168860622,
   "address": {
     "street_line1": "Florida 9860",
     "city": "Del Viso",
     "postal_code": "1669",
     "state": "ARG-B",
     "country": "ARG"
-  },
-  "created_at": "2026-04-15T10:30:00",
-  "updated_at": "2026-04-15T10:30:00"
+  }
 }
 ```
 
