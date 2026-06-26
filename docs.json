@@ -230,7 +230,9 @@
                     "group": "Simulate",
                     "pages": [
                       "api-reference/cards/webhooks/simulate/simulate-authorize",
-                      "api-reference/cards/webhooks/simulate/simulate-clearing"
+                      "api-reference/cards/webhooks/simulate/simulate-clearing",
+                      "api-reference/cards/webhooks/simulate/simulate-refund",
+                      "api-reference/cards/webhooks/simulate/simulate-reversal"
                     ]
                   }
                 ]
