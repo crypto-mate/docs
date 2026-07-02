@@ -82,6 +82,40 @@ For cards using `TOPUP` approval, each card also has a **personal deposit wallet
 
 ---
 
+## Fees wallet
+
+The commissions charged on card activity — the fees applied to deposits and transactions — accumulate in a dedicated **fees wallet** on Polygon, separate from the holding wallet that funds card spending.
+
+<Note>
+You can both **view the balances** and **make withdrawals** from the CryptoMate Portal (Cards → Summary → **Accumulated fees**), as well as through the API described below.
+</Note>
+
+### Pending vs. available balance
+
+The fees wallet tracks two balances, visible in the Portal (Cards → Summary → **Accumulated fees**):
+
+| Balance | Meaning |
+|---|---|
+| **Pending to credit** | Fees already charged but not yet settled on-chain into the fees wallet. A virtual balance that becomes available progressively as fees are collected from card deposits and spending. |
+| **Available (on-chain)** | Fees already settled on-chain in the fees wallet. **Only this balance can be withdrawn.** |
+
+### Withdrawing fees
+
+Use [Withdraw fees](/api-reference/cards/account/withdraw-fees-wallet) to send accumulated fees to one of your wallets. Withdrawals draw only from the **available on-chain balance** and are made per token (`token_symbol`).
+
+The destination must be a **whitelisted address enabled for at least 24 hours**:
+
+<Warning>
+A newly whitelisted address cannot receive a fees withdrawal until **24 hours** after it was added. This delay is a security measure against unauthorized address changes.
+</Warning>
+
+- Manage the whitelist from the Portal (Cards → **Configuration**).
+- List the addresses currently eligible (enabled ≥ 24 h) with [Get fees wallet whitelisted addresses](/api-reference/cards/account/get-fees-wallet-whitelisted-addresses).
+
+Fees withdrawals are also available from the Portal (Cards → Summary → Accumulated fees → **Withdraw fees**). Each withdrawal is recorded in the transaction history as a `CLIENT_FEES_WITHDRAW` movement.
+
+---
+
 ## Managing cards
 
 ### Spending limits
@@ -338,6 +372,8 @@ See [Webhooks](/integration/webhooks) for the full envelope format, authenticati
 | Reissue card number | [POST /cards/virtual-cards/{cardId}/reissue](/api-reference/cards/virtual-cards/reissue-card) |
 | Check holding balance | [GET /cards/holding/balance](/api-reference/cards/holding/get-balance) |
 | Withdraw from holding | [POST /cards/holding/withdraw](/api-reference/cards/holding/withdraw) |
+| List fees withdrawal addresses | [GET /cards/account/fees-wallet/whitelisted-addresses](/api-reference/cards/account/get-fees-wallet-whitelisted-addresses) |
+| Withdraw fees | [POST /cards/account/fees-wallet/withdraw](/api-reference/cards/account/withdraw-fees-wallet) |
 | Configure velocity rules | [PUT /cards/account/configuration/velocity-rules](/api-reference/cards/account/replace-velocity-rules) |
 | Arm risk score fuse | [POST /cards/virtual-cards/{cardId}/risk-score-fuse](/api-reference/cards/virtual-cards/arm-risk-score-fuse) |
 | Search transactions | [GET /cards/transactions](/api-reference/cards/transactions/search-transactions) |
