@@ -191,6 +191,8 @@
                   "api-reference/cards/virtual-cards/rotate-deposit-wallet",
                   "api-reference/cards/virtual-cards/get-virtual-balances",
                   "api-reference/cards/virtual-cards/override-virtual-balance",
+                  "api-reference/cards/virtual-cards/add-virtual-balance",
+                  "api-reference/cards/virtual-cards/subtract-virtual-balance",
                   "api-reference/cards/virtual-cards/set-3ds-configuration",
                   "api-reference/cards/virtual-cards/respond-3ds-authorization",
                   "api-reference/cards/virtual-cards/arm-risk-score-fuse",
