@@ -4,7 +4,7 @@ description: "Add a delta amount to the virtual balance of a card."
 api: "POST /cards/virtual-cards/{cardId}/virtual-balance/add"
 ---
 
-Adds a delta amount to the virtual balance of a card for a specific token, and returns the resulting balance. Unlike [Override virtual balance](/api-reference/cards/virtual-cards/override-virtual-balance), which sets an absolute value, this endpoint applies a relative change.
+Adds a delta amount to the virtual balance of a card, and returns the resulting balance in USD. Unlike [Override virtual balance](/api-reference/cards/virtual-cards/override-virtual-balance), which sets an absolute value, this endpoint applies a relative change.
 
 The operation is idempotent: retrying a request with the same `x-idempotency-key` returns the original result instead of applying the amount a second time. Requires an API key with access level 2 or higher.
 
@@ -23,34 +23,12 @@ The operation is idempotent: retrying a request with the same `x-idempotency-key
 ## Body
 
 <ParamField body="amount" type="number" required>
-  Amount to add. Must be greater than 0, with up to 9 integer digits and 2 decimal places.
-</ParamField>
-
-<ParamField body="token_address" type="string" required>
-  Contract address of the token to credit.
-</ParamField>
-
-<ParamField body="blockchain" type="string" required>
-  Blockchain of the token (e.g. `POLYGON`).
+  Amount to add, in USD. Must be greater than 0, with up to 2 decimal places.
 </ParamField>
 
 ## Response
 
-<ResponseField name="blockchain" type="string">
-  Blockchain of the token.
-</ResponseField>
-
-<ResponseField name="token_symbol" type="string">
-  Symbol of the token (e.g. `USDT`).
-</ResponseField>
-
-<ResponseField name="token_address" type="string">
-  Contract address of the token.
-</ResponseField>
-
-<ResponseField name="virtual_balance" type="number">
-  Resulting virtual balance for the token after the amount is applied.
-</ResponseField>
+Returns the new total card balance in USD as a JSON number.
 
 <RequestExample>
 
@@ -60,9 +38,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4
   -H "x-idempotency-key: 4f5b8c9d-1e2a-4b3c-9d8e-7f6a5b4c3d2e" \
   -H "Content-Type: application/json" \
   -d '{
-    "amount": 100.00,
-    "token_address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-    "blockchain": "POLYGON"
+    "amount": 100.00
   }'
 ```
 
@@ -71,12 +47,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4
 <ResponseExample>
 
 ```json 200 OK
-{
-  "blockchain": "POLYGON",
-  "token_symbol": "USDT",
-  "token_address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-  "virtual_balance": 350.00
-}
+350.00
 ```
 
 ```json 412 Missing Idempotency Key
