@@ -1,0 +1,65 @@
+---
+title: "Set individual card PIN"
+description: "Set or update the PIN for an individual card."
+api: "PUT /cards/individual-cards/{cardId}/pin"
+---
+
+Sets or updates the PIN for an individual card. Requires an API key with access level 3 or higher.
+
+## Path
+
+<ParamField path="cardId" type="string" required>
+  Unique identifier of the individual card.
+</ParamField>
+
+## Body
+
+<ParamField body="pin" type="string" required>
+  New PIN for the card. Must be 4 to 12 digits.
+</ParamField>
+
+## Response
+
+Returns HTTP 200 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X PUT "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/pin" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pin": "1234"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{}
+```
+
+```json 400 Bad Request
+{
+  "code": "VAL",
+  "message": "PIN must be 4 to 12 digits"
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": "AUTH",
+  "message": "Invalid API key"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
