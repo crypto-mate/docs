@@ -317,6 +317,25 @@ The fuse bypasses only the risk score check. All other controls (spending limits
 
 ---
 
+### Blocked merchant categories
+
+Block purchases based on the **type of business** the merchant runs — its merchant category. You keep a **blocklist of categories**, and any purchase from a merchant in one of those categories is automatically declined. Use it to keep company spending away from business types you never want your cards used for — for example, gambling and casinos, or cash advances and ATM withdrawals.
+
+<Note>
+This control applies to **company cards** only. It is set once at the account level and enforced across every card your company issues. It does not apply to individual cards.
+</Note>
+
+Manage the blocklist from the Portal (Cards → **Configuration**), the same place where you manage country blocking. You choose categories by name from a standard catalog — there are no codes to type in.
+
+On top of your own list, **CryptoMate maintains a platform-wide list of blocked categories** that always applies to every company. These platform categories are shown in the Portal for reference and **cannot be removed** — your list is added on top of them, never replacing them.
+
+How the block behaves:
+
+- If a purchase comes from a merchant whose category is on your blocklist — or on the platform-wide list — it is **declined**.
+- A category blocked by the platform stays blocked even when it is not on your own list.
+
+---
+
 ### Blocked merchant countries
 
 Block purchases based on the country where the merchant is located. You keep a **blocklist of countries**, and any purchase from a merchant in one of those countries is automatically declined. Use it as a geographic fraud and security control — for example, to keep spending inside the regions where your business actually operates and shut out purchases from countries you never expect to transact in.
