@@ -317,6 +317,27 @@ The fuse bypasses only the risk score check. All other controls (spending limits
 
 ---
 
+### Blocked merchant countries
+
+Block purchases based on the country where the merchant is located. You keep a **blocklist of countries**, and any purchase from a merchant in one of those countries is automatically declined. Use it as a geographic fraud and security control — for example, to keep spending inside the regions where your business actually operates and shut out purchases from countries you never expect to transact in.
+
+<Note>
+This control applies to **company cards** only. It is set once at the account level and enforced across every card your company issues. It does not apply to individual cards.
+</Note>
+
+Manage the blocklist from the Portal (Cards → **Configuration**), the same place where you manage merchant category (MCC) blocking. Add or remove countries at any time; changes take effect on the next purchase. Countries are identified by their standard two-letter country codes (for example, `US` or `AR`).
+
+How the block behaves:
+
+- If a purchase comes from a merchant whose country is on your blocklist, it is **declined** — the reason reported is "merchant country blocked".
+- If a purchase does not carry a merchant country, it cannot be evaluated against the list and is **not** blocked by this control.
+
+<Note>
+Blocked countries and blocked merchant categories (MCC) are **independent, additive controls**. A purchase is declined if it matches **either** list — neither one overrides the other.
+</Note>
+
+---
+
 ## Transactions
 
 ### Searching transactions
