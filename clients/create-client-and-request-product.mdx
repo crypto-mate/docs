@@ -142,6 +142,10 @@ Satisfy each entry in `missing_requirements.documents` with [Complete product do
 
 Use the `document_type` listed under the requirement's `valid_documents`, attach the base64-encoded image(s), and include any required `metadata` fields.
 
+<Warning>
+  **Identification documents must be a photo or scan of the physical document.** For any identity document — such as `passport`, `national_id`, `drivers_license` or `ssn` — upload an image of the actual physical document. Digital-only versions issued by government apps are **not accepted** and will fail the KYC review, including for example Argentina's **Mi Argentina**, Colombia's **Cédula Digital**, Brazil's **Carteira Digital de Trânsito**, Mexico's **Licencia Digital CDMX**, and Europe's **EU Digital Identity Wallet** / **France Identité** / Spain's **MiDNI**, or any similar national digital-ID app. Make sure the whole document is visible, in focus and well lit, and include the back image (`image_back`) whenever the document type requires it.
+</Warning>
+
 ```bash cURL
 curl -X POST "https://api.cryptomate.me/management/clients/individuals/{clientId}/products/{productRequestId}/documentation" \
   -H "x-api-key: $CRYPTOMATE_API_KEY" \
