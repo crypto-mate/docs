@@ -6,6 +6,10 @@ api: "POST /management/clients/individuals/{clientId}/products/{productRequestId
 
 Submits a missing document for a pending product enablement request. Data fields are set through [Update individual client](/api-reference/management/individual-clients/update-client) instead. The response returns the remaining missing requirements and any rejected items with their reason. Requires an API key with access level 3 or higher.
 
+<Warning>
+  **Identification documents must be a photo or scan of the physical document.** For any identity document — such as `passport`, `national_id`, `drivers_license` or `ssn` — `image_front` (and `image_back` when required) must show the actual physical document. Digital-only versions issued by government apps are **not accepted** and will fail the KYC review, including for example Argentina's **Mi Argentina**, Colombia's **Cédula Digital**, Brazil's **Carteira Digital de Trânsito**, Mexico's **Licencia Digital CDMX**, and Europe's **EU Digital Identity Wallet** / **France Identité** / Spain's **MiDNI**, or any similar national digital-ID app.
+</Warning>
+
 ## Path parameters
 
 <ParamField path="clientId" type="string" required>
@@ -26,10 +30,10 @@ Submits a missing document for a pending product enablement request. Data fields
       Document type key as listed in the missing requirements (e.g., `passport`).
     </ParamField>
     <ParamField body="image_front" type="string" required>
-      Base64-encoded front image content.
+      Base64-encoded front image content. For identification documents (e.g. `passport`, `national_id`, `drivers_license`, `ssn`) this must be a photo or scan of the physical document — digital-only app versions (Mi Argentina, Cédula Digital Colombiana, Carteira Digital de Trânsito, Licencia Digital CDMX, EU Digital Identity Wallet / France Identité / MiDNI, etc.) are rejected by KYC.
     </ParamField>
     <ParamField body="image_back" type="string">
-      Base64-encoded back image content, when the document type requires it.
+      Base64-encoded back image content, when the document type requires it. For identification documents it must also show the physical document, not a digital-only version.
     </ParamField>
     <ParamField body="replace" type="boolean">
       Whether an existing document of the same type should be replaced. Defaults to `false`.
