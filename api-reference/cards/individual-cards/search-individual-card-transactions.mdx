@@ -4,11 +4,7 @@ description: "Retrieve transactions for an individual card with filtering, pagin
 api: "GET /cards/individual-cards/transactions/{cardId}/search"
 ---
 
-Searches and retrieves transactions for a specific individual card with filtering, pagination, and sorting. This is the Individual Cards equivalent of the Enterprise [Search card transactions](/api-reference/cards/transactions/search-transactions) endpoint. Requires an API key with access level 1 or higher.
-
-<Note>
-Available to companies with Individual Cards enabled, including US companies.
-</Note>
+Searches and retrieves transactions for a specific individual card with filtering, pagination, and sorting. Requires an API key with access level 1 or higher.
 
 ## Path parameters
 
@@ -47,8 +43,6 @@ Available to companies with Individual Cards enabled, including US companies.
 </ParamField>
 
 ## Response
-
-Full parity with the Enterprise endpoint: the pagination envelope and the per-movement fields are identical (both surfaces read from the same transaction source).
 
 <ResponseField name="number_of_elements" type="integer">
   Number of transactions in the current page.
