@@ -256,6 +256,18 @@
                 ]
               },
               {
+                "group": "Transactions",
+                "pages": [
+                  "api-reference/cards/individual-cards/search-individual-card-transactions"
+                ]
+              },
+              {
+                "group": "Balance",
+                "pages": [
+                  "api-reference/cards/individual-cards/get-individual-cards-balance"
+                ]
+              },
+              {
                 "group": "Configuration",
                 "pages": [
                   "api-reference/cards/individual-cards/get-card-types",
