@@ -264,7 +264,8 @@
               {
                 "group": "Balance",
                 "pages": [
-                  "api-reference/cards/individual-cards/get-individual-cards-balance"
+                  "api-reference/cards/individual-cards/get-individual-cards-balance",
+                  "api-reference/cards/individual-cards/get-individual-card-balance"
                 ]
               },
               {
