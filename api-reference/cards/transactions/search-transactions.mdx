@@ -15,7 +15,7 @@ Searches and retrieves transactions for a specific card with filtering, paginati
 ## Query parameters
 
 <ParamField query="operations" type="array" required>
-  Transaction operation types to include. At least one is required. Possible values: `AUTHORIZATION`, `CLEARING`, `REFUND`, `REVERSAL`.
+  Transaction operation types to include. At least one is required. Possible values: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND`.
 </ParamField>
 
 <ParamField query="from_date" type="string">
@@ -67,7 +67,7 @@ Searches and retrieves transactions for a specific card with filtering, paginati
 <RequestExample>
 
 ```bash cURL
-curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/search?operations=AUTHORIZATION&operations=CLEARING&from_date=2026-01-01&to_date=2026-04-20&size=10&page_number=1" \
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/search?operations=TRANSACTION_AUTHORIZATION&operations=TRANSACTION_CLEARED&from_date=2026-01-01&to_date=2026-04-20&size=10&page_number=1" \
   -H "x-api-key: $CRYPTOMATE_API_KEY"
 ```
 
@@ -85,7 +85,7 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
     {
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       "datetime": "2026-04-15T10:30:00",
-      "operation": "CLEARING",
+      "operation": "TRANSACTION_CLEARED",
       "bill_amount": 100.00,
       "bill_currency": "USD",
       "transaction_amount": 85.50,

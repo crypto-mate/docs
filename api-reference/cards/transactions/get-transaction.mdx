@@ -27,7 +27,7 @@ Returns the full detail of a single card transaction by its ID. Requires an API 
 </ResponseField>
 
 <ResponseField name="operation" type="string">
-  Type of card operation. Possible values: `AUTHORIZATION`, `CLEARING`, `REFUND`, `REVERSAL`.
+  Type of card operation. Possible values: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND`.
 </ResponseField>
 
 <ResponseField name="bill_amount" type="number">
@@ -109,7 +109,7 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "datetime": "2026-04-15T10:30:00",
-  "operation": "CLEARING",
+  "operation": "TRANSACTION_CLEARED",
   "bill_amount": 100.00,
   "bill_currency": "USD",
   "transaction_amount": 85.50,
