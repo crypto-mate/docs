@@ -1,0 +1,52 @@
+---
+title: "Get individual card PAN and CVV"
+description: "Retrieve the sensitive card data (PAN and CVV) of an individual card."
+api: "GET /cards/individual-cards/{cardId}/pan"
+---
+
+Returns the full card number (PAN) and verification code (CVV/CVC) of an individual card issued via Rain. Requires an API key with access level 2 or higher.
+
+Responses are returned with `Cache-Control: no-store` — do not cache or persist these values.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Individual card identifier.
+</ParamField>
+
+## Response
+
+<ResponseField name="pan" type="string">
+  Full card number (PAN).
+</ResponseField>
+
+<ResponseField name="cvc" type="string">
+  Card verification code (CVC/CVV).
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/pan" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "pan": "4242424242424242",
+  "cvc": "123"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
