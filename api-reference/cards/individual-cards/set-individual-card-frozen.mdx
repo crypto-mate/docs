@@ -1,0 +1,58 @@
+---
+title: "Freeze or unfreeze individual card"
+description: "Set the frozen status of an individual card."
+api: "PATCH /cards/individual-cards/{cardId}/frozen"
+---
+
+Sets the frozen status of an individual card issued via Rain. Freezing locks the card and unfreezing reactivates it. Frozen cards cannot authorize transactions until they are unfrozen. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Unique identifier of the individual card.
+</ParamField>
+
+## Body
+
+<ParamField body="freeze" type="boolean">
+  Whether to freeze (`true`) or unfreeze (`false`) the card.
+</ParamField>
+
+## Response
+
+Returns HTTP 200 with an empty body on success.
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/frozen" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "freeze": true
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{}
+```
+
+```json 401 Unauthorized
+{
+  "code": "AUTH",
+  "message": "Invalid API key"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
