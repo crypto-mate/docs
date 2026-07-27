@@ -296,49 +296,6 @@
                 ]
               },
               {
-                "group": "Clients (Deprecated)",
-                "pages": [
-                  "api-reference/management/clients/get-all-clients",
-                  "api-reference/management/clients/get-client",
-                  "api-reference/management/clients/create-client",
-                  "api-reference/management/clients/create-business-client",
-                  "api-reference/management/clients/update-client",
-                  "api-reference/management/clients/delete-client",
-                  "api-reference/management/clients/enable-otp",
-                  "api-reference/management/clients/get-by-phone-whatsapp",
-                  "api-reference/management/clients/list-associated-persons",
-                  "api-reference/management/clients/get-pending-documents",
-                  "api-reference/management/clients/get-countries",
-                  "api-reference/management/clients/get-documentation-checklist",
-                  "api-reference/management/clients/get-identifications-by-country",
-                  "api-reference/management/clients/get-business-identifications-by-country",
-                  "api-reference/management/clients/get-business-industries",
-                  "api-reference/management/clients/get-occupation-codes",
-                  "api-reference/management/clients/create-provider-customer",
-                  "api-reference/management/clients/list-provider-customers",
-                  "api-reference/management/clients/get-provider-customer-by-provider",
-                  "api-reference/management/clients/update-provider-customer",
-                  "api-reference/management/clients/delete-provider-customer",
-                  {
-                    "group": "Bank Accounts",
-                    "pages": [
-                      "api-reference/management/clients/bank-accounts/list-bank-accounts",
-                      "api-reference/management/clients/bank-accounts/get-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-us-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-spei-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-sepa-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-pix-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-fps-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-co-bank-transfer-bank-account",
-                      "api-reference/management/clients/bank-accounts/create-bre-b-bank-account",
-                      "api-reference/management/clients/bank-accounts/list-colombian-bank-codes",
-                      "api-reference/management/clients/bank-accounts/list-co-account-types",
-                      "api-reference/management/clients/bank-accounts/delete-bank-account"
-                    ]
-                  }
-                ]
-              },
-              {
                 "group": "Individual Clients",
                 "pages": [
                   "api-reference/management/individual-clients/create-client",
@@ -352,6 +309,23 @@
                   "api-reference/management/individual-clients/request-product-enablement",
                   "api-reference/management/individual-clients/complete-product-documentation",
                   "api-reference/management/individual-clients/submit-product"
+                ]
+              },
+              {
+                "group": "Bank Accounts",
+                "pages": [
+                  "api-reference/management/clients/bank-accounts/list-bank-accounts",
+                  "api-reference/management/clients/bank-accounts/get-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-us-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-spei-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-sepa-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-pix-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-fps-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-co-bank-transfer-bank-account",
+                  "api-reference/management/clients/bank-accounts/create-bre-b-bank-account",
+                  "api-reference/management/clients/bank-accounts/list-colombian-bank-codes",
+                  "api-reference/management/clients/bank-accounts/list-co-account-types",
+                  "api-reference/management/clients/bank-accounts/delete-bank-account"
                 ]
               },
               {
@@ -398,6 +372,92 @@
      "vscode"
    ]
   },
+  "redirects": [
+    {
+      "source": "/api-reference/management/clients/get-all-clients",
+      "destination": "/api-reference/management/individual-clients/list-clients"
+    },
+    {
+      "source": "/api-reference/management/clients/get-client",
+      "destination": "/api-reference/management/individual-clients/get-client"
+    },
+    {
+      "source": "/api-reference/management/clients/create-client",
+      "destination": "/api-reference/management/individual-clients/create-client"
+    },
+    {
+      "source": "/api-reference/management/clients/update-client",
+      "destination": "/api-reference/management/individual-clients/update-client"
+    },
+    {
+      "source": "/api-reference/management/clients/delete-client",
+      "destination": "/api-reference/management/individual-clients/delete-client"
+    },
+    {
+      "source": "/api-reference/management/clients/get-countries",
+      "destination": "/api-reference/management/individual-clients/get-countries"
+    },
+    {
+      "source": "/api-reference/management/clients/get-identifications-by-country",
+      "destination": "/api-reference/management/individual-clients/get-identifications-by-country"
+    },
+    {
+      "source": "/api-reference/management/clients/create-business-client",
+      "destination": "/api-reference/management/individual-clients/create-client"
+    },
+    {
+      "source": "/api-reference/management/clients/get-business-identifications-by-country",
+      "destination": "/api-reference/management/individual-clients/get-identifications-by-country"
+    },
+    {
+      "source": "/api-reference/management/clients/enable-otp",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/get-by-phone-whatsapp",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/list-associated-persons",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/get-pending-documents",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/get-documentation-checklist",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/get-business-industries",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/get-occupation-codes",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/create-provider-customer",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/list-provider-customers",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/get-provider-customer-by-provider",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/update-provider-customer",
+      "destination": "/api-reference/management/index"
+    },
+    {
+      "source": "/api-reference/management/clients/delete-provider-customer",
+      "destination": "/api-reference/management/index"
+    }
+  ],
   "footer": {
     "socials": {
       "x": "https://x.com/mintlify",

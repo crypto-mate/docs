@@ -1,10 +1,10 @@
 ---
 title: "Overview"
 sidebarTitle: "Overview"
-description: "Manage your company, clients, bank accounts, blockchains, configurations, and contracted product usage."
+description: "Manage your company, individual clients, bank accounts, blockchains, configurations, and contracted product usage."
 ---
 
-The Management API lets you administer your CryptoMate account: update company details and webhooks, create and manage end-clients (individual and business), link clients to external provider customer IDs, register client bank accounts across payment rails (US/ACH, SPEI, SEPA, PIX, FPS, CO Bank Transfer, Bre-B), configure payment destinations, and inspect operations, blockchains, and contracted product usage.
+The Management API lets you administer your CryptoMate account: update company details and webhooks, create and manage individual end-clients and their product enablement, register client bank accounts across payment rails (US/ACH, SPEI, SEPA, PIX, FPS, CO Bank Transfer, Bre-B), configure payment destinations, and inspect operations, blockchains, and contracted product usage.
 
 All endpoints are authenticated with the `x-api-key` header. Most write endpoints require an API key with access level 3; read endpoints typically require access level 1 or higher.
 
@@ -14,8 +14,8 @@ All endpoints are authenticated with the `x-api-key` header. Most write endpoint
   <Card title="Company" icon="building" href="/api-reference/management/company/get-company">
     Retrieve and update your company profile and webhook subscription.
   </Card>
-  <Card title="Clients" icon="users" href="/api-reference/management/clients/get-all-clients">
-    Create individual or business clients, manage provider mappings, and upload identity documents.
+  <Card title="Individual clients" icon="users" href="/api-reference/management/individual-clients/list-clients">
+    Create and manage individual clients, request product enablement, and submit their documentation.
   </Card>
   <Card title="Bank accounts" icon="building-columns" href="/api-reference/management/clients/bank-accounts/list-bank-accounts">
     Register US/ACH, SPEI, SEPA, PIX, FPS, CO Bank Transfer, or Bre-B bank accounts for your clients.
