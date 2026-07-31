@@ -254,7 +254,8 @@
                   "api-reference/cards/individual-cards/get-individual-card-pan",
                   "api-reference/cards/individual-cards/search-individual-cards",
                   "api-reference/cards/individual-cards/set-individual-card-pin",
-                  "api-reference/cards/individual-cards/set-individual-card-frozen"
+                  "api-reference/cards/individual-cards/set-individual-card-frozen",
+                  "api-reference/cards/individual-cards/get-individual-card-top-up-wallets"
                 ]
               },
               {

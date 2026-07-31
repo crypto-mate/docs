@@ -1,0 +1,87 @@
+---
+title: "Get individual card top-up wallets"
+description: "Retrieve the funding wallets available for topping up an individual card."
+api: "GET /cards/individual-cards/{cardId}/top-up"
+---
+
+Returns the funding wallets you can use to load balance onto an individual card. Each wallet gives you a deposit address on a blockchain, the tokens accepted at that address, and any additional deposit addresses provided by ramp partners. Requires an API key with access level 1 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Individual card identifier.
+</ParamField>
+
+## Response
+
+Returns an array of top-up wallet objects.
+
+<ResponseField name="address" type="string">
+  Deposit address of the top-up wallet.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network of the deposit address.
+</ResponseField>
+
+<ResponseField name="tokens" type="array">
+  Tokens accepted at the deposit address. Each token contains `symbol`, `name`, `decimals`, `address`, and `blockchain`.
+</ResponseField>
+
+<ResponseField name="ramps" type="array">
+  Additional deposit addresses provided by ramp partners. Each ramp contains `address`, `blockchain`, `memo`, and `tokens`. Send the `memo` along with the deposit when the chain requires one, such as Stellar.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/top-up" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "address": "0x1234567890abcdef1234567890abcdef12345678",
+    "blockchain": "POLYGON",
+    "tokens": [
+      {
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "decimals": "6",
+        "address": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        "blockchain": "POLYGON"
+      }
+    ],
+    "ramps": [
+      {
+        "address": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "blockchain": "POLYGON",
+        "memo": null,
+        "tokens": [
+          {
+            "symbol": "USDC",
+            "name": "USD Coin",
+            "decimals": "6",
+            "address": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+            "blockchain": "POLYGON"
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
