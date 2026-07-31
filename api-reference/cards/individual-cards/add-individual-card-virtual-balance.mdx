@@ -1,0 +1,60 @@
+---
+title: "Add to individual card virtual balance"
+description: "Add a delta amount to the virtual balance of an individual card."
+api: "POST /cards/individual-cards/{cardId}/virtual-balance/add"
+---
+
+Adds a delta amount to the virtual balance of an individual card, and returns the resulting balance in USD. Unlike [Override individual card virtual balance](/api-reference/cards/individual-cards/override-individual-card-virtual-balance), which sets an absolute value, this endpoint applies a relative change.
+
+The operation is idempotent: retrying a request with the same `x-idempotency-key` returns the original result instead of applying the amount a second time. Requires an API key with access level 2 or higher.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Individual card identifier.
+</ParamField>
+
+## Headers
+
+<ParamField header="x-idempotency-key" type="string" required>
+  Unique key that makes the operation safe to retry. Reusing the same key returns the original result without applying the amount again. Requests with a missing or blank key are rejected.
+</ParamField>
+
+## Body
+
+<ParamField body="amount" type="number" required>
+  Amount to add, in USD. Must be greater than 0, with up to 2 decimal places.
+</ParamField>
+
+## Response
+
+Returns the new total card balance in USD as a JSON number.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/individual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/virtual-balance/add" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "x-idempotency-key: 4f5b8c9d-1e2a-4b3c-9d8e-7f6a5b4c3d2e" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 100.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+350.00
+```
+
+```json 412 Missing Idempotency Key
+{
+  "code": "VAL",
+  "message": "x-idempotency-key header is required"
+}
+```
+
+</ResponseExample>

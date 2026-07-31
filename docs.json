@@ -267,7 +267,10 @@
               {
                 "group": "Balance",
                 "pages": [
-                  "api-reference/cards/individual-cards/get-individual-card-balance"
+                  "api-reference/cards/individual-cards/get-individual-card-balance",
+                  "api-reference/cards/individual-cards/override-individual-card-virtual-balance",
+                  "api-reference/cards/individual-cards/add-individual-card-virtual-balance",
+                  "api-reference/cards/individual-cards/subtract-individual-card-virtual-balance"
                 ]
               },
               {
