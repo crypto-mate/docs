@@ -1,0 +1,148 @@
+---
+title: "Update individual card limits"
+description: "Change the spending limits of an already issued individual card."
+api: "PATCH /cards/individual-cards/{cardId}/limits"
+---
+
+Updates the daily, weekly and monthly spending limits of an individual card that is already issued, without reissuing it. The new limits apply to the following authorizations. Requires an API key with access level 2 or higher.
+
+Every limit is optional and independent. Send a number to set that limit, or `null` to remove it so the card has no cap for that window. Any limit you omit from the body is treated as `null` and therefore removed — always send the three fields with their intended values.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Unique identifier of the individual card.
+</ParamField>
+
+## Body
+
+<ParamField body="daily_limit" type="number">
+  Daily spending limit in USD. Must be zero or greater. Send `null` to remove the daily limit.
+</ParamField>
+
+<ParamField body="weekly_limit" type="number">
+  Weekly spending limit in USD. Must be zero or greater. Send `null` to remove the weekly limit.
+</ParamField>
+
+<ParamField body="monthly_limit" type="number">
+  Monthly spending limit in USD. Must be zero or greater. Send `null` to remove the monthly limit.
+</ParamField>
+
+## Response
+
+Returns the updated card.
+
+<ResponseField name="id" type="string">
+  Unique card identifier.
+</ResponseField>
+
+<ResponseField name="rain_card_id" type="string">
+  Rain provider card identifier.
+</ResponseField>
+
+<ResponseField name="client_id" type="string">
+  ID of the individual client the card belongs to.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Card type.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Card status. Possible values: `ACTIVE`, `FROZEN`, `INACTIVE`, `DELETED`, `EXPIRED`.
+</ResponseField>
+
+<ResponseField name="last4" type="string">
+  Last 4 digits of the card number.
+</ResponseField>
+
+<ResponseField name="expiration_month" type="integer">
+  Card expiration month.
+</ResponseField>
+
+<ResponseField name="expiration_year" type="integer">
+  Card expiration year.
+</ResponseField>
+
+<ResponseField name="card_holder_name" type="string">
+  Name printed on the card.
+</ResponseField>
+
+<ResponseField name="approval_method" type="string">
+  Transaction approval method.
+</ResponseField>
+
+<ResponseField name="daily_limit" type="number">
+  Updated daily spending limit in USD. `null` when there is no daily limit.
+</ResponseField>
+
+<ResponseField name="weekly_limit" type="number">
+  Updated weekly spending limit in USD. `null` when there is no weekly limit.
+</ResponseField>
+
+<ResponseField name="monthly_limit" type="number">
+  Updated monthly spending limit in USD. `null` when there is no monthly limit.
+</ResponseField>
+
+<ResponseField name="forwarded_3ds_type" type="string">
+  3DS challenge delivery method. Possible values: `sms`, `webhook`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/limits" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "daily_limit": 250.00,
+    "weekly_limit": null,
+    "monthly_limit": 3000.00
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23",
+  "rain_card_id": "rain_9d3b2c10-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+  "client_id": "client_abc123",
+  "type": "Virtual",
+  "status": "ACTIVE",
+  "last4": "4242",
+  "expiration_month": 12,
+  "expiration_year": 2028,
+  "card_holder_name": "JOHN DOE",
+  "approval_method": "TOPUP",
+  "daily_limit": 250.00,
+  "weekly_limit": null,
+  "monthly_limit": 3000.00,
+  "forwarded_3ds_type": "sms"
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "BAD_REQUEST",
+  "message": "daily_limit cannot be negative"
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": "AUTH",
+  "message": "Invalid API key"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
