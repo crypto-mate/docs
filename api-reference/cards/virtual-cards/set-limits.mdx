@@ -15,15 +15,15 @@ Updates the daily, weekly, and monthly spending limits for a virtual card. Requi
 ## Body
 
 <ParamField body="daily_limit" type="number">
-  Daily spending limit in USD.
+  Daily spending limit in USD. Must be zero or greater.
 </ParamField>
 
 <ParamField body="weekly_limit" type="number">
-  Weekly spending limit in USD.
+  Weekly spending limit in USD. Must be zero or greater.
 </ParamField>
 
 <ParamField body="monthly_limit" type="number">
-  Monthly spending limit in USD.
+  Monthly spending limit in USD. Must be zero or greater.
 </ParamField>
 
 ## Response
@@ -71,6 +71,13 @@ curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-
   "daily_limit": 1500.00,
   "weekly_limit": 7500.00,
   "monthly_limit": 25000.00
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "BAD_REQUEST",
+  "message": "daily_limit cannot be negative"
 }
 ```
 
