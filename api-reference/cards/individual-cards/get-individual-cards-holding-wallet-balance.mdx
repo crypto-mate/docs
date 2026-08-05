@@ -1,0 +1,57 @@
+---
+title: "Get individual cards holding wallet balance"
+description: "Retrieve the balance and deposit details of the individual cards program's holding wallet."
+api: "GET /cards/individual-cards/holding-wallet/balance"
+---
+
+Retrieves the current balance and deposit details of the individual cards program's holding wallet, used as a central pool to fund the program before distributing balance to each individual card. Requires an API key with access level 1 or higher.
+
+## Response
+
+<ResponseField name="balance" type="number">
+  Current balance of the holding wallet.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain network the address belongs to.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Deposit address of the program's holding wallet.
+</ResponseField>
+
+<ResponseField name="tokens" type="object">
+  Map of supported token symbols to their contract addresses on `blockchain`.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/holding-wallet/balance" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "balance": 10000.00,
+  "blockchain": "POLYGON",
+  "address": "0x1234567890abcdef1234567890abcdef12345678",
+  "tokens": {
+    "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    "USDT": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f"
+  }
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Individual cards holding wallet not found for company"
+}
+```
+
+</ResponseExample>
