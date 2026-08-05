@@ -217,6 +217,12 @@
                 ]
               },
               {
+                "group": "Individual Cards",
+                "pages": [
+                  "api-reference/cards/individual-cards/get-holding-wallet"
+                ]
+              },
+              {
                 "group": "Account",
                 "pages": [
                   "api-reference/cards/account/get-velocity-rules",
