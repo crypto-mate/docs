@@ -217,12 +217,6 @@
                 ]
               },
               {
-                "group": "Individual Cards",
-                "pages": [
-                  "api-reference/cards/individual-cards/get-holding-wallet"
-                ]
-              },
-              {
                 "group": "Account",
                 "pages": [
                   "api-reference/cards/account/get-velocity-rules",
@@ -278,6 +272,12 @@
                   "api-reference/cards/individual-cards/override-individual-card-virtual-balance",
                   "api-reference/cards/individual-cards/add-individual-card-virtual-balance",
                   "api-reference/cards/individual-cards/subtract-individual-card-virtual-balance"
+                ]
+              },
+              {
+                "group": "Holding",
+                "pages": [
+                  "api-reference/cards/individual-cards/get-individual-cards-holding-wallet"
                 ]
               },
               {
