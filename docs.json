@@ -277,8 +277,7 @@
               {
                 "group": "Configuration",
                 "pages": [
-                  "api-reference/cards/individual-cards/get-card-types",
-                  "api-reference/cards/individual-cards/get-limit-frequencies"
+                  "api-reference/cards/individual-cards/get-card-types"
                 ]
               }
             ]
