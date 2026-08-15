@@ -1,0 +1,88 @@
+---
+title: "API Versioning"
+description: "Opt into newer response shapes with the X-API-Version header without breaking your current integration."
+---
+
+## Overview
+
+Some endpoints support more than one response shape. You choose which one you get with the `X-API-Version` header:
+
+```bash
+curl -X GET "https://api.cryptomate.me/cards/transactions/{cardId}/search?operations=PURCHASE" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "X-API-Version: 2"
+```
+
+Versions are opt-in. If you send no header, an unknown value, or `1`, you get version 1 — the shape your integration already handles. Nothing changes for you until you ask for it.
+
+<Note>
+  The header applies to the whole API, not to a single endpoint. Once you send `X-API-Version: 2`, every endpoint that supports version 2 answers with its version 2 shape.
+</Note>
+
+## What version 2 changes
+
+Version 2 reports **operations** instead of **events**.
+
+A card purchase is not a single event for the issuer. It starts with an authorization, is followed by one or more clearings when the merchant collects, and can include reversals, refunds and closing adjustments — sometimes days apart. Version 1 reports each of those as its own movement, so one purchase shows up several times with different amounts, and reconstructing what the purchase actually cost is up to you.
+
+Version 2 groups them: one purchase is one movement, labelled `PURCHASE`, carrying the amount that is currently charged to the card.
+
+| | Version 1 | Version 2 |
+|---|---|---|
+| Unit | One item per lifecycle event | One item per operation |
+| Purchase amount | The amount of that event | The current amount of the whole operation, fees included |
+| `operations` filter | Internal event names | Families: `PURCHASE` and the operations that are not purchases |
+| Cards | All | Enterprise cards only |
+
+Endpoints that support version 2 today:
+
+- [Search card transactions](/api-reference/cards/transactions/search-transactions)
+- [Get transaction](/api-reference/cards/transactions/get-transaction)
+
+## Filtering by operation in version 2
+
+Version 2 accepts these values in `operations`:
+
+| Value | What it covers |
+|---|---|
+| `PURCHASE` | The whole purchase family: authorizations, approvals, clearings, reversals, refunds, declines and closing adjustments |
+| `WALLET_DEPOSIT` | Deposits into the card wallet |
+| `WALLET_WITHDRAWAL` | Withdrawals from the card wallet |
+| `WARRANTY_DEPOSIT` | Deposits into the warranty wallet |
+| `WARRANTY_WITHDRAWAL` | Withdrawals from the warranty wallet |
+| `OVERRIDE_VIRTUAL_BALANCE` | Manual adjustments of the card's virtual balance |
+| `VISA_DIRECT_DEPOSIT` | Visa Direct deposits |
+
+Internal event names such as `TRANSACTION_APPROVED` or `TRANSACTION_CLEARED` are rejected with `412`. In version 2 a purchase already includes them, so mixing both would return the same purchase twice: once collapsed and once as a loose event.
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Operations [TRANSACTION_APPROVED] are not available in version 2 of this endpoint: a purchase is searched as PURCHASE, which already covers its authorizations, clearings, reversals, refunds and closure adjustments. Available operations: [PURCHASE, WARRANTY_WITHDRAWAL, WARRANTY_DEPOSIT, WALLET_WITHDRAWAL, WALLET_DEPOSIT, OVERRIDE_VIRTUAL_BALANCE, VISA_DIRECT_DEPOSIT]"
+}
+```
+
+## Enterprise cards only
+
+Version 2 covers enterprise cards. Asking for it on an individual card returns `412`. Individual cards keep their own endpoints under [Individual Cards](/api-reference/cards/individual-cards/search-individual-card-transactions).
+
+## Migrating
+
+<Steps>
+  <Step title="Replace the operation filter">
+    Swap the purchase event names in `operations` for `PURCHASE`. Keep the other values as they are.
+  </Step>
+  <Step title="Send the header">
+    Add `X-API-Version: 2` to your requests.
+  </Step>
+  <Step title="Adjust to fewer rows">
+    Expect fewer movements for the same date range, and `total_elements` counting operations rather than events. A purchase you used to see three times is now one row.
+  </Step>
+  <Step title="Read the amount from the operation">
+    `bill_amount` is what the card is charged for that purchase right now, fees included. You no longer need to add up authorizations and clearings.
+  </Step>
+</Steps>
+
+<Warning>
+  Version 2 of the search returns a smaller set of fields per movement — no `status`, no `decline_reason`, no fee breakdown. A declined purchase is reported as a `PURCHASE` movement with the amount that was attempted. If you rely on any of those fields to classify movements, stay on version 1 or read the detail endpoint for the movements you care about.
+</Warning>

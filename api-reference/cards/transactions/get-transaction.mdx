@@ -94,6 +94,103 @@ Returns the full detail of a single card transaction by its ID. Requires an API 
   Deposit fee charged to the client.
 </ResponseField>
 
+## Version 2: the state of the whole operation
+
+Send `X-API-Version: 2` to get the amount and the events of the whole operation instead of the single event you asked for. See [API Versioning](/integration/api-versioning).
+
+Enterprise cards only: on an individual card the endpoint answers `412`.
+
+### Response
+
+Same fields as version 1, with three differences: `status`, `original_balance` and `new_balance` are not returned, `merchant_city` is added, and the amounts describe the operation rather than the event.
+
+<ResponseField name="bill_amount" type="number">
+  Current amount of the operation in billing currency, fees included. Can be `0` after a full reversal, or negative if a refund exceeded what was charged.
+</ResponseField>
+
+<ResponseField name="lifecycle" type="object">
+  The states the operation went through.
+
+  <Expandable title="lifecycle">
+    <ResponseField name="transaction_id" type="string">
+      Identifier the issuer gave to the operation. All its events share it.
+    </ResponseField>
+
+    <ResponseField name="state" type="string">
+      How the operation closed against what was authorized. Possible values: `SIMPLE` (a single event, nothing to consolidate), `PARTIAL` (the issuer settled less than authorized, the hold is still in place), `COMPLETE` (settled matches authorized), `OVER_CAPTURE` (the issuer settled more than authorized).
+    </ResponseField>
+
+    <ResponseField name="event_count" type="integer">
+      Number of events the operation is made of.
+    </ResponseField>
+
+    <ResponseField name="events" type="array">
+      The events themselves, oldest first. Each one has `id`, `operation` and `datetime`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Note>
+  Events carry no amount. The net of an operation depends on the fee regime it closed under, so adding up the events does not reproduce `bill_amount`. Read the amount from the operation.
+</Note>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "X-API-Version: 2"
+```
+
+```json 200 OK
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "datetime": "2026-04-15T10:30:00",
+  "operation": "TRANSACTION_APPROVED",
+  "bill_amount": 101.25,
+  "bill_currency": "USD",
+  "transaction_amount": 85.50,
+  "transaction_currency": "EUR",
+  "exchange_rate": 1.17,
+  "merchant_name": "Amazon.com",
+  "merchant_city": "Seattle",
+  "decline_reason": null,
+  "fee_fx_provider": 0.50,
+  "fee_fx_client": 0.75,
+  "fee_atm_provider": 0,
+  "fee_atm_client": 0,
+  "fee_deposit_provider": 0,
+  "fee_deposit_client": 0,
+  "lifecycle": {
+    "transaction_id": "tid_019f4d29",
+    "state": "PARTIAL",
+    "event_count": 3,
+    "events": [
+      {
+        "id": "fc98fb66-f0ae-4d3a-8600-412a6ddcd89f",
+        "operation": "TRANSACTION_AUTHORIZATION",
+        "datetime": "2026-04-15T10:30:00"
+      },
+      {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "operation": "TRANSACTION_APPROVED",
+        "datetime": "2026-04-15T10:30:02"
+      },
+      {
+        "id": "9c7e2f80-1a4b-4c3d-8e2f-7b6a5c4d3e2f",
+        "operation": "TRANSACTION_CLEARED",
+        "datetime": "2026-04-17T09:00:00"
+      }
+    ]
+  }
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "The consolidated transaction detail is only available for ENTERPRISE cards"
+}
+```
+
 <RequestExample>
 
 ```bash cURL
