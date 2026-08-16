@@ -50,7 +50,8 @@
             "pages": [
               "integration/webhooks",
               "integration/rate-limiting",
-              "integration/errors"
+              "integration/errors",
+              "integration/card-decline-codes"
             ]
           },
           {

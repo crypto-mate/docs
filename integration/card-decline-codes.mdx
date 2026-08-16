@@ -1,0 +1,146 @@
+---
+title: "Card decline codes"
+description: "Read the decline_reason object returned with declined card purchases, and understand what each decline code means."
+---
+
+## Overview
+
+When a card purchase is declined, the API call that reports it still succeeds. You get HTTP `200`, and the decline travels inside the response body in the `decline_reason` object.
+
+Decline codes and [API error codes](/integration/errors) are two separate catalogs. A decline code never appears in the `code` field of an error response, and an error code never appears in `decline_reason`.
+
+<Warning>
+  Do not treat a decline as a failed request. A declined purchase is a successful read of a transaction whose outcome was "declined". If you retry the API call, you get the same declined transaction back.
+</Warning>
+
+## Where you see it
+
+| Surface | Field |
+|---|---|
+| [Search card transactions](/api-reference/cards/transactions/search-transactions) | `decline_reason` on each transaction |
+| [Get transaction](/api-reference/cards/transactions/get-transaction) | `decline_reason` on the transaction |
+| [Webhooks](/integration/webhooks), `declined` event | `decline_reason` inside `data` |
+
+## The decline_reason object
+
+REST responses carry three fields:
+
+<ResponseField name="code" type="string">
+  The decline code. This is the only field you should branch on.
+</ResponseField>
+
+<ResponseField name="simple_reason" type="string">
+  A short human-readable label for the code. Suitable for display, not for parsing.
+</ResponseField>
+
+<ResponseField name="detailed_reason" type="string">
+  A longer human-readable sentence. It repeats `simple_reason` when no additional detail was recorded.
+</ResponseField>
+
+```json
+{
+  "decline_reason": {
+    "code": "C020",
+    "simple_reason": "Transaction could not be processed. Please try again or contact support.",
+    "detailed_reason": "Transaction could not be processed. Please try again or contact support."
+  }
+}
+```
+
+Webhook payloads carry five fields: the three above plus `response_code` and `description`, which duplicate `code` and `simple_reason`. Those two exist for backwards compatibility with older integrations — read `code` and `simple_reason` instead.
+
+## decline_reason can be null
+
+`decline_reason` is nullable. It is `null` both when no reason was recorded for the decline and when the recorded reason is not one that CryptoMate exposes. Nothing in the response tells those two cases apart.
+
+<Warning>
+  Always null-check `decline_reason` before reading `code`. A declined transaction with `decline_reason: null` is a normal response — not a bug, and not an incomplete record.
+</Warning>
+
+## detailed_reason is not a contract
+
+`detailed_reason` is free text written for humans. Its wording changes without notice, it differs in shape between codes, and for some codes it is a copy of `simple_reason`.
+
+<Warning>
+  Never parse `detailed_reason`, and never derive amounts, balances or limits from it. Any figure in that sentence renders internal state at the moment of the decline — it is not a value you can reconcile against. Branch on `code`, and read balances and limits from the endpoints that own them.
+</Warning>
+
+## Decline codes
+
+### Balance
+
+| Code | What it means |
+|---|---|
+| `M101` | The holding wallet funding the card did not have enough balance to cover the purchase. |
+| `M102` | The card's own balance did not cover the purchase. |
+
+### Spending limits
+
+| Code | What it means |
+|---|---|
+| `M201` | The purchase would exceed the card's daily spending limit. |
+| `M202` | The purchase would exceed the card's weekly spending limit. |
+| `M203` | The purchase would exceed the card's monthly spending limit. |
+| `M204` | The purchase would exceed the per-operation limit. See the warning below before reading a figure out of this decline. |
+
+<Warning>
+  **`M204` reports two different limits.** Its short label cites a 5,000 USD ceiling while its detailed text cites 25,000 USD. The two disagree, and this page does not state which one governs. Do not derive a limit value from an `M204` decline.
+</Warning>
+
+### Velocity rules
+
+| Code | What it means |
+|---|---|
+| `M210` | A [velocity rule](/products/cards) was triggered and the card was blocked as a result. Unblock the card before it can be used again. |
+| `M213` | A velocity rule was triggered. The card remains usable. |
+
+### Risk evaluation
+
+| Code | What it means |
+|---|---|
+| `M211` | The authorization was rejected by the fraud risk evaluation. |
+
+### Card security
+
+| Code | What it means |
+|---|---|
+| `C101` | Too many incorrect CVV attempts. The card was blocked as a result. |
+| `C102` | The CVV entered did not match. |
+
+### Merchant category
+
+| Code | What it means |
+|---|---|
+| `C011` | The merchant's category is on your blocked merchant category list. |
+| `C103` | The merchant's category is a high-risk category that is not allowed. |
+
+### Processing
+
+| Code | What it means |
+|---|---|
+| `C020` | The purchase could not be processed during authorization. |
+| `M212` | The data submitted with the authorization failed verification. |
+
+<Note>
+  `C020` is a broad bucket, not a specific cause. It is not limited to declines that arrived without an identifiable reason — a decline can surface as `C020` even when a more specific cause exists upstream. Treat it as "could not be processed".
+</Note>
+
+### Unknown
+
+| Code | What it means |
+|---|---|
+| `M000` | No cause could be determined for the decline. |
+
+## Declines that block the card
+
+Two codes report that the card was blocked as part of the decline: `M210` and `C101`. A blocked card declines every subsequent purchase until you unblock it. Every other code in this catalog leaves the card usable.
+
+## Declines in version 2 of the search
+
+<Warning>
+  **Version 2 of the card transaction search does not report declines.** It omits both `decline_reason` and `status`, and it folds declined purchases into the `PURCHASE` operation. In version 2 a declined purchase is indistinguishable from a completed one. If you need to identify declines, stay on version 1 of the search or read the transaction detail endpoint.
+</Warning>
+
+<Tip>
+  Branch on `code` and keep a default case — the catalog grows. Show `simple_reason` if you need a message for your users, and log `code` alongside your own request identifiers so a decline can be traced later.
+</Tip>

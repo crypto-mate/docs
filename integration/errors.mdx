@@ -31,15 +31,94 @@ Failed requests return a JSON object with the following fields:
 
 ## HTTP status codes
 
-| Code | Meaning |
+| Status | Meaning | Codes you can receive |
+|---|---|---|
+| `200` / `201` | Successful request | — |
+| `302` | The operation needs an intermediate step before it can continue | `WARNING` |
+| `400` | The request was rejected — either its shape is invalid or a business rule turned it down | `BAD_REQUEST`, `VALUE_NOT_ALLOWED`, `METHOD_NOT_ALLOWED`, `APP_ERROR`, and the [product-specific codes](#product-specific-codes) |
+| `401` | The API key is missing, invalid, not authorized for the operation, or the calling IP is not allowed | `DENIED` |
+| `404` | The resource or the route does not exist | `NOT_FOUND` |
+| `412` | A business validation rejected the request | `VAL` |
+| `429` | Rate limit exceeded — back off and retry; see [Rate Limiting](/integration/rate-limiting) | `TOO_MANY_REQUESTS` |
+| `500` | Unexpected server-side failure — retry later and contact support if it persists | `SERVER_ERROR` |
+
+<Note>
+  A `302` from CryptoMate is not a redirect. It carries no `Location` header and its body is the same error object as every other status. Read the body — do not follow it.
+</Note>
+
+## Generic error codes
+
+These codes can be returned by any endpoint.
+
+| Code | Status | Returned when |
+|---|---|---|
+| `WARNING` | `302` | The flow requires an intermediate action before it can continue. |
+| `DENIED` | `401` | The `x-api-key` header is missing or invalid, the key does not have permission for the operation, or the calling IP address is not allowed. |
+| `NOT_FOUND` | `404` | The resource you asked for does not exist, or the route you called does not exist. Both cases return this code — check the identifier and the URL. |
+| `VAL` | `412` | A business validation rejected the request. Read `message` for the rule that failed. |
+| `APP_ERROR` | `400` | A business rule rejected the request and no more specific code applies. |
+| `BAD_REQUEST` | `400` | The request failed structural validation: a body field is missing or invalid, a required query parameter is absent, or a required multipart part is missing. |
+| `VALUE_NOT_ALLOWED` | `400` | A value could not be accepted: the JSON body is malformed or carries an unknown enum value, a path or query parameter has the wrong type, or an uploaded file is larger than 50 MB. |
+| `METHOD_NOT_ALLOWED` | `400` | The HTTP verb is not supported for that path. The status is `400`, not `405`. |
+| `TOO_MANY_REQUESTS` | `429` | You exceeded a rate limit. `Retry-After` gives the wait in seconds. Two limits apply — per IP and per company — and the per-IP one applies even without a valid API key. See [Rate Limiting](/integration/rate-limiting). |
+| `SERVER_ERROR` | `500` | An unexpected failure. The `message` is generic by design; the underlying detail is never exposed. Retry, and send the `trace_id` to support if it persists. |
+
+## Product-specific codes
+
+These codes are always returned with HTTP `400`.
+
+| Code | Returned when |
 |---|---|
-| `200` / `201` | Successful request |
-| `400` | Invalid request — verify the body of `POST`/`PUT`/`PATCH` calls or the parameters of `GET`/`DELETE` calls |
-| `401` | The API Key is not authorized for this operation — check its configuration |
-| `404` | The requested resource does not exist — verify the identifier |
-| `412` | Internal validation failure — inspect the request body |
-| `429` | Rate limit exceeded — back off and retry; see [Rate Limiting](/integration/rate-limiting) |
-| `500` | Server-side issue — retry later and contact support if it persists |
+| `PROVIDER_NOT_SUPPORTED` | The operation was requested against a provider that is not supported for your configuration. |
+| `REQUIREMENTS_UNAVAILABLE` | The onboarding requirements for the requested product could not be retrieved. |
+| `ENTERPRISE_CARD_CREATION_DISABLED` | Enterprise card creation is disabled for your company. |
+| `VELOCITY_RULES_LIMIT_EXCEEDED` | The company already has the maximum of 5 velocity rules. Delete one before adding another. |
+| `VELOCITY_RULES_DUPLICATE_WINDOW` | A velocity rule with the same time window already exists. |
+| `RAMP_OFF_UNAVAILABLE` | Off-ramp is not available for the requested combination. Both the simulation and the creation call return it. |
+| `RAMP_ON_CURRENCY_UNSUPPORTED` | The requested currency is not supported for on-ramp. Only the simulation validates the currency — the creation call does not. |
+| `RAMP_DATA_UNAVAILABLE` | A piece of ramp data could not be retrieved: the exchange rate or the transfer receipt. |
+| `RAMP_ORDER_UNAVAILABLE` | The ramp order could not be retrieved or read. It applies to on-ramp, off-ramp and transfer status lookups alike. Retry, and contact support with the `trace_id` if it persists. |
+
+## The two validation paths
+
+A `400` and a `412` both mean the request was rejected, but they come from different places and you fix them differently.
+
+| | Structural validation | Business validation |
+|---|---|---|
+| Status | `400` | `412` |
+| Code | `BAD_REQUEST` or `VALUE_NOT_ALLOWED` | `VAL` |
+| What ran | Field-level constraints on the request itself | Rules that depend on your configuration, balances, or the state of the resource |
+| When | Before any business logic runs | After the request was accepted as well-formed |
+| How to fix it | Correct the request | Correct the operation, or the state it depends on |
+
+A request missing a required field never reaches the business rules — it comes back as `BAD_REQUEST`. A well-formed request for an amount above your limit passes structural validation and comes back as `VAL`.
+
+## Where specific codes survive
+
+A request crosses more than one internal service before it is answered, and that hop preserves the specific `code` only for some statuses.
+
+| Status | What `code` carries |
+|---|---|
+| `400` | The specific code when there is one, otherwise `APP_ERROR` |
+| `401` | Always `DENIED` |
+| `404` | Always `NOT_FOUND` |
+| `412` | Always `VAL` |
+| `302` | Always `WARNING` |
+| `500` | Always `SERVER_ERROR` |
+
+Do not build logic that expects a granular code on a `412`, a `404` or a `401` — those statuses answer with the generic code and the detail lives in `message`.
+
+<Note>
+  Switch on the HTTP status first and treat `code` as a refinement of it. A status can gain new codes as products evolve, so any branch on `code` should keep a default case that falls back to the status.
+</Note>
+
+## Card declines are not HTTP errors
+
+A declined card purchase is not an API error. The call that reports it succeeds with HTTP `200`, and the decline travels in the response body inside `decline_reason`. Decline codes never appear in the `code` field of an error response.
+
+<Card title="Card decline codes" icon="credit-card" href="/integration/card-decline-codes">
+  The 16 decline codes you can receive, what each one means, and why `decline_reason` can be null.
+</Card>
 
 ## trace_id in the Portal
 

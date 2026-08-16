@@ -206,11 +206,11 @@ Sent when a transaction is declined by the network or by CryptoMate. `data` shap
     "bill_amount": "42.50",
     "bill_currency_code": "USD",
     "decline_reason": {
-      "response_code": "05",
-      "description": "Do not honor",
-      "code": "INSUFFICIENT_FUNDS",
-      "simple_reason": "Insufficient funds",
-      "detailed_reason": "Wallet balance is lower than transaction amount"
+      "response_code": "M102",
+      "description": "Declined due to insufficient card balance",
+      "code": "M102",
+      "simple_reason": "Declined due to insufficient card balance",
+      "detailed_reason": "Declined due to insufficient card balance"
     },
     "merchant_data": { "name": "Acme Coffee", "mcc_code": "5812" }
   }
