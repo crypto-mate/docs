@@ -217,6 +217,8 @@ Sent when a transaction is declined by the network or by CryptoMate. `data` shap
 }
 ```
 
+See [Card decline codes](/integration/card-decline-codes) for the full catalog, and for why `decline_reason` can be `null`.
+
 #### `reversal` — authorization reversed
 
 Sent when a prior authorization is reversed (released) by the network. Same `data` shape as `authorized`.
