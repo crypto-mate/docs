@@ -9,7 +9,7 @@ This section describes how to handle errors while integrating with the CryptoMat
 
 ## Request tracing
 
-Every failing request includes a `trace_id` in the error response body that uniquely identifies the call. **Include it in any support request or troubleshooting conversation** — it gives us everything we need to find the failing request and figure out what went wrong.
+Failing requests carry a `trace_id` in the error response body that uniquely identifies the call. It is resolved on a best-effort basis, so it can occasionally be absent. **Whenever it is there, include it in any support request or troubleshooting conversation** — it gives us everything we need to find the failing request and figure out what went wrong.
 
 ## Error response format
 
