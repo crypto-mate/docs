@@ -117,7 +117,11 @@ Same fields as version 1, with three differences: `status`, `original_balance` a
     </ResponseField>
 
     <ResponseField name="state" type="string">
-      How the operation closed against what was authorized. Possible values: `SIMPLE` (a single event, nothing to consolidate), `PARTIAL` (the issuer settled less than authorized, the hold is still in place), `COMPLETE` (settled matches authorized), `OVER_CAPTURE` (the issuer settled more than authorized).
+      Whether the clearing added up: how much the issuer settled against how much was authorized. Possible values: `SIMPLE` (a single event, nothing to consolidate), `PARTIAL` (the issuer settled less than authorized, the hold is still in place), `COMPLETE` (settled matches authorized), `OVER_CAPTURE` (the issuer settled more than authorized). Read it together with `outcome`, not instead of it: a purchase whose hold was released settles `0` against `0`, and a fully refunded one settled in full, so both report `COMPLETE`.
+    </ResponseField>
+
+    <ResponseField name="outcome" type="string">
+      Whether anything came back, which `state` cannot tell you. Possible values: `NONE` (nothing came back), `PARTIALLY_REVERSED` (the issuer released part of the hold and the operation never settled anything), `REVERSED` (the issuer released the whole hold, so the purchase left no charge), `PARTIALLY_REFUNDED` (the merchant returned part of what it had settled), `REFUNDED` (the merchant returned all of it). A partial reversal followed by a clearing is the ordinary right-sizing of a hold, not a return, and reports `NONE`. Measured on the original-currency amounts.
     </ResponseField>
 
     <ResponseField name="event_count" type="integer">
@@ -162,6 +166,7 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
   "lifecycle": {
     "transaction_id": "tid_019f4d29",
     "state": "PARTIAL",
+    "outcome": "NONE",
     "event_count": 3,
     "events": [
       {

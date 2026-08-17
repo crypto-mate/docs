@@ -68,7 +68,7 @@ Searches and retrieves transactions for a specific card with filtering, paginati
 
 Send `X-API-Version: 2` to get one movement per operation instead of one per lifecycle event. A purchase made of an authorization, partial clearings, reversals or refunds is reported as a single `PURCHASE` movement carrying its current amount. See [API Versioning](/integration/api-versioning).
 
-Enterprise cards only.
+Enterprise cards only: on an individual card the endpoint answers `412`.
 
 ### Query parameters
 
