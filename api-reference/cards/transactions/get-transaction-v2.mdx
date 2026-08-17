@@ -1,0 +1,259 @@
+---
+title: "Get transaction (v2)"
+description: "Retrieve a card movement with the current state of the whole operation."
+api: "GET /cards/transactions/{cardId}/{transactionId}"
+---
+
+Returns a card movement with the amount and the events of the **whole operation**, not of the single event you asked for. Ask for any event of a purchase — its authorization, one of its clearings, its refund — and you get the same consolidated answer.
+
+This is version 2 of [Get transaction](/api-reference/cards/transactions/get-transaction), selected with the `X-API-Version` header. See [API Versioning](/integration/api-versioning). Enterprise cards only. Requires an API key with access level 1 or higher.
+
+## Headers
+
+<ParamField header="X-API-Version" type="string" required>
+  Must be `2`. Any other value — including omitting the header — serves [version 1](/api-reference/cards/transactions/get-transaction), which returns the single event and no `lifecycle`. On 1 October 2026 version 1 is removed: this becomes the only shape and the header is ignored, so sending it stays harmless.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+<ParamField path="transactionId" type="string" required>
+  Identifier of any movement of the operation.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Identifier of the event the data is taken from (UUID). For a purchase, its approval — or its decline, if it was never approved.
+</ResponseField>
+
+<ResponseField name="datetime" type="string">
+  Timestamp of that event (ISO-8601).
+</ResponseField>
+
+<ResponseField name="operation" type="string">
+  `PURCHASE` for anything belonging to a purchase — ask for the id of one of its clearings and you still get `PURCHASE`. Movements that are not purchases keep their own operation: `WALLET_DEPOSIT`, `WALLET_WITHDRAWAL`, `WARRANTY_DEPOSIT`, `WARRANTY_WITHDRAWAL`, `OVERRIDE_VIRTUAL_BALANCE`, `VISA_DIRECT_DEPOSIT`. The individual events keep their own operation inside `lifecycle.events`.
+</ResponseField>
+
+<ResponseField name="bill_amount" type="number">
+  Current amount of the operation in billing currency, fees included. Can be `0` after a full reversal, or negative if a refund exceeded what was charged.
+</ResponseField>
+
+<ResponseField name="bill_currency" type="string">
+  Billing currency code (e.g. `USD`).
+</ResponseField>
+
+<ResponseField name="transaction_amount" type="number">
+  Current amount of the operation in its original currency.
+</ResponseField>
+
+<ResponseField name="transaction_currency" type="string">
+  Original transaction currency code (e.g. `EUR`).
+</ResponseField>
+
+<ResponseField name="exchange_rate" type="number">
+  Exchange rate applied, rounded to 6 decimal places. It is the rate of the event, not recalculated over the consolidated amount.
+</ResponseField>
+
+<ResponseField name="merchant_name" type="string">
+  Name of the merchant.
+</ResponseField>
+
+<ResponseField name="merchant_city" type="string">
+  City of the merchant. Not returned by version 1.
+</ResponseField>
+
+<ResponseField name="decline_reason" type="object">
+  Present when the transaction was declined. Contains `code`, `simple_reason` and `detailed_reason`. See [Card decline codes](/integration/card-decline-codes).
+</ResponseField>
+
+<ResponseField name="fee_fx_provider" type="number">
+  FX fee charged by the provider.
+</ResponseField>
+
+<ResponseField name="fee_fx_client" type="number">
+  FX fee charged to the client.
+</ResponseField>
+
+<ResponseField name="fee_atm_provider" type="number">
+  ATM fee charged by the provider.
+</ResponseField>
+
+<ResponseField name="fee_atm_client" type="number">
+  ATM fee charged to the client.
+</ResponseField>
+
+<ResponseField name="fee_deposit_provider" type="number">
+  Deposit fee charged by the provider.
+</ResponseField>
+
+<ResponseField name="fee_deposit_client" type="number">
+  Deposit fee charged to the client.
+</ResponseField>
+
+<ResponseField name="lifecycle" type="object">
+  The states the operation went through.
+
+  <Expandable title="lifecycle">
+    <ResponseField name="transaction_id" type="string">
+      Identifier the issuer gave to the operation. All its events share it.
+    </ResponseField>
+
+    <ResponseField name="state" type="string">
+      Whether the clearing added up: how much was settled against how much was authorized, both in the original currency. Possible values: `SIMPLE` (nothing was consolidated), `PARTIAL` (less was settled than authorized, the rest of the hold is still in place), `COMPLETE` (settled matches authorized), `OVER_CAPTURE` (more was settled than authorized). Read it together with `outcome`, not instead of it — see [the combinations](#state-and-outcome-together).
+
+      `SIMPLE` covers three different situations: the operation is a single event — **a purchase that was authorized and has not settled yet reports `SIMPLE`, not `PARTIAL`** — or it is not a purchase at all, or its events could not be composed. In all three the amounts are those of the event you asked for.
+    </ResponseField>
+
+    <ResponseField name="outcome" type="string">
+      Whether anything came back, which `state` cannot tell you. Possible values: `NONE` (nothing came back), `PARTIALLY_REVERSED` (part of the hold was released and the operation never settled anything), `REVERSED` (the whole hold was released, so the purchase left no charge), `PARTIALLY_REFUNDED` (the merchant returned part of what had been settled), `REFUNDED` (the merchant returned all of it). Measured on the original-currency amounts, because the billing amount carries fees that a return does not give back.
+
+      Two rules worth knowing: a refund outranks a release of the hold, so an operation with both reports the refund; and the release of a hold is only reported when **nothing at all was settled** — if any amount was settled, releasing part of the hold is the ordinary right-sizing of it and reports `NONE`.
+    </ResponseField>
+
+    <ResponseField name="event_count" type="integer">
+      Number of events the operation is made of.
+    </ResponseField>
+
+    <ResponseField name="events" type="array">
+      The events themselves, oldest first.
+
+      <Expandable title="event">
+        <ResponseField name="id" type="string">
+          Identifier of the event. Reading its detail returns this same operation.
+        </ResponseField>
+
+        <ResponseField name="operation" type="string">
+          What the event was: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND` and the closing adjustments.
+        </ResponseField>
+
+        <ResponseField name="datetime" type="string">
+          When the event happened (ISO-8601).
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Note>
+  Events carry no amount. The net of an operation depends on the fee regime it closed under, so adding up the events does not reproduce `bill_amount`. Read the amount from the operation.
+</Note>
+
+## State and outcome together
+
+The two fields answer different questions — how the clearing added up, and whether anything came back — so neither one alone tells you how a purchase ended. Of the twenty possible pairs, thirteen occur:
+
+| | `NONE` | `PARTIALLY_REVERSED` | `REVERSED` | `PARTIALLY_REFUNDED` | `REFUNDED` |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **`SIMPLE`** | ✓ | — | — | — | — |
+| **`PARTIAL`** | ✓ | ✓ | — | ✓ | ✓ |
+| **`COMPLETE`** | ✓ | — | ✓ | ✓ | ✓ |
+| **`OVER_CAPTURE`** | ✓ | — | ⚠ | ✓ | ✓ |
+
+What each one means:
+
+| Combination | What happened |
+|---|---|
+| `SIMPLE` + `NONE` | Nothing to consolidate: a purchase still waiting to settle, a movement that is not a purchase, or an operation whose events could not be composed. |
+| `PARTIAL` + `NONE` | Less was settled than authorized. The rest of the hold is still in place. |
+| `PARTIAL` + `PARTIALLY_REVERSED` | Part of the hold was released and nothing was ever settled. The remainder is still held against an operation that never advanced. This is the only combination `PARTIALLY_REVERSED` appears in. |
+| `PARTIAL` + `PARTIALLY_REFUNDED` | Less was settled than authorized, and part of what was settled came back. |
+| `PARTIAL` + `REFUNDED` | Less was settled than authorized, and all of what was settled came back — but the unsettled part of the hold was never released. |
+| `COMPLETE` + `NONE` | The ordinary purchase: either the clearing matched the authorization exactly, or part of the hold was released and the rest settled, which is the same thing in two steps. |
+| `COMPLETE` + `REVERSED` | The whole hold was released and nothing was ever settled. Settled and authorized are both zero, which is why the state says `COMPLETE` — **this is the pair `state` alone would get wrong**, and the reason `outcome` exists. |
+| `COMPLETE` + `PARTIALLY_REFUNDED` | Authorized and settled in full, then the merchant returned part of it. |
+| `COMPLETE` + `REFUNDED` | Authorized and settled in full, then the merchant returned all of it. The purchase leaves no charge. |
+| `OVER_CAPTURE` + `NONE` | More was settled than authorized — a tip or a restaurant adjustment — or the hold was released and the clearing arrived afterwards. |
+| `OVER_CAPTURE` + `PARTIALLY_REFUNDED` | More was settled than authorized, then part of it came back. |
+| `OVER_CAPTURE` + `REFUNDED` | More was settled than authorized, then all of it came back. |
+| ⚠ `OVER_CAPTURE` + `REVERSED` | Not expected. It means more was released than was ever authorized, which no normal flow produces. Treat it as inconsistent data rather than as a business outcome. |
+
+The seven combinations that never occur follow from how the two fields are computed:
+
+- `SIMPLE` always comes with `NONE`. When nothing is consolidated there is no return to report.
+- `PARTIALLY_REVERSED` only ever comes with `PARTIAL`. Part of a hold released with nothing settled always leaves something authorized and nothing settled against it.
+- `REVERSED` never comes with `PARTIAL`. Releasing the whole hold leaves nothing authorized, so there is nothing left for a partial settlement to fall short of.
+
+<Note>
+  `state` compares the two amounts exactly, with no tolerance. A rounding difference of one cent between what was authorized and what was settled — possible on foreign-currency purchases — is enough to report `PARTIAL` or `OVER_CAPTURE` on a purchase that otherwise looks ordinary.
+</Note>
+
+<Warning>
+  Version 1 returns `status`, `original_balance` and `new_balance`; version 2 does not. A single event has a status, an operation made of several does not — a purchase that was authorized, partly settled and partly refunded is not in any one of those states. Use `lifecycle.state` and `lifecycle.outcome` instead.
+</Warning>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "X-API-Version: 2"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "datetime": "2026-04-15T10:30:00",
+  "operation": "PURCHASE",
+  "bill_amount": 101.25,
+  "bill_currency": "USD",
+  "transaction_amount": 85.50,
+  "transaction_currency": "EUR",
+  "exchange_rate": 1.170000,
+  "merchant_name": "Amazon.com",
+  "merchant_city": "Seattle",
+  "decline_reason": null,
+  "fee_fx_provider": 0.50,
+  "fee_fx_client": 0.75,
+  "fee_atm_provider": 0.00,
+  "fee_atm_client": 0.00,
+  "fee_deposit_provider": 0.00,
+  "fee_deposit_client": 0.00,
+  "lifecycle": {
+    "transaction_id": "019f4d29-8b1c-7a3e-9f01-2c5d7e8a4b60",
+    "state": "PARTIAL",
+    "outcome": "NONE",
+    "event_count": 3,
+    "events": [
+      {
+        "id": "fc98fb66-f0ae-4d3a-8600-412a6ddcd89f",
+        "operation": "TRANSACTION_AUTHORIZATION",
+        "datetime": "2026-04-15T10:30:00"
+      },
+      {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "operation": "TRANSACTION_APPROVED",
+        "datetime": "2026-04-15T10:30:02"
+      },
+      {
+        "id": "9c7e2f80-1a4b-4c3d-8e2f-7b6a5c4d3e2f",
+        "operation": "TRANSACTION_CLEARED",
+        "datetime": "2026-04-17T09:00:00"
+      }
+    ]
+  }
+}
+```
+
+```json 412 Not An Enterprise Card
+{
+  "code": "VAL",
+  "message": "The consolidated transaction detail is only available for ENTERPRISE cards, and movement a1b2c3d4-e5f6-7890-abcd-ef1234567890 belongs to a INDIVIDUAL card"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Movement not found: a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+```
+
+</ResponseExample>

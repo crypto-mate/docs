@@ -1,0 +1,109 @@
+---
+title: "API Versioning"
+description: "Opt into version 2 with the X-API-Version header before version 1 is removed on 1 October 2026."
+---
+
+<Warning>
+  **Version 1 is removed on 1 October 2026.** From that date the endpoints below answer with their version 2 shape for everyone, the header stops being needed, and there is no way to ask for version 1. Migrate before then: after the date, an integration that never sent the header starts receiving a different response without changing a line of its own code.
+</Warning>
+
+## Overview
+
+Some endpoints support more than one response shape. Until 1 October 2026 you choose which one you get with the `X-API-Version` header:
+
+```bash
+curl -X GET "https://api.cryptomate.me/cards/transactions/{cardId}/search?operations=PURCHASE" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "X-API-Version: 2"
+```
+
+Until that date, versions are opt-in: if you send no header, an unknown value, or `1`, you get version 1 — the shape your integration already handles.
+
+<Note>
+  The header applies to the whole API, not to a single endpoint. Once you send `X-API-Version: 2`, every endpoint that supports version 2 answers with its version 2 shape.
+</Note>
+
+## What version 2 changes
+
+Version 2 reports **operations** instead of **events**.
+
+A card purchase is not a single event for the issuer. It starts with an authorization, is followed by one or more clearings when the merchant collects, and can include reversals, refunds and closing adjustments — sometimes days apart. Version 1 reports each of those as its own movement, so one purchase shows up several times with different amounts, and reconstructing what the purchase actually cost is up to you.
+
+Version 2 groups them: one purchase is one movement, labelled `PURCHASE`, carrying the amount that is currently charged to the card.
+
+| | Version 1 | Version 2 |
+|---|---|---|
+| Unit | One item per lifecycle event | One item per operation |
+| Purchase amount | The amount of that event | The current amount of the whole operation, fees included |
+| `operations` filter | Internal event names | Families: `PURCHASE` and the operations that are not purchases |
+| `operation` in the response | The event's own type | `PURCHASE` for the whole purchase family, on the search and on the detail alike |
+| How a purchase ended | Inferred by you from the sequence of events | Stated by the detail in `lifecycle.state` and `lifecycle.outcome` |
+| Cards | All | Enterprise cards only |
+
+Endpoints that support version 2 today, each documented on its own page:
+
+- [Search card transactions (v2)](/api-reference/cards/transactions/search-transactions-v2)
+- [Get transaction (v2)](/api-reference/cards/transactions/get-transaction-v2)
+
+## Filtering by operation in version 2
+
+Version 2 accepts these values in `operations`:
+
+| Value | What it covers |
+|---|---|
+| `PURCHASE` | The whole purchase family: authorizations, approvals, clearings, reversals, refunds, declines and closing adjustments |
+| `WALLET_DEPOSIT` | Deposits into the card wallet |
+| `WALLET_WITHDRAWAL` | Withdrawals from the card wallet |
+| `WARRANTY_DEPOSIT` | Deposits into the warranty wallet |
+| `WARRANTY_WITHDRAWAL` | Withdrawals from the warranty wallet |
+| `OVERRIDE_VIRTUAL_BALANCE` | Manual adjustments of the card's virtual balance |
+| `VISA_DIRECT_DEPOSIT` | Visa Direct deposits |
+
+Internal event names such as `TRANSACTION_APPROVED` or `TRANSACTION_CLEARED` are rejected with `412`. In version 2 a purchase already includes them, so mixing both would return the same purchase twice: once collapsed and once as a loose event.
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Operations [TRANSACTION_APPROVED] are not available in version 2 of this endpoint: a purchase is searched as PURCHASE, which already covers its authorizations, clearings, reversals, refunds and closure adjustments. Available operations: [PURCHASE, WARRANTY_WITHDRAWAL, WARRANTY_DEPOSIT, WALLET_WITHDRAWAL, WALLET_DEPOSIT, OVERRIDE_VIRTUAL_BALANCE, VISA_DIRECT_DEPOSIT]"
+}
+```
+
+## Enterprise cards only
+
+Version 2 covers enterprise cards. Asking for it on an individual card returns `412`. Individual cards keep their own endpoints under [Individual Cards](/api-reference/cards/individual-cards/search-individual-card-transactions).
+
+## Removal of version 1 — 1 October 2026
+
+On **1 October 2026** version 1 of these endpoints is removed:
+
+- The endpoints answer with their version 2 shape for every caller, whether or not they send the header.
+- `X-API-Version` stops being read. Sending it is harmless — it is ignored, not rejected — so you do not need a second deploy on the day of the change.
+- There is no way to keep receiving version 1.
+
+What this means if you have not migrated: **your integration receives a different response without changing a line of its own code.** Fewer rows for the same date range, a different `operation` value, and fewer fields per movement.
+
+<Warning>
+  **The search loses fields, permanently.** Version 2 does not return `status`, `decline_reason` or the fee breakdown per movement, and that is not coming back — the removal of version 1 removes those fields from the search for good. A declined purchase is reported as a `PURCHASE` movement with the amount that was attempted, so summing `bill_amount` counts declines as spend.
+
+  If you classify movements by any of those fields, the replacement is the [detail endpoint](/api-reference/cards/transactions/get-transaction-v2): `lifecycle.state` and `lifecycle.outcome` say how the operation closed and whether anything came back, and the fee fields are still there. Plan that call into your integration before the date.
+</Warning>
+
+## Migrating
+
+<Steps>
+  <Step title="Replace the operation filter">
+    Swap the purchase event names in `operations` for `PURCHASE`. Keep the other values as they are.
+  </Step>
+  <Step title="Send the header">
+    Add `X-API-Version: 2` to your requests. After 1 October 2026 this step is unnecessary, but harmless.
+  </Step>
+  <Step title="Adjust to fewer rows">
+    Expect fewer movements for the same date range, and `total_elements` counting operations rather than events. A purchase you used to see three times is now one row.
+  </Step>
+  <Step title="Read the amount from the operation">
+    `bill_amount` is what the card is charged for that purchase right now, fees included. You no longer need to add up authorizations and clearings.
+  </Step>
+  <Step title="Replace what the search no longer gives you">
+    If you read `status`, `decline_reason` or the fees from the search, move that logic to the detail endpoint. This is the step that cannot be postponed past 1 October 2026.
+  </Step>
+</Steps>

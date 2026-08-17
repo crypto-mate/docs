@@ -1,0 +1,171 @@
+---
+title: "Search card transactions (v2)"
+description: "Retrieve card movements collapsed into one item per operation."
+api: "GET /cards/transactions/{cardId}/search"
+---
+
+Searches the movements of a card, reporting **one item per operation** instead of one per lifecycle event. A purchase made of an authorization, partial clearings, reversals or refunds is a single `PURCHASE` item carrying the amount currently charged to the card.
+
+This is version 2 of [Search card transactions](/api-reference/cards/transactions/search-transactions), selected with the `X-API-Version` header. See [API Versioning](/integration/api-versioning). Enterprise cards only. Requires an API key with access level 1 or higher.
+
+Results are always ordered by date, newest first, by when the operation started.
+
+## Headers
+
+<ParamField header="X-API-Version" type="string" required>
+  Must be `2`. Any other value — including omitting the header — serves [version 1](/api-reference/cards/transactions/search-transactions), which reports one item per event. On 1 October 2026 version 1 is removed: this becomes the only shape and the header is ignored, so sending it stays harmless.
+</ParamField>
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Query parameters
+
+<ParamField query="operations" type="array" required>
+  Movement types to include. At least one is required. Possible values: `PURCHASE`, `WARRANTY_WITHDRAWAL`, `WARRANTY_DEPOSIT`, `WALLET_WITHDRAWAL`, `WALLET_DEPOSIT`, `OVERRIDE_VIRTUAL_BALANCE`, `VISA_DIRECT_DEPOSIT`. Internal event names such as `TRANSACTION_APPROVED` return `412`: `PURCHASE` already covers them.
+</ParamField>
+
+<ParamField query="from_date" type="string">
+  Start date (ISO-8601 `YYYY-MM-DD`). Defaults to 7 days ago.
+</ParamField>
+
+<ParamField query="to_date" type="string">
+  End date (ISO-8601 `YYYY-MM-DD`). Defaults to today.
+</ParamField>
+
+<ParamField query="size" type="integer">
+  Page size. Maximum 100. Defaults to `10`.
+</ParamField>
+
+<ParamField query="page_number" type="integer">
+  Page number, starting at `1`. Defaults to `1`.
+</ParamField>
+
+## Response
+
+<ResponseField name="number_of_elements" type="integer">
+  Number of movements in the current page.
+</ResponseField>
+
+<ResponseField name="next_page" type="integer">
+  Next page number. `null` on the last page.
+</ResponseField>
+
+<ResponseField name="total_pages" type="integer">
+  Total number of pages.
+</ResponseField>
+
+<ResponseField name="total_elements" type="integer">
+  Total number of **operations** across all pages — not events. Expect a smaller number than version 1 reports for the same range.
+</ResponseField>
+
+<ResponseField name="movements" type="array">
+  The movements in the current page.
+
+  <Expandable title="movement">
+    <ResponseField name="id" type="string">
+      Identifier of the event the operation's data is taken from: for a purchase, its approval — or its decline, if it was never approved. Use it to read the [detail](/api-reference/cards/transactions/get-transaction-v2).
+    </ResponseField>
+
+    <ResponseField name="datetime" type="string">
+      When the operation started (ISO-8601). For a purchase, when it was authorized — an earlier event than the one `id` points to.
+    </ResponseField>
+
+    <ResponseField name="operation" type="string">
+      `PURCHASE` for the whole purchase family. Movements that are not purchases keep their own operation: `WALLET_DEPOSIT`, `WALLET_WITHDRAWAL`, `WARRANTY_DEPOSIT`, `WARRANTY_WITHDRAWAL`, `OVERRIDE_VIRTUAL_BALANCE`, `VISA_DIRECT_DEPOSIT`.
+    </ResponseField>
+
+    <ResponseField name="bill_amount" type="number">
+      Current amount of the operation in billing currency, fees included. Can be `0` after a full reversal, or negative if a refund exceeded what was charged.
+    </ResponseField>
+
+    <ResponseField name="bill_currency" type="string">
+      Billing currency code.
+    </ResponseField>
+
+    <ResponseField name="transaction_amount" type="number">
+      Current amount of the operation in its original currency.
+    </ResponseField>
+
+    <ResponseField name="transaction_currency" type="string">
+      Original currency code.
+    </ResponseField>
+
+    <ResponseField name="merchant_name" type="string">
+      Merchant name.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Warning>
+  A movement carries these eight fields and no more: there is no `status`, no `decline_reason` and no fee breakdown. A declined purchase is reported as a `PURCHASE` with the amount that was attempted, so summing `bill_amount` counts declines as spend. To tell purchases apart, read the [detail](/api-reference/cards/transactions/get-transaction-v2) of the ones you care about.
+</Warning>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/search?operations=PURCHASE&operations=WALLET_DEPOSIT&from_date=2026-01-01&to_date=2026-04-20&size=10&page_number=1" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "X-API-Version: 2"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "number_of_elements": 2,
+  "next_page": null,
+  "total_pages": 1,
+  "total_elements": 2,
+  "movements": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "datetime": "2026-04-15T10:30:00",
+      "operation": "PURCHASE",
+      "bill_amount": 101.25,
+      "bill_currency": "USD",
+      "transaction_amount": 85.50,
+      "transaction_currency": "EUR",
+      "merchant_name": "Amazon.com"
+    },
+    {
+      "id": "7d3f1c22-9b4e-4a71-8c05-1f2e3d4a5b6c",
+      "datetime": "2026-04-12T08:05:00",
+      "operation": "WALLET_DEPOSIT",
+      "bill_amount": 500.00,
+      "bill_currency": "USD",
+      "transaction_amount": 500.00,
+      "transaction_currency": "USD",
+      "merchant_name": null
+    }
+  ]
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "Operations [TRANSACTION_APPROVED] are not available in version 2 of this endpoint: a purchase is searched as PURCHASE, which already covers its authorizations, clearings, reversals, refunds and closure adjustments. Available operations: [PURCHASE, WARRANTY_WITHDRAWAL, WARRANTY_DEPOSIT, WALLET_WITHDRAWAL, WALLET_DEPOSIT, OVERRIDE_VIRTUAL_BALANCE, VISA_DIRECT_DEPOSIT]"
+}
+```
+
+```json 412 Not An Enterprise Card
+{
+  "code": "VAL",
+  "message": "The consolidated search is only available for ENTERPRISE cards, and card card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23 is a INDIVIDUAL card"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found: card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23"
+}
+```
+
+</ResponseExample>

@@ -1,10 +1,15 @@
 ---
 title: "Search card transactions"
-description: "Retrieve card transactions with filtering, pagination, and sorting."
+description: "Retrieve card transactions with filtering and pagination."
 api: "GET /cards/transactions/{cardId}/search"
+deprecated: true
 ---
 
-Searches and retrieves transactions for a specific card with filtering, pagination, and sorting options. Requires an API key with access level 1 or higher.
+<Warning>
+  **Removed on 1 October 2026.** From that date this path answers with the [version 2](/api-reference/cards/transactions/search-transactions-v2) shape for every caller, and there is no way to keep receiving the response documented on this page — including the `status`, `decline_reason` and fee fields, which version 2 does not return. If you consume this endpoint, read [API Versioning](/integration/api-versioning) and migrate before the date.
+</Warning>
+
+Searches and retrieves transactions for a specific card with filtering and pagination. Results are always ordered by date, newest first. Requires an API key with access level 1 or higher.
 
 ## Path parameters
 
@@ -15,15 +20,15 @@ Searches and retrieves transactions for a specific card with filtering, paginati
 ## Query parameters
 
 <ParamField query="operations" type="array" required>
-  Transaction operation types to include. At least one is required. Possible values: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND`.
+  Transaction operation types to include. At least one is required. Purchase events: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND`. Movements that are not purchases: `WALLET_DEPOSIT`, `WALLET_WITHDRAWAL`, `WARRANTY_DEPOSIT`, `WARRANTY_WITHDRAWAL`, `OVERRIDE_VIRTUAL_BALANCE`, `VISA_DIRECT_DEPOSIT`.
 </ParamField>
 
 <ParamField query="from_date" type="string">
-  Start date (ISO-8601 `YYYY-MM-DD`).
+  Start date (ISO-8601 `YYYY-MM-DD`). Defaults to 7 days ago.
 </ParamField>
 
 <ParamField query="to_date" type="string">
-  End date (ISO-8601 `YYYY-MM-DD`).
+  End date (ISO-8601 `YYYY-MM-DD`). Defaults to today.
 </ParamField>
 
 <ParamField query="size" type="integer">
@@ -34,12 +39,12 @@ Searches and retrieves transactions for a specific card with filtering, paginati
   Page number, starting at `1`. Defaults to `1`.
 </ParamField>
 
-<ParamField query="sort_field" type="string">
-  Field to sort results by.
+<ParamField query="sort_field" type="string" deprecated>
+  Accepted and ignored. Results are always ordered by date, newest first.
 </ParamField>
 
-<ParamField query="sort_order" type="string">
-  Sort order. Possible values: `ASC`, `DESC`.
+<ParamField query="sort_order" type="string" deprecated>
+  Accepted and ignored. Results are always ordered by date, newest first.
 </ParamField>
 
 ## Response
@@ -63,6 +68,10 @@ Searches and retrieves transactions for a specific card with filtering, paginati
 <ResponseField name="movements" type="array">
   Array of transaction objects with fields: `id`, `datetime`, `operation`, `bill_amount`, `bill_currency`, `transaction_amount`, `transaction_currency`, `exchange_rate`, `merchant_name`, `original_balance`, `new_balance`, `status`, `decline_reason`, and fee fields (`fee_fx_provider`, `fee_fx_client`, `fee_atm_provider`, `fee_atm_client`, `fee_deposit_provider`, `fee_deposit_client`).
 </ResponseField>
+
+<Note>
+  Version 2 of this endpoint reports one movement per operation instead of one per lifecycle event, and is documented separately in [Search card transactions (v2)](/api-reference/cards/transactions/search-transactions-v2).
+</Note>
 
 <RequestExample>
 
@@ -90,18 +99,18 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
       "bill_currency": "USD",
       "transaction_amount": 85.50,
       "transaction_currency": "EUR",
-      "exchange_rate": 1.17,
+      "exchange_rate": 1.170000,
       "merchant_name": "Amazon.com",
       "original_balance": 5000.00,
       "new_balance": 4900.00,
-      "status": "APPROVED",
+      "status": "SUCCESS",
       "decline_reason": null,
       "fee_fx_provider": 0.50,
       "fee_fx_client": 0.75,
-      "fee_atm_provider": 0,
-      "fee_atm_client": 0,
-      "fee_deposit_provider": 0,
-      "fee_deposit_client": 0
+      "fee_atm_provider": 0.00,
+      "fee_atm_client": 0.00,
+      "fee_deposit_provider": 0.00,
+      "fee_deposit_client": 0.00
     }
   ]
 }
