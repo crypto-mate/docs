@@ -1,11 +1,15 @@
 ---
 title: "API Versioning"
-description: "Opt into newer response shapes with the X-API-Version header without breaking your current integration."
+description: "Opt into version 2 with the X-API-Version header before version 1 is removed on 1 October 2026."
 ---
+
+<Warning>
+  **Version 1 is removed on 1 October 2026.** From that date the endpoints below answer with their version 2 shape for everyone, the header stops being needed, and there is no way to ask for version 1. Migrate before then: after the date, an integration that never sent the header starts receiving a different response without changing a line of its own code.
+</Warning>
 
 ## Overview
 
-Some endpoints support more than one response shape. You choose which one you get with the `X-API-Version` header:
+Some endpoints support more than one response shape. Until 1 October 2026 you choose which one you get with the `X-API-Version` header:
 
 ```bash
 curl -X GET "https://api.cryptomate.me/cards/transactions/{cardId}/search?operations=PURCHASE" \
@@ -13,7 +17,7 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/{cardId}/search?operat
   -H "X-API-Version: 2"
 ```
 
-Versions are opt-in. If you send no header, an unknown value, or `1`, you get version 1 — the shape your integration already handles. Nothing changes for you until you ask for it.
+Until that date, versions are opt-in: if you send no header, an unknown value, or `1`, you get version 1 — the shape your integration already handles.
 
 <Note>
   The header applies to the whole API, not to a single endpoint. Once you send `X-API-Version: 2`, every endpoint that supports version 2 answers with its version 2 shape.
@@ -68,6 +72,22 @@ Internal event names such as `TRANSACTION_APPROVED` or `TRANSACTION_CLEARED` are
 
 Version 2 covers enterprise cards. Asking for it on an individual card returns `412`. Individual cards keep their own endpoints under [Individual Cards](/api-reference/cards/individual-cards/search-individual-card-transactions).
 
+## Removal of version 1 — 1 October 2026
+
+On **1 October 2026** version 1 of these endpoints is removed:
+
+- The endpoints answer with their version 2 shape for every caller, whether or not they send the header.
+- `X-API-Version` stops being read. Sending it is harmless — it is ignored, not rejected — so you do not need a second deploy on the day of the change.
+- There is no way to keep receiving version 1.
+
+What this means if you have not migrated: **your integration receives a different response without changing a line of its own code.** Fewer rows for the same date range, a different `operation` value, and fewer fields per movement.
+
+<Warning>
+  **The search loses fields, permanently.** Version 2 does not return `status`, `decline_reason` or the fee breakdown per movement, and that is not coming back — the removal of version 1 removes those fields from the search for good. A declined purchase is reported as a `PURCHASE` movement with the amount that was attempted, so summing `bill_amount` counts declines as spend.
+
+  If you classify movements by any of those fields, the replacement is the [detail endpoint](/api-reference/cards/transactions/get-transaction-v2): `lifecycle.state` and `lifecycle.outcome` say how the operation closed and whether anything came back, and the fee fields are still there. Plan that call into your integration before the date.
+</Warning>
+
 ## Migrating
 
 <Steps>
@@ -75,7 +95,7 @@ Version 2 covers enterprise cards. Asking for it on an individual card returns `
     Swap the purchase event names in `operations` for `PURCHASE`. Keep the other values as they are.
   </Step>
   <Step title="Send the header">
-    Add `X-API-Version: 2` to your requests.
+    Add `X-API-Version: 2` to your requests. After 1 October 2026 this step is unnecessary, but harmless.
   </Step>
   <Step title="Adjust to fewer rows">
     Expect fewer movements for the same date range, and `total_elements` counting operations rather than events. A purchase you used to see three times is now one row.
@@ -83,8 +103,7 @@ Version 2 covers enterprise cards. Asking for it on an individual card returns `
   <Step title="Read the amount from the operation">
     `bill_amount` is what the card is charged for that purchase right now, fees included. You no longer need to add up authorizations and clearings.
   </Step>
+  <Step title="Replace what the search no longer gives you">
+    If you read `status`, `decline_reason` or the fees from the search, move that logic to the detail endpoint. This is the step that cannot be postponed past 1 October 2026.
+  </Step>
 </Steps>
-
-<Warning>
-  Version 2 of the search returns a smaller set of fields per movement — no `status`, no `decline_reason`, no fee breakdown. A declined purchase is reported as a `PURCHASE` movement with the amount that was attempted. If you rely on any of those fields to classify movements, stay on version 1, or read the [detail](/api-reference/cards/transactions/get-transaction-v2) of the movements you care about: there `lifecycle.state` and `lifecycle.outcome` say how the operation closed and whether anything came back.
-</Warning>

@@ -2,7 +2,12 @@
 title: "Search card transactions"
 description: "Retrieve card transactions with filtering and pagination."
 api: "GET /cards/transactions/{cardId}/search"
+deprecated: true
 ---
+
+<Warning>
+  **Removed on 1 October 2026.** From that date this path answers with the [version 2](/api-reference/cards/transactions/search-transactions-v2) shape for every caller, and there is no way to keep receiving the response documented on this page — including the `status`, `decline_reason` and fee fields, which version 2 does not return. If you consume this endpoint, read [API Versioning](/integration/api-versioning) and migrate before the date.
+</Warning>
 
 Searches and retrieves transactions for a specific card with filtering and pagination. Results are always ordered by date, newest first. Requires an API key with access level 1 or higher.
 

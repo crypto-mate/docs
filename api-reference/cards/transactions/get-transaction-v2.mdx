@@ -11,7 +11,7 @@ This is version 2 of [Get transaction](/api-reference/cards/transactions/get-tra
 ## Headers
 
 <ParamField header="X-API-Version" type="string" required>
-  Must be `2`. Any other value — including omitting the header — serves [version 1](/api-reference/cards/transactions/get-transaction), which returns the single event and no `lifecycle`.
+  Must be `2`. Any other value — including omitting the header — serves [version 1](/api-reference/cards/transactions/get-transaction), which returns the single event and no `lifecycle`. On 1 October 2026 version 1 is removed: this becomes the only shape and the header is ignored, so sending it stays harmless.
 </ParamField>
 
 ## Path parameters

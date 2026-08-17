@@ -2,7 +2,12 @@
 title: "Get transaction"
 description: "Retrieve detailed information for a specific card transaction."
 api: "GET /cards/transactions/{cardId}/{transactionId}"
+deprecated: true
 ---
+
+<Warning>
+  **Removed on 1 October 2026.** From that date this path answers with the [version 2](/api-reference/cards/transactions/get-transaction-v2) shape for every caller, and there is no way to keep receiving the response documented on this page. Version 2 drops `status`, `original_balance` and `new_balance`, and reports the whole operation instead of the single event. If you consume this endpoint, read [API Versioning](/integration/api-versioning) and migrate before the date.
+</Warning>
 
 Returns the full detail of a single card transaction by its ID. Requires an API key with access level 1 or higher.
 

@@ -13,7 +13,7 @@ Results are always ordered by date, newest first, by when the operation started.
 ## Headers
 
 <ParamField header="X-API-Version" type="string" required>
-  Must be `2`. Any other value — including omitting the header — serves [version 1](/api-reference/cards/transactions/search-transactions), which reports one item per event.
+  Must be `2`. Any other value — including omitting the header — serves [version 1](/api-reference/cards/transactions/search-transactions), which reports one item per event. On 1 October 2026 version 1 is removed: this becomes the only shape and the header is ignored, so sending it stays harmless.
 </ParamField>
 
 ## Path parameters
