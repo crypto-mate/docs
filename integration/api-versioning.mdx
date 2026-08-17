@@ -36,10 +36,10 @@ Version 2 groups them: one purchase is one movement, labelled `PURCHASE`, carryi
 | How a purchase ended | Inferred by you from the sequence of events | Stated by the detail in `lifecycle.state` and `lifecycle.outcome` |
 | Cards | All | Enterprise cards only |
 
-Endpoints that support version 2 today:
+Endpoints that support version 2 today, each documented on its own page:
 
-- [Search card transactions](/api-reference/cards/transactions/search-transactions)
-- [Get transaction](/api-reference/cards/transactions/get-transaction)
+- [Search card transactions (v2)](/api-reference/cards/transactions/search-transactions-v2)
+- [Get transaction (v2)](/api-reference/cards/transactions/get-transaction-v2)
 
 ## Filtering by operation in version 2
 
@@ -86,5 +86,5 @@ Version 2 covers enterprise cards. Asking for it on an individual card returns `
 </Steps>
 
 <Warning>
-  Version 2 of the search returns a smaller set of fields per movement — no `status`, no `decline_reason`, no fee breakdown. A declined purchase is reported as a `PURCHASE` movement with the amount that was attempted. If you rely on any of those fields to classify movements, stay on version 1, or read the [detail](/api-reference/cards/transactions/get-transaction) of the movements you care about: there `lifecycle.state` and `lifecycle.outcome` say how the operation closed and whether anything came back.
+  Version 2 of the search returns a smaller set of fields per movement — no `status`, no `decline_reason`, no fee breakdown. A declined purchase is reported as a `PURCHASE` movement with the amount that was attempted. If you rely on any of those fields to classify movements, stay on version 1, or read the [detail](/api-reference/cards/transactions/get-transaction-v2) of the movements you care about: there `lifecycle.state` and `lifecycle.outcome` say how the operation closed and whether anything came back.
 </Warning>
