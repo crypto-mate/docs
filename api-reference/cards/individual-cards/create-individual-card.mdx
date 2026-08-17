@@ -32,6 +32,10 @@ Creates a new virtual card assigned to an individual client. Requires an API key
   Monthly spending limit in USD.
 </ParamField>
 
+<ParamField body="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD, fees included. Does not apply to ATM withdrawals.
+</ParamField>
+
 ## Response
 
 <ResponseField name="id" type="string">
@@ -86,6 +90,10 @@ Creates a new virtual card assigned to an individual client. Requires an API key
   Monthly spending limit in USD.
 </ResponseField>
 
+<ResponseField name="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD. `null` when there is no per-transaction limit.
+</ResponseField>
+
 <ResponseField name="forwarded_3ds_type" type="string">
   3DS challenge delivery method. Possible values: `sms`, `webhook`.
 </ResponseField>
@@ -102,7 +110,8 @@ curl -X POST "https://api.cryptomate.me/cards/individual-cards/create" \
     "approval_method": "TOPUP",
     "daily_limit": 100.00,
     "weekly_limit": 500.00,
-    "monthly_limit": 2000.00
+    "monthly_limit": 2000.00,
+    "per_transaction_limit": 50.00
   }'
 ```
 
@@ -125,6 +134,7 @@ curl -X POST "https://api.cryptomate.me/cards/individual-cards/create" \
   "daily_limit": 100.00,
   "weekly_limit": 500.00,
   "monthly_limit": 2000.00,
+  "per_transaction_limit": 50.00,
   "forwarded_3ds_type": "sms"
 }
 ```

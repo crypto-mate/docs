@@ -4,9 +4,11 @@ description: "Change the spending limits of an already issued individual card."
 api: "PATCH /cards/individual-cards/{cardId}/limits"
 ---
 
-Updates the daily, weekly and monthly spending limits of an individual card that is already issued, without reissuing it. The new limits apply to the following authorizations. Requires an API key with access level 2 or higher.
+Updates the daily, weekly, monthly and per-transaction spending limits of an individual card that is already issued, without reissuing it. The new limits apply to the following authorizations. Requires an API key with access level 2 or higher.
 
-Every limit is optional and independent. Send a number to set that limit, or `null` to remove it so the card has no cap for that window. Any limit you omit from the body is treated as `null` and therefore removed — always send the three fields with their intended values.
+Every limit is optional and independent. Send a number to set that limit, or `null` to remove it so the card has no cap for that window. Any limit you omit from the body is treated as `null` and therefore removed — always send the four fields with their intended values.
+
+The daily, weekly and monthly limits cap accumulated spending over their window. The per-transaction limit caps a single purchase instead: any purchase above it is declined regardless of how much is left on the other limits. It is evaluated on the total purchase amount with fees included, and it does not apply to ATM withdrawals.
 
 ## Path parameters
 
@@ -26,6 +28,10 @@ Every limit is optional and independent. Send a number to set that limit, or `nu
 
 <ParamField body="monthly_limit" type="number">
   Monthly spending limit in USD. Must be zero or greater. Send `null` to remove the monthly limit.
+</ParamField>
+
+<ParamField body="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD, fees included. Must be zero or greater. Send `null` to remove the per-transaction limit. Does not apply to ATM withdrawals.
 </ParamField>
 
 ## Response
@@ -84,6 +90,10 @@ Returns the updated card.
   Updated monthly spending limit in USD. `null` when there is no monthly limit.
 </ResponseField>
 
+<ResponseField name="per_transaction_limit" type="number">
+  Updated per-transaction spending limit in USD. `null` when there is no per-transaction limit.
+</ResponseField>
+
 <ResponseField name="forwarded_3ds_type" type="string">
   3DS challenge delivery method. Possible values: `sms`, `webhook`.
 </ResponseField>
@@ -97,7 +107,8 @@ curl -X PATCH "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4
   -d '{
     "daily_limit": 250.00,
     "weekly_limit": null,
-    "monthly_limit": 3000.00
+    "monthly_limit": 3000.00,
+    "per_transaction_limit": 200.00
   }'
 ```
 
@@ -120,6 +131,7 @@ curl -X PATCH "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4
   "daily_limit": 250.00,
   "weekly_limit": null,
   "monthly_limit": 3000.00,
+  "per_transaction_limit": 200.00,
   "forwarded_3ds_type": "sms"
 }
 ```

@@ -40,6 +40,10 @@ Creates a new virtual card with the specified limits and cardholder information.
   Monthly spending limit in USD.
 </ParamField>
 
+<ParamField body="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD, fees included. Does not apply to ATM withdrawals.
+</ParamField>
+
 <ParamField body="metadata" type="object">
   Additional metadata key-value pairs for the card.
 </ParamField>
@@ -82,6 +86,10 @@ Creates a new virtual card with the specified limits and cardholder information.
   Monthly spending limit in USD.
 </ResponseField>
 
+<ResponseField name="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD. `null` when there is no per-transaction limit.
+</ResponseField>
+
 <RequestExample>
 
 ```bash cURL
@@ -97,6 +105,7 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
     "daily_limit": 1000.00,
     "weekly_limit": 5000.00,
     "monthly_limit": 20000.00,
+    "per_transaction_limit": 500.00,
     "metadata": {
       "department": "engineering"
     }
@@ -117,7 +126,8 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
   "approval_method": "TOPUP",
   "daily_limit": 1000.00,
   "weekly_limit": 5000.00,
-  "monthly_limit": 20000.00
+  "monthly_limit": 20000.00,
+  "per_transaction_limit": 500.00
 }
 ```
 

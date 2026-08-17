@@ -60,9 +60,11 @@ The `approval_method` cannot be changed after card creation. If the wrong method
 
 ### Spending limits
 
-Set `daily_limit`, `weekly_limit`, and `monthly_limit` (in USD) at creation. These are enforced per card independently. You can update them at any time — see [Spending limits](#spending-limits) below.
+Set `daily_limit`, `weekly_limit`, `monthly_limit`, and `per_transaction_limit` (in USD) at creation. These are enforced per card independently. You can update them at any time — see [Spending limits](#spending-limits) below.
 
-Omitting a limit means no limit is applied for that time window.
+The first three cap accumulated spending over their window. `per_transaction_limit` caps a single purchase instead: a purchase above it is declined even if the accumulated limits still have room. It is evaluated on the total purchase amount with fees included, so a 199 USD purchase with 3 USD of FX fees is declined against a 200 USD cap. It does not apply to ATM withdrawals.
+
+Omitting a limit means no limit is applied — for the three accumulated limits, no cap on that time window; for `per_transaction_limit`, no cap on individual purchases.
 
 ---
 
@@ -120,7 +122,9 @@ Fees withdrawals are also available from the Portal (Cards → Summary → Accum
 
 ### Spending limits
 
-Update per-card daily, weekly, and monthly limits independently with [Update card limits](/api-reference/cards/virtual-cards/set-limits). Changes take effect immediately on the next authorization.
+Update per-card daily, weekly, monthly, and per-transaction limits independently with [Update card limits](/api-reference/cards/virtual-cards/set-limits). Changes take effect immediately on the next authorization.
+
+That endpoint replaces every limit, so send the four fields on each call — any field you omit is removed.
 
 ### Freeze and unfreeze
 

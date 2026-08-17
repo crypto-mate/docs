@@ -6,6 +6,10 @@ api: "GET /cards/transactions/{cardId}/accumulated-spending"
 
 Returns the amount already consumed against the card's daily, weekly, and monthly spending limits. Use this alongside the card's `daily_limit`, `weekly_limit`, and `monthly_limit` to compute the remaining available amount on each period. Requires an API key with access level 1 or higher.
 
+<Note>
+`per_transaction_limit` is not reported here. It caps a single purchase rather than accumulating over a period, so there is no consumed amount to track against it.
+</Note>
+
 ## Path parameters
 
 <ParamField path="cardId" type="string" required>

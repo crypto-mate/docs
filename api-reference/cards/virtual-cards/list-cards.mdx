@@ -46,6 +46,10 @@ Returns an array of virtual card objects.
   Monthly spending limit in USD.
 </ResponseField>
 
+<ResponseField name="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD. `null` when there is no per-transaction limit.
+</ResponseField>
+
 <ResponseField name="forwarded_3ds_type" type="string">
   3D Secure configuration. Possible values: `AUTOMATIC`, `FORWARDED`, `DISABLED`.
 </ResponseField>
@@ -77,6 +81,7 @@ curl -X GET "https://api.cryptomate.me/cards/virtual-cards/list" \
     "daily_limit": 1000.00,
     "weekly_limit": 5000.00,
     "monthly_limit": 20000.00,
+    "per_transaction_limit": 500.00,
     "forwarded_3ds_type": "AUTOMATIC",
     "meta": {
       "email": "cardholder@example.com",
