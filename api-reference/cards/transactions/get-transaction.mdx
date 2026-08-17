@@ -27,7 +27,7 @@ Returns the full detail of a single card transaction by its ID. Requires an API 
 </ResponseField>
 
 <ResponseField name="operation" type="string">
-  Type of card operation. Possible values: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND`.
+  Type of card operation. Purchase events: `TRANSACTION_AUTHORIZATION`, `TRANSACTION_APPROVED`, `TRANSACTION_CLEARED`, `TRANSACTION_REJECTED`, `TRANSACTION_REVERSED`, `TRANSACTION_REFUND`. Movements that are not purchases: `WALLET_DEPOSIT`, `WALLET_WITHDRAWAL`, `WARRANTY_DEPOSIT`, `WARRANTY_WITHDRAWAL`, `OVERRIDE_VIRTUAL_BALANCE`, `VISA_DIRECT_DEPOSIT`.
 </ResponseField>
 
 <ResponseField name="bill_amount" type="number">
@@ -63,11 +63,11 @@ Returns the full detail of a single card transaction by its ID. Requires an API 
 </ResponseField>
 
 <ResponseField name="status" type="string">
-  Transaction status. Possible values: `SUCCESS`, `PENDING`, `FAILED`.
+  Transaction status. Possible values: `PENDING`, `SUCCESS`, `FAILED`, `CANCELED`, `TIME_CANCELED`, `MANUAL_CHECK`.
 </ResponseField>
 
 <ResponseField name="decline_reason" type="object">
-  Present when the transaction was declined. Contains `response_code` and `description`.
+  Present when the transaction was declined. Contains `code`, `simple_reason` and `detailed_reason`. See [Card decline codes](/integration/card-decline-codes).
 </ResponseField>
 
 <ResponseField name="fee_fx_provider" type="number">
@@ -237,15 +237,15 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
 
 ```json 404 Not Found
 {
-  "code": "APP_ERROR",
-  "message": "Transaction not found."
+  "code": "NOT_FOUND",
+  "message": "Movement not found: a1b2c3d4-e5f6-7890-abcd-ef1234567890"
 }
 ```
 
 ```json 401 Unauthorized
 {
-  "code": "AUTH_ERROR",
-  "message": "Invalid or missing API key."
+  "code": "DENIED",
+  "message": "Header x-api-key is mandatory."
 }
 ```
 
