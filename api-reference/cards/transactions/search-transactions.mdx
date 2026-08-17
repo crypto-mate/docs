@@ -85,11 +85,11 @@ Same as version 1, except:
 The wrapper is the same, with one difference: `total_elements` counts operations, not events. Each movement carries eight fields.
 
 <ResponseField name="id" type="string">
-  Identifier of the movement that opened the operation. Use it to read the [detail](/api-reference/cards/transactions/get-transaction).
+  Identifier of the event the operation's data is taken from: for a purchase, its approval — or its decline, if it was never approved. Use it to read the [detail](/api-reference/cards/transactions/get-transaction).
 </ResponseField>
 
 <ResponseField name="datetime" type="string">
-  When the operation started (ISO-8601). For a purchase, when it was authorized.
+  When the operation started (ISO-8601). For a purchase, when it was authorized — which is an earlier event than the one `id` points to.
 </ResponseField>
 
 <ResponseField name="operation" type="string">
@@ -140,6 +140,20 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
       "merchant_name": "Amazon.com"
     }
   ]
+}
+```
+
+```json 412 Precondition Failed
+{
+  "code": "VAL",
+  "message": "The consolidated search is only available for ENTERPRISE cards, and card card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23 is a INDIVIDUAL card"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found: card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23"
 }
 ```
 

@@ -32,6 +32,7 @@ Version 2 groups them: one purchase is one movement, labelled `PURCHASE`, carryi
 | Unit | One item per lifecycle event | One item per operation |
 | Purchase amount | The amount of that event | The current amount of the whole operation, fees included |
 | `operations` filter | Internal event names | Families: `PURCHASE` and the operations that are not purchases |
+| `operation` in the response | The event's own type | `PURCHASE` for the whole purchase family, on the search and on the detail alike |
 | How a purchase ended | Inferred by you from the sequence of events | Stated by the detail in `lifecycle.state` and `lifecycle.outcome` |
 | Cards | All | Enterprise cards only |
 

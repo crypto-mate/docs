@@ -102,7 +102,11 @@ Enterprise cards only: on an individual card the endpoint answers `412`.
 
 ### Response
 
-Same fields as version 1, with three differences: `status`, `original_balance` and `new_balance` are not returned, `merchant_city` is added, and the amounts describe the operation rather than the event.
+Same fields as version 1, with four differences: `status`, `original_balance` and `new_balance` are not returned, `merchant_city` is added, the amounts describe the operation rather than the event, and `operation` reports the operation rather than the event you asked for.
+
+<ResponseField name="operation" type="string">
+  `PURCHASE` for anything belonging to a purchase — ask for the id of one of its clearings and you still get `PURCHASE`. Movements that are not purchases keep their own operation: `WALLET_DEPOSIT`, `WALLET_WITHDRAWAL`, `WARRANTY_DEPOSIT`, `WARRANTY_WITHDRAWAL`, `OVERRIDE_VIRTUAL_BALANCE`, `VISA_DIRECT_DEPOSIT`. The events that make up the purchase keep their own operation inside `lifecycle.events`.
+</ResponseField>
 
 <ResponseField name="bill_amount" type="number">
   Current amount of the operation in billing currency, fees included. Can be `0` after a full reversal, or negative if a refund exceeded what was charged.
@@ -117,7 +121,7 @@ Same fields as version 1, with three differences: `status`, `original_balance` a
     </ResponseField>
 
     <ResponseField name="state" type="string">
-      Whether the clearing added up: how much the issuer settled against how much was authorized. Possible values: `SIMPLE` (a single event, nothing to consolidate), `PARTIAL` (the issuer settled less than authorized, the hold is still in place), `COMPLETE` (settled matches authorized), `OVER_CAPTURE` (the issuer settled more than authorized). Read it together with `outcome`, not instead of it: a purchase whose hold was released settles `0` against `0`, and a fully refunded one settled in full, so both report `COMPLETE`.
+      Whether the clearing added up: how much the issuer settled against how much was authorized. Possible values: `SIMPLE` (nothing was consolidated — either the operation is a single event, or its events could not be composed, in which case the amounts are those of the event you asked for), `PARTIAL` (the issuer settled less than authorized, the hold is still in place), `COMPLETE` (settled matches authorized), `OVER_CAPTURE` (the issuer settled more than authorized). Read it together with `outcome`, not instead of it: a purchase whose hold was released settles `0` against `0`, and a fully refunded one settled in full, so both report `COMPLETE`.
     </ResponseField>
 
     <ResponseField name="outcome" type="string">
@@ -148,23 +152,23 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "datetime": "2026-04-15T10:30:00",
-  "operation": "TRANSACTION_APPROVED",
+  "operation": "PURCHASE",
   "bill_amount": 101.25,
   "bill_currency": "USD",
   "transaction_amount": 85.50,
   "transaction_currency": "EUR",
-  "exchange_rate": 1.17,
+  "exchange_rate": 1.170000,
   "merchant_name": "Amazon.com",
   "merchant_city": "Seattle",
   "decline_reason": null,
   "fee_fx_provider": 0.50,
   "fee_fx_client": 0.75,
-  "fee_atm_provider": 0,
-  "fee_atm_client": 0,
-  "fee_deposit_provider": 0,
-  "fee_deposit_client": 0,
+  "fee_atm_provider": 0.00,
+  "fee_atm_client": 0.00,
+  "fee_deposit_provider": 0.00,
+  "fee_deposit_client": 0.00,
   "lifecycle": {
-    "transaction_id": "tid_019f4d29",
+    "transaction_id": "019f4d29-8b1c-7a3e-9f01-2c5d7e8a4b60",
     "state": "PARTIAL",
     "outcome": "NONE",
     "event_count": 3,
@@ -192,7 +196,7 @@ curl -X GET "https://api.cryptomate.me/cards/transactions/card_6f1e2a30-4a3c-4b2
 ```json 412 Precondition Failed
 {
   "code": "VAL",
-  "message": "The consolidated transaction detail is only available for ENTERPRISE cards"
+  "message": "The consolidated transaction detail is only available for ENTERPRISE cards, and movement a1b2c3d4-e5f6-7890-abcd-ef1234567890 belongs to a INDIVIDUAL card"
 }
 ```
 
