@@ -66,6 +66,10 @@ Returns the details of a single individual card by its ID. Requires an API key w
   Monthly spending limit in USD.
 </ResponseField>
 
+<ResponseField name="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD. `null` when there is no per-transaction limit.
+</ResponseField>
+
 <ResponseField name="forwarded_3ds_type" type="string">
   3DS challenge delivery method. Possible values: `sms`, `webhook`.
 </ResponseField>
@@ -96,6 +100,7 @@ curl -X GET "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4a3
   "daily_limit": 100.00,
   "weekly_limit": 500.00,
   "monthly_limit": 2000.00,
+  "per_transaction_limit": 50.00,
   "forwarded_3ds_type": "sms"
 }
 ```

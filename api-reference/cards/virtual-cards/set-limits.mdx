@@ -1,10 +1,14 @@
 ---
 title: "Update card limits"
-description: "Update daily, weekly, and monthly spending limits for a virtual card."
+description: "Update daily, weekly, monthly, and per-transaction spending limits for a virtual card."
 api: "PATCH /cards/virtual-cards/{cardId}/limits"
 ---
 
-Updates the daily, weekly, and monthly spending limits for a virtual card. Requires an API key with access level 2 or higher.
+Updates the daily, weekly, monthly, and per-transaction spending limits for a virtual card. Requires an API key with access level 2 or higher.
+
+The daily, weekly, and monthly limits cap accumulated spending over their window. The per-transaction limit caps a single purchase instead: any purchase above it is declined regardless of how much is left on the other limits. It is evaluated on the total purchase amount with fees included, and it does not apply to ATM withdrawals.
+
+This endpoint replaces every limit. Any field you omit from the body is treated as `null` and therefore removed, so always send the four fields with their intended values.
 
 ## Path parameters
 
@@ -24,6 +28,10 @@ Updates the daily, weekly, and monthly spending limits for a virtual card. Requi
 
 <ParamField body="monthly_limit" type="number">
   Monthly spending limit in USD.
+</ParamField>
+
+<ParamField body="per_transaction_limit" type="number">
+  Maximum amount allowed for a single purchase in USD, fees included. Does not apply to ATM withdrawals.
 </ParamField>
 
 ## Response
@@ -46,6 +54,10 @@ Returns the updated virtual card object.
   Updated monthly spending limit.
 </ResponseField>
 
+<ResponseField name="per_transaction_limit" type="number">
+  Updated per-transaction spending limit. `null` when there is no per-transaction limit.
+</ResponseField>
+
 <RequestExample>
 
 ```bash cURL
@@ -55,7 +67,8 @@ curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-
   -d '{
     "daily_limit": 1500.00,
     "weekly_limit": 7500.00,
-    "monthly_limit": 25000.00
+    "monthly_limit": 25000.00,
+    "per_transaction_limit": 500.00
   }'
 ```
 
@@ -70,7 +83,8 @@ curl -X PATCH "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-
   "status": "ACTIVE",
   "daily_limit": 1500.00,
   "weekly_limit": 7500.00,
-  "monthly_limit": 25000.00
+  "monthly_limit": 25000.00,
+  "per_transaction_limit": 500.00
 }
 ```
 

@@ -81,6 +81,9 @@ Returns a paginated list of individual cards for the authenticated company. Supp
     <ResponseField name="monthly_limit" type="number">
       Monthly spending limit in USD.
     </ResponseField>
+    <ResponseField name="per_transaction_limit" type="number">
+      Maximum amount allowed for a single purchase in USD. `null` when there is no per-transaction limit.
+    </ResponseField>
   </Expandable>
 </ResponseField>
 
@@ -132,7 +135,8 @@ curl -X GET "https://api.cryptomate.me/cards/individual-cards/list/search?search
       "approval_method": "TOPUP",
       "daily_limit": 100.00,
       "weekly_limit": 500.00,
-      "monthly_limit": 2000.00
+      "monthly_limit": 2000.00,
+      "per_transaction_limit": 50.00
     }
   ],
   "page": 0,
