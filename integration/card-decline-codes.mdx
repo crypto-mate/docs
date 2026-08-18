@@ -81,6 +81,7 @@ Webhook payloads carry five fields: the three above plus `response_code` and `de
 | `M201` | The purchase would exceed the card's daily spending limit. |
 | `M202` | The purchase would exceed the card's weekly spending limit. |
 | `M203` | The purchase would exceed the card's monthly spending limit. |
+| `M214` | The purchase amount, fees included, would exceed the per-transaction limit configured on the card. Checked before the daily, weekly and monthly limits, and only on purchases — ATM withdrawals are exempt. |
 | `M204` | The purchase would exceed the per-operation limit. See the warning below before reading a figure out of this decline. |
 
 <Warning>
@@ -106,6 +107,7 @@ Webhook payloads carry five fields: the three above plus `response_code` and `de
 |---|---|
 | `C101` | Too many incorrect CVV attempts. The card was blocked as a result. |
 | `C102` | The CVV entered did not match. |
+| `C012` | The PIN entered at the terminal did not match. |
 
 ### Merchant category
 
@@ -119,6 +121,7 @@ Webhook payloads carry five fields: the three above plus `response_code` and `de
 | Code | What it means |
 |---|---|
 | `C020` | The purchase could not be processed during authorization. |
+| `C010` | The authorization was not answered within the issuer's real-time window of 1.6 seconds, so the issuer declined it. The purchase was never authorized and no funds were held. Retrying it is safe. |
 | `M212` | The data submitted with the authorization failed verification. |
 
 <Note>
