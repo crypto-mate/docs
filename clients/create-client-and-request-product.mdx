@@ -143,7 +143,13 @@ Satisfy each entry in `missing_requirements.documents` with [Complete product do
 Use the `document_type` listed under the requirement's `valid_documents`, attach the base64-encoded image(s), and include any required `metadata` fields.
 
 <Warning>
-  **Identification documents must be a photo or scan of the physical document.** For any identity document — such as `passport`, `national_id`, `drivers_license` or `ssn` — upload an image of the actual physical document. Digital-only versions issued by government apps are **not accepted** and will fail the KYC review, including for example Argentina's **Mi Argentina**, Colombia's **Cédula Digital**, Brazil's **Carteira Digital de Trânsito**, Mexico's **Licencia Digital CDMX**, and Europe's **EU Digital Identity Wallet** / **France Identité** / Spain's **MiDNI**, or any similar national digital-ID app. Make sure the whole document is visible, in focus and well lit, and include the back image (`image_back`) whenever the document type requires it.
+  **Upload a photo of the physical document, taken directly with a camera.** The photo comes straight from a camera and goes straight to the upload — if it passed through a program in between, it will not work. Photocopies, scans, screenshots and images exported from an editor are rejected by the KYC review.
+
+  Upload **JPG or PNG** images, up to **10 MB** each. Other formats — including PDF — are not processed reliably and will fail the review.
+
+  Digital-only versions issued by government apps are **not accepted**, including Argentina's **Mi Argentina**, Colombia's **Cédula Digital**, Brazil's **Carteira Digital de Trânsito**, Mexico's **Licencia Digital CDMX**, and Europe's **EU Digital Identity Wallet** / **France Identité** / Spain's **MiDNI**, or any similar national digital-ID app.
+
+  There is no fixed turnaround time for KYC review, and any shortfall in image quality routes the case to manual review — which can take weeks. Read the full [KYC image guidelines](/clients/kyc-image-guidelines) before collecting documents.
 </Warning>
 
 ```bash cURL
