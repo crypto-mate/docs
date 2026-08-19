@@ -42,7 +42,8 @@
           {
             "group": "Clients",
             "pages": [
-              "clients/create-client-and-request-product"
+              "clients/create-client-and-request-product",
+              "clients/kyc-image-guidelines"
             ]
           },
           {

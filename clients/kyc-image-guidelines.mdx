@@ -1,0 +1,61 @@
+---
+title: "KYC image guidelines"
+description: "Image requirements every identity document and selfie must meet to pass the automated KYC review."
+---
+
+Documents uploaded for a product enablement request go through an automated compliance review. This page lists what that review expects. Pass these requirements on to the person whose documents you are collecting — they are written as checks you can run against an image before uploading it.
+
+<Warning>
+  **There is no fixed turnaround time for KYC review.** Documents are normally checked by an automated compliance flow. If image quality falls short in any way, the case is routed to manual review, which can take **up to several weeks**. Meeting the requirements below is the fastest path to automatic approval.
+</Warning>
+
+## Avoid — these send the case to manual review
+
+<Danger>
+  **The photo comes straight from a camera and goes straight to the upload. If it passed through a program in between, it will not work.**
+
+  - **Photocopies and scans of the document.** Previously listed as an accepted option — this is no longer the case.
+  - **Images opened in Word, Paint, Photos, Preview or any other editor**, even when nothing was changed. Exporting from those tools adds background, margins and metadata that the automated flow reads as editing.
+  - **Screenshots.**
+  - **Crops, resizes or format conversions made in an editor.**
+  - **Frames or white borders** around the image — the "photo of a photo" or "document pasted onto a sheet" look.
+  - **Filters, watermarks, annotations or overlaid signatures.**
+  - **Digital-only documents issued by government apps.** These are not accepted and will fail the KYC review, including Argentina's **Mi Argentina**, Colombia's **Cédula Digital**, Brazil's **Carteira Digital de Trânsito**, Mexico's **Licencia Digital CDMX**, and Europe's **EU Digital Identity Wallet** / **France Identité** / Spain's **MiDNI**, or any similar national digital-ID app.
+</Danger>
+
+## General requirements
+
+<Check>
+  - **Format: JPG or PNG.** Other formats — including PDF — are not processed reliably and will fail the KYC review.
+  - **Size: up to 10 MB per image.**
+  - One image per side. Send the back side in `image_back` whenever the document type requires it.
+</Check>
+
+## For identity documents
+
+Applies to `passport`, `national_id`, `drivers_license` and `ssn`.
+
+<Check>
+  - A photo of the physical document, taken directly with a camera.
+  - The document rests on a clean, flat, contrasting surface.
+  - All four corners are visible, and every field is sharp and readable.
+  - Lighting is even, with no glare, flash reflections or shadows — watch holograms in particular.
+  - The document is valid and has not expired.
+  - The back side is included when the document type carries data there (for example, national ID cards).
+  - The name and date of birth match the details submitted when the client was created.
+</Check>
+
+## For selfies
+
+<Check>
+  - The face is centered, fully visible and well lit.
+  - The background is plain and free of objects.
+  - The expression is neutral and the eyes are open.
+  - The selfie is recent and reflects the person's current appearance.
+  - No glasses, hats or veils that do not appear in the identity document.
+  - The document is not held in frame — it is not required and only adds noise around the face.
+</Check>
+
+<Tip>
+  If a document is rejected, the `rejected_items` array returned by [Complete product documentation](/api-reference/management/individual-clients/complete-product-documentation) carries a `reason` for each item. Fix the issue it names, re-check the requirements above, and upload the image again.
+</Tip>
