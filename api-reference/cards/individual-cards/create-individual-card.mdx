@@ -6,6 +6,8 @@ api: "POST /cards/individual-cards/create"
 
 Creates a new virtual card assigned to an individual client. Requires an API key with access level 2 or higher.
 
+A client can hold at most **3 cards** at the same time. Every card that has not been cancelled counts toward that limit, whatever its status; cancelling a card is the only way to free a slot. Requests over the limit return `412` and create nothing. See [Individual cards](/products/individual-cards) for the full rule.
+
 ## Body
 
 <ParamField body="client_id" type="string" required>
@@ -133,6 +135,20 @@ curl -X POST "https://api.cryptomate.me/cards/individual-cards/create" \
 {
   "code": "VAL",
   "message": "clientId must not be null"
+}
+```
+
+```json 412 Client Card Limit Reached
+{
+  "code": "VAL",
+  "message": "This client already has the maximum of 3 cards. Cancel one of them to create a new one."
+}
+```
+
+```json 412 Company Quota Reached
+{
+  "code": "VAL",
+  "message": "The current limit for this product has been reached. Please increase the limit."
 }
 ```
 
