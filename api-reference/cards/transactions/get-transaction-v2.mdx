@@ -142,11 +142,6 @@ This is version 2 of [Get transaction](/api-reference/cards/transactions/get-tra
   Events carry no amount. The net of an operation depends on the fee regime it closed under and on the fees a reversal or a refund gave back, so adding up the events does not reproduce `bill_amount`. Read the amount from the operation.
 </Note>
 
-{/* TODO EN-2931: reemplazar las dos apariciones de DEPLOY_DATE_TBD por la fecha de deploy. NO PUBLICAR sin completarlas. */}
-<Note>
-  From **DEPLOY_DATE_TBD**, a reversal or a refund returns every fee the operation had been charged, in proportion to the amount returned and capped at what was charged. Earlier part of those fees stayed charged, so `bill_amount` on an operation that was partly or fully returned is lower than it was before that date, and a full return closes at exactly `0` instead of leaving a residue. Operations whose reversal or refund was processed before **DEPLOY_DATE_TBD** keep the amount they closed with, so a date range that spans it mixes both behaviors — reconcile historical data as two periods, not one.
-</Note>
-
 ## State and outcome together
 
 The two fields answer different questions — how the clearing added up, and whether anything came back — so neither one alone tells you how a purchase ended. Of the twenty possible pairs, thirteen occur:

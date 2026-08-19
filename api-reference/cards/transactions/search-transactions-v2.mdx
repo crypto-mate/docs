@@ -104,11 +104,6 @@ Results are always ordered by date, newest first, by when the operation started.
   A movement carries these eight fields and no more: there is no `status`, no `decline_reason` and no fee breakdown. A declined purchase is reported as a `PURCHASE` with the amount that was attempted, so summing `bill_amount` counts declines as spend. To tell purchases apart, read the [detail](/api-reference/cards/transactions/get-transaction-v2) of the ones you care about.
 </Warning>
 
-{/* TODO EN-2931: reemplazar las dos apariciones de DEPLOY_DATE_TBD por la fecha de deploy. NO PUBLICAR sin completarlas. */}
-<Note>
-  From **DEPLOY_DATE_TBD**, a reversal or a refund returns every fee the operation had been charged, in proportion to the amount returned and capped at what was charged. Earlier part of those fees stayed charged, so `bill_amount` on an operation that was partly or fully returned is lower than it was before that date, and a full return closes at exactly `0`. Operations whose reversal or refund was processed before **DEPLOY_DATE_TBD** keep the amount they closed with: a range that spans it mixes both behaviors.
-</Note>
-
 <RequestExample>
 
 ```bash cURL
