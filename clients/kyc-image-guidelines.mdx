@@ -15,7 +15,9 @@ Documents uploaded for a product enablement request go through an automated comp
   **The photo comes straight from a camera and goes straight to the upload. If it passed through a program in between, it will not work.**
 
   - **Photocopies and scans of the document.** Previously listed as an accepted option — this is no longer the case.
+  - **PDF files.** A PDF is what a scanner or a "print to PDF" produces, so it carries the same problem as a scan — and the automated flow expects an image, not a document container. Photograph the document with a camera and upload the image instead. Converting the PDF to JPG in another tool does not help either: the result still comes from a scan, and the conversion itself falls under the editor rule below.
   - **Images opened in Word, Paint, Photos, Preview or any other editor**, even when nothing was changed. Exporting from those tools adds background, margins and metadata that the automated flow reads as editing.
+  - **HEIC / HEIF files — the default photo format on iPhone and Mac.** A photo taken with an iPhone is saved as `.heic` unless the camera is set otherwise, and that format is not processed. On the device, go to **Settings › Camera › Formats** and choose **Most Compatible** so the camera shoots JPEG, then take the photo again. Do not convert an existing `.heic` in an image editor — that lands under the editor rule above.
   - **Screenshots.**
   - **Crops, resizes or format conversions made in an editor.**
   - **Frames or white borders** around the image — the "photo of a photo" or "document pasted onto a sheet" look.
@@ -26,7 +28,7 @@ Documents uploaded for a product enablement request go through an automated comp
 ## General requirements
 
 <Check>
-  - **Format: JPG or PNG.** Other formats — including PDF — are not processed reliably and will fail the KYC review.
+  - **Format: JPG or PNG.** Other formats are not processed reliably and will fail the KYC review — this includes PDF, and **HEIC / HEIF, which is what an iPhone or a Mac produces by default**.
   - **Size: up to 10 MB per image.**
   - One image per side. Send the back side in `image_back` whenever the document type requires it.
 </Check>
@@ -36,7 +38,7 @@ Documents uploaded for a product enablement request go through an automated comp
 Applies to `passport`, `national_id`, `drivers_license` and `ssn`.
 
 <Check>
-  - A photo of the physical document, taken directly with a camera.
+  - A photo of the physical document, taken directly with a camera — set to shoot **JPEG**, not HEIC, on Apple devices.
   - The document rests on a clean, flat, contrasting surface.
   - All four corners are visible, and every field is sharp and readable.
   - Lighting is even, with no glare, flash reflections or shadows — watch holograms in particular.
