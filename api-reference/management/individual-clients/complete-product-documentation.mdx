@@ -7,7 +7,7 @@ api: "POST /management/clients/individuals/{clientId}/products/{productRequestId
 Submits a missing document for a pending product enablement request. Data fields are set through [Update individual client](/api-reference/management/individual-clients/update-client) instead. The response returns the remaining missing requirements and any rejected items with their reason. Requires an API key with access level 3 or higher.
 
 <Warning>
-  **Identity documents must be a photo of the physical document, taken directly with a camera.** Photocopies, scans, screenshots and images exported from an editor are rejected by the KYC review. Upload **JPG or PNG**, up to **10 MB** per image — other formats, including PDF, are not processed reliably.
+  **Identity documents must be a photo of the physical document, taken directly with a camera.** Photocopies, scans, screenshots and images exported from an editor are rejected by the KYC review. Upload **JPG or PNG**, up to **10 MB** per image — other formats are not processed reliably, including PDF and **HEIC / HEIF, the default photo format on iPhone and Mac**.
 
   Digital-only versions issued by government apps are **not accepted**, including Argentina's **Mi Argentina**, Colombia's **Cédula Digital**, Brazil's **Carteira Digital de Trânsito**, Mexico's **Licencia Digital CDMX**, and Europe's **EU Digital Identity Wallet** / **France Identité** / Spain's **MiDNI**, or any similar national digital-ID app.
 
@@ -34,7 +34,7 @@ Submits a missing document for a pending product enablement request. Data fields
       Document type key as listed in the missing requirements (e.g., `passport`).
     </ParamField>
     <ParamField body="image_front" type="string" required>
-      Base64-encoded front image content. JPG or PNG, up to 10 MB. For identification documents (e.g. `passport`, `national_id`, `drivers_license`, `ssn`) this must be a camera photo of the physical document — see the [KYC image guidelines](/clients/kyc-image-guidelines).
+      Base64-encoded front image content. JPG or PNG, up to 10 MB — HEIC/HEIF and PDF are not processed. For identification documents (e.g. `passport`, `national_id`, `drivers_license`, `ssn`) this must be a camera photo of the physical document — see the [KYC image guidelines](/clients/kyc-image-guidelines).
     </ParamField>
     <ParamField body="image_back" type="string">
       Base64-encoded back image content, when the document type requires it. Same format, size and quality requirements as `image_front`.
