@@ -1,34 +1,27 @@
-> **Customize this file**: Tailor this template to your project by noting specific contribution types you're looking for, adding a Code of Conduct, or adjusting the writing guidelines to match your style.
+# Contribute to the CryptoMate documentation
 
-# Contribute to the documentation
+## Flow
 
-Thank you for your interest in contributing to our documentation! This guide will help you get started.
+1. Branch off updated `main` (`docs/EN-1234-short-slug`).
+2. Edit the MDX pages, and `docs.json` if the navigation changes.
+3. Run `mint dev` and `mint broken-links` before pushing.
+4. Open a PR against `main`. Mintlify deploys automatically once merged.
 
-## How to contribute
+Never add commits to a branch whose PR is already merged — branch again off updated `main`.
 
-### Option 1: Edit directly on GitHub
+## Writing style
 
-1. Navigate to the page you want to edit
-2. Click the "Edit this file" button (the pencil icon)
-3. Make your changes and submit a pull request
+- Active voice, second person ("you").
+- Sentence case for headings.
+- One idea per sentence. Lead with the reader's goal.
+- Bold for UI elements (Click **Settings**); code formatting for file names, commands, paths, and identifiers.
+- All content in **English**, including titles, descriptions, table headers, and callouts.
 
-### Option 2: Local development
+## Content boundaries
 
-1. Fork and clone this repository
-2. Install the Mintlify CLI: `npm i -g mint`
-3. Create a branch for your changes
-4. Make changes
-5. Navigate to the docs directory and run `mint dev`
-6. Preview your changes at `http://localhost:3000`
-7. Commit your changes and submit a pull request
+- `products/*.mdx` are commercial guides: no endpoint paths, `curl` examples, JSON bodies, or auth details.
+- `api-reference/**` carries every technical detail, one page per endpoint.
+- Only the public `/api` surface is documented. `/portal` endpoints are internal — never document them.
+- Generic errors (`401` invalid key, `400` validation, `500`) live only in `/integration/errors`; endpoint pages document endpoint-specific errors.
 
-For more details on local development, see our [development guide](development.mdx).
-
-## Writing guidelines
-
-- **Use active voice**: "Run the command" not "The command should be run"
-- **Address the reader directly**: Use "you" instead of "the user"
-- **Keep sentences concise**: Aim for one idea per sentence
-- **Lead with the goal**: Start instructions with what the user wants to accomplish
-- **Use consistent terminology**: Don't alternate between synonyms for the same concept
-- **Include examples**: Show, don't just tell
+Full conventions: [`CLAUDE.md`](CLAUDE.md).
