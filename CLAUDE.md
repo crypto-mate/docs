@@ -143,7 +143,7 @@ Shared exception model in `apps/java-commons` (`com.cryptomate.commons.models.ex
 
 When tracing a new endpoint's possible errors: start in the API Layer controller method, follow into the service and provider, then into the downstream microservice's controller/service — every `throw new XxxException(code, msg)` along the path becomes a row in the endpoint's `<ResponseExample>`.
 
-## Writing style (from AGENTS.md / CONTRIBUTING.md)
+## Writing style (from CONTRIBUTING.md)
 
 - Active voice, second person ("you").
 - Sentence case for headings.
