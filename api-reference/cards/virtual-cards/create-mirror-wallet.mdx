@@ -1,0 +1,111 @@
+---
+title: "Create card mirror wallet"
+description: "Add an inbound Stellar address to a virtual card."
+api: "POST /cards/virtual-cards/{cardId}/mirror-wallets"
+---
+
+<Danger>
+  **A deposit sent to a mirror wallet address is not credited to the card.** Moving those funds to the card's Polygon wallet is a later development, so today they stay where they land. They are not lost, but they do not show up in the card balance until that sweep exists.
+
+  Do not publish a mirror address as a funding address, and do not send funds to it yourself. To load balance onto the card, keep using the deposit address returned by [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets) — the mirror address never appears there.
+</Danger>
+
+Creates a mirror wallet for the card: an additional inbound address on another blockchain. The card's Polygon wallet is untouched and remains the wallet that holds the card balance. Requires an API key with access level 2 or higher.
+
+The call answers `200`, not `201`. Repeating a call that succeeded returns the mirror wallet the card already has, instead of creating a second one. A mirror wallet can only be added — there is no way to remove one or replace it with another address.
+
+Only Stellar is available today. Other blockchains are enabled in later developments.
+
+Individual cards have the same pair of endpoints — see [Create individual card mirror wallet](/api-reference/cards/individual-cards/create-individual-card-mirror-wallet).
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Card identifier.
+</ParamField>
+
+## Body
+
+Unknown fields are ignored.
+
+<ParamField body="blockchain" type="string" required>
+  Blockchain of the mirror wallet. `STELLAR` is the only value available. Matching is case-insensitive, and `STELLAR` is the canonical form.
+</ParamField>
+
+## Response
+
+<ResponseField name="wallet_id" type="string">
+  Identifier of the mirror wallet.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Inbound address of the mirror wallet on its blockchain.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain of the mirror wallet. Always `STELLAR` today.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Whether the mirror wallet is enabled on the platform. A mirror wallet comes back `false` by design: the address exists on its blockchain, but the platform has not enabled it. This is not a state you can change.
+</ResponseField>
+
+## Rejected blockchains
+
+Two different statuses answer a blockchain the endpoint will not accept, and they tell you different things:
+
+- `400` — the value is not a blockchain CryptoMate knows, such as `NOTACHAIN`. The request fails while its body is being read, before any business rule runs.
+- `412` — the value is a blockchain CryptoMate knows but has not enabled for mirror wallets, such as `POLYGON`. A `blockchain` field that is missing or `null` answers `412` as well. The `message` names the blockchain that is enabled.
+
+## Provisioning failures
+
+Creating the Stellar address involves funding the account and establishing its trustline. If either step fails, the call answers `500` with a generic message and no internal detail.
+
+Retrying is safe — you end up with a card that has a usable mirror wallet. What a retry does not do is hand you back the address the failed attempt was working on: a call that fails records no mirror wallet for the card, so the retry provisions and funds a new address. Only a call that already succeeded returns the same wallet when you repeat it.
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/mirror-wallets" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "blockchain": "STELLAR"
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "wallet_id": "wlt_9c4f1a2b3d",
+  "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
+  "blockchain": "STELLAR",
+  "enabled": false
+}
+```
+
+```json 400 Unknown Blockchain
+{
+  "code": "VALUE_NOT_ALLOWED",
+  "message": "Sent request is invalid"
+}
+```
+
+```json 412 Blockchain Not Enabled
+{
+  "code": "VAL",
+  "message": "Mirror wallets are only available on STELLAR blockchain"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
