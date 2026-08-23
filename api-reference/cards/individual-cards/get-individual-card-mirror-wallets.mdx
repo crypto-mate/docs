@@ -1,0 +1,78 @@
+---
+title: "Get individual card mirror wallets"
+description: "List the mirror wallet addresses of an individual card."
+api: "GET /cards/individual-cards/{cardId}/mirror-wallets"
+---
+
+<Danger>
+  **A deposit sent to a mirror wallet address is not credited to the card.** Moving those funds to the card's Polygon wallet is a later development, so today they stay where they land. They are not lost, but they do not show up in the card balance until that sweep exists.
+
+  Do not publish a mirror address as a funding address, and do not send funds to it yourself. To load balance onto the card, keep using the deposit address returned by [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets) — the mirror address never appears there.
+</Danger>
+
+Returns the mirror wallets of the individual card: the additional inbound addresses it has on other blockchains. The card's Polygon wallet is not a mirror wallet and is not part of this list — it remains the wallet that holds the card balance. Requires an API key with access level 1 or higher.
+
+A card that has no mirror wallet answers `200` with an empty list. Only Stellar is available today, so a card has at most one mirror wallet.
+
+Enterprise virtual cards have the same pair of endpoints — see [Get card mirror wallets](/api-reference/cards/virtual-cards/get-mirror-wallets).
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Individual card identifier.
+</ParamField>
+
+## Response
+
+Returns an array of mirror wallet objects.
+
+<ResponseField name="wallet_id" type="string">
+  Identifier of the mirror wallet.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Inbound address of the mirror wallet on its blockchain.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain of the mirror wallet. Always `STELLAR` today.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Whether the mirror wallet is enabled on the platform. A mirror wallet comes back `false` by design: the address exists on its blockchain, but the platform has not enabled it. This is not a state you can change.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/individual-cards/card_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/mirror-wallets" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "wallet_id": "wlt_9c4f1a2b3d",
+    "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
+    "blockchain": "STELLAR",
+    "enabled": false
+  }
+]
+```
+
+```json 200 No Mirror Wallets
+[]
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>

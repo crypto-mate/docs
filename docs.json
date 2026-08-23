@@ -183,6 +183,8 @@
                   "api-reference/cards/virtual-cards/create-card",
                   "api-reference/cards/virtual-cards/delete-card",
                   "api-reference/cards/virtual-cards/get-card-top-up-wallets",
+                  "api-reference/cards/virtual-cards/create-mirror-wallet",
+                  "api-reference/cards/virtual-cards/get-mirror-wallets",
                   "api-reference/cards/virtual-cards/get-card-pan-html",
                   "api-reference/cards/virtual-cards/set-limits",
                   "api-reference/cards/virtual-cards/update-email",
@@ -261,7 +263,9 @@
                   "api-reference/cards/individual-cards/set-individual-card-pin",
                   "api-reference/cards/individual-cards/set-individual-card-frozen",
                   "api-reference/cards/individual-cards/update-individual-card-limits",
-                  "api-reference/cards/individual-cards/get-individual-card-top-up-wallets"
+                  "api-reference/cards/individual-cards/get-individual-card-top-up-wallets",
+                  "api-reference/cards/individual-cards/create-individual-card-mirror-wallet",
+                  "api-reference/cards/individual-cards/get-individual-card-mirror-wallets"
                 ]
               },
               {
