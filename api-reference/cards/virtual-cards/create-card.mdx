@@ -9,7 +9,17 @@ Creates a new virtual card with the specified limits and cardholder information.
 ## Body
 
 <ParamField body="card_holder_name" type="string" required>
-  Name of the cardholder.
+  Name of the cardholder. The card issuer prints it on the card in uppercase, so the casing you send is not preserved on the plastic.
+
+  **Accepted characters:** letters (`A-Z`, `a-z`), digits (`0-9`), the letters `äöüÄÖÜ`, space, and `/` `-` `^` `.` `'` `)`. Note the right parenthesis is accepted and the left one is not.
+
+  **Maximum length:** 26 characters, measured after the normalization below. A longer name is rejected — it is never silently truncated.
+
+  **Normalization applied before the card is issued:** leading and trailing whitespace is trimmed, and any accented letter that has a close ASCII equivalent is transliterated — `José` is issued and stored as `Jose`, `Łukasz` as `Lukasz`. The letters `äöüÄÖÜ` are an exception and reach the issuer untouched. Internal spacing is left exactly as you send it.
+
+  Anything still outside the accepted set after that normalization is rejected with `400` — this includes `ß`, `Ø`, `Æ`, and any non-Latin script such as Cyrillic or CJK, none of which have an ASCII equivalent to fall back on.
+
+  Read the value back from `card_holder_name` in the response to see what was actually stored.
 </ParamField>
 
 <ParamField body="email" type="string">
@@ -130,6 +140,13 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
   "weekly_limit": 5000.00,
   "monthly_limit": 20000.00,
   "per_transaction_limit": 500.00
+}
+```
+
+```json 400 Bad Request
+{
+  "code": "BAD_REQUEST",
+  "message": "card_holder_name accepts letters (A-Z, a-z), digits (0-9), the letters äöüÄÖÜ, space, and / - ^ . apostrophe and right parenthesis, up to 26 characters. Other accented letters are converted to their closest ASCII equivalent; anything left outside that set is rejected"
 }
 ```
 
