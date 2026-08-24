@@ -4,13 +4,13 @@ description: "List the mirror wallet addresses of an individual card."
 api: "GET /cards/individual-cards/{cardId}/mirror-wallets"
 ---
 
-<Danger>
-  **A deposit sent to a mirror wallet address is not credited to the card.** Moving those funds to the card's Polygon wallet is a later development, so today they stay where they land. They are not lost, but they do not show up in the card balance until that sweep exists.
+<Note>
+  **A mirror wallet accepts USDC only.** Any other asset is rejected by the network, so it never leaves the wallet you sent it from and no funds are lost.
 
-  Do not publish a mirror address as a funding address, and do not send funds to it yourself. To load balance onto the card, keep using the deposit address returned by [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets) — the mirror address never appears there.
-</Danger>
+  A USDC deposit at a mirror address is credited to the card balance, the same as a deposit at the address returned by [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets).
+</Note>
 
-Returns the mirror wallets of the individual card: the additional inbound addresses it has on other blockchains. The card's Polygon wallet is not a mirror wallet and is not part of this list — it remains the wallet that holds the card balance. Requires an API key with access level 1 or higher.
+Returns the mirror wallets of the individual card: the additional inbound addresses it has on other blockchains, each of which funds the card balance. The card's main deposit address is not a mirror wallet and is not part of this list — it comes from [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets). Requires an API key with access level 1 or higher.
 
 A card that has no mirror wallet answers `200` with an empty list. Only Stellar is available today, so a card has at most one mirror wallet.
 
@@ -39,7 +39,7 @@ Returns an array of mirror wallet objects.
 </ResponseField>
 
 <ResponseField name="enabled" type="boolean">
-  Whether the mirror wallet is enabled on the platform. A mirror wallet comes back `false` by design: the address exists on its blockchain, but the platform has not enabled it. This is not a state you can change.
+  Whether the mirror wallet is receiving deposits. A new mirror wallet comes back `true`. A `false` means the address is not accepting deposits — do not send funds to it while it reads `false`. This is not a state you can change.
 </ResponseField>
 
 <RequestExample>
@@ -59,7 +59,7 @@ curl -X GET "https://api.cryptomate.me/cards/individual-cards/card_6f1e2a30-4a3c
     "wallet_id": "wlt_9c4f1a2b3d",
     "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
     "blockchain": "STELLAR",
-    "enabled": false
+    "enabled": true
   }
 ]
 ```
