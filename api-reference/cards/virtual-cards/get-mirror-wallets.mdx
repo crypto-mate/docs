@@ -26,10 +26,6 @@ Individual cards have the same pair of endpoints — see [Get individual card mi
 
 Returns an array of mirror wallet objects.
 
-<ResponseField name="wallet_id" type="string">
-  Identifier of the mirror wallet.
-</ResponseField>
-
 <ResponseField name="address" type="string">
   Inbound address of the mirror wallet on its blockchain.
 </ResponseField>
@@ -56,7 +52,6 @@ curl -X GET "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b
 ```json 200 OK
 [
   {
-    "wallet_id": "wlt_9c4f1a2b3d",
     "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
     "blockchain": "STELLAR",
     "enabled": true
