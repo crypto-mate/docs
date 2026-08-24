@@ -83,6 +83,16 @@ Every card that has not been cancelled counts toward that limit, whatever its st
 This limit is per customer and is separate from your company's contracted card quota. The two are checked independently: a customer below their own limit can still be blocked because the company ran out of contracted units, and vice versa. The error message tells you which limit was hit.
 </Warning>
 
+### Updating the customer's data
+
+The customer's name, email and phone can be updated from any of their cards, through the [Update individual card holder](/api-reference/cards/individual-cards/update-individual-card-holder) endpoint or from the card detail in the Portal.
+
+<Warning>
+There is no per-card copy of this data. It belongs to the customer, so updating it from one card changes it for the customer and therefore for **every other card they hold**.
+</Warning>
+
+The card issuer is updated first: if it rejects the change, nothing is saved and the two copies never diverge. The address, birth date and identity document are captured during identity verification and are fixed at the issuer — they cannot be changed afterwards.
+
 ---
 
 ## Summary
