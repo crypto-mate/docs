@@ -1,10 +1,12 @@
 ---
 title: "Delete individual client"
-description: "Permanently delete an individual client."
+description: "Delete an individual client."
 api: "DELETE /management/clients/individuals/{id}"
 ---
 
-Permanently deletes a client and all associated data from the company. Requires an API key with access level 3 or higher.
+Deletes an individual client from your company. Requires an API key with access level 3 or higher.
+
+Once the call succeeds the client stops appearing in [List individual clients](/api-reference/management/individual-clients/list-clients), and every endpoint that takes its `id` answers `404`. You cannot undo the deletion through the API. Deleting a client removes it from your company — it does not erase every record ever associated with it.
 
 ## Path parameters
 
@@ -16,6 +18,17 @@ Permanently deletes a client and all associated data from the company. Requires 
 
 Returns `204 No Content` on success with an empty body.
 
+## When a client can be deleted
+
+Deletion is blocked while a compliance review is running, and after the client has been rejected by screening. Both cases answer `412`:
+
+- `status` is `screening_review`, `validating_preconditions` or `validating_kyb` — a review is in flight and deleting the client would discard its outcome. Check the current value with [Get individual client](/api-reference/management/individual-clients/get-client) and retry once the client leaves that status.
+- `status` is `rejected` **and** `rejection_code` is `REJECTED_BY_SCREENING` — the client failed compliance screening and stays on record. A `rejected` client with a different `rejection_code`, or with none at all, can be deleted.
+
+Every other status can be deleted, including `active` and `pending` — `pending` is where a client sits until compliance screening returns a verdict.
+
+The `message` names the status in upper case (`SCREENING_REVIEW`), while the `status` field of the client resource is lower case (`screening_review`).
+
 <RequestExample>
 
 ```bash cURL
@@ -26,6 +39,20 @@ curl -X DELETE "https://api.cryptomate.me/management/clients/individuals/4QWq1rQ
 </RequestExample>
 
 <ResponseExample>
+
+```json 412 Status Not Deletable
+{
+  "code": "VAL",
+  "message": "Client cannot be deleted in status: SCREENING_REVIEW"
+}
+```
+
+```json 412 Rejected By Screening
+{
+  "code": "VAL",
+  "message": "Client cannot be deleted: rejected by compliance screening"
+}
+```
 
 ```json 404 Not Found
 {
