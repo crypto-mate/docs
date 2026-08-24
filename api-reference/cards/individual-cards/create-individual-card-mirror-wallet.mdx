@@ -34,10 +34,6 @@ Unknown fields are ignored.
 
 ## Response
 
-<ResponseField name="wallet_id" type="string">
-  Identifier of the mirror wallet.
-</ResponseField>
-
 <ResponseField name="address" type="string">
   Inbound address of the mirror wallet on its blockchain.
 </ResponseField>
@@ -80,7 +76,6 @@ curl -X POST "https://api.cryptomate.me/cards/individual-cards/card_6f1e2a30-4a3
 
 ```json 200 OK
 {
-  "wallet_id": "wlt_9c4f1a2b3d",
   "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
   "blockchain": "STELLAR",
   "enabled": true
