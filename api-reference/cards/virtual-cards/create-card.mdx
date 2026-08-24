@@ -46,6 +46,8 @@ Creates a new virtual card with the specified limits and cardholder information.
 
 <ParamField body="metadata" type="object">
   Additional metadata key-value pairs for the card.
+
+  Some keys are reserved by the platform and you cannot set them here: `wallet_id`, `previous_wallets`, and any key that starts with `mirror_wallet_`. If the metadata carries one of them, the call answers `412` and no card is created. The `message` names the key that was rejected.
 </ParamField>
 
 ## Response
@@ -135,6 +137,13 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/create" \
 {
   "code": "VAL",
   "message": "The current limit for this product has been reached. Please increase the limit."
+}
+```
+
+```json 412 Reserved Metadata Key
+{
+  "code": "VAL",
+  "message": "The metadata key 'wallet_id' is reserved by the platform and cannot be set on card creation."
 }
 ```
 
