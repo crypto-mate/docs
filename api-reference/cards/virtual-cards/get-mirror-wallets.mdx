@@ -14,7 +14,7 @@ api: "GET /cards/virtual-cards/{cardId}/mirror-wallets"
 
 Returns the mirror wallets of the card: the additional inbound addresses it has on other blockchains, each of which funds the card balance. The card's main deposit address is not a mirror wallet and is not part of this list — it comes from [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets). Requires an API key with access level 1 or higher.
 
-A card that has no mirror wallet answers `200` with an empty list. Only Stellar is available today, so a card has at most one mirror wallet.
+A card that has no mirror wallet answers `200` with an empty list. A card holds at most one mirror wallet per blockchain, so with Solana and Stellar available the list has at most two entries.
 
 Individual cards have the same pair of endpoints — see [Get individual card mirror wallets](/api-reference/cards/individual-cards/get-individual-card-mirror-wallets).
 
@@ -33,7 +33,7 @@ Returns an array of mirror wallet objects.
 </ResponseField>
 
 <ResponseField name="blockchain" type="string">
-  Blockchain of the mirror wallet. Always `STELLAR` today.
+  Blockchain of the mirror wallet. `SOLANA` or `STELLAR`.
 </ResponseField>
 
 <ResponseField name="enabled" type="boolean">
@@ -53,6 +53,11 @@ curl -X GET "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4b
 
 ```json 200 OK
 [
+  {
+    "address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
+    "blockchain": "SOLANA",
+    "enabled": true
+  },
   {
     "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
     "blockchain": "STELLAR",
