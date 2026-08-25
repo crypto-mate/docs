@@ -1,0 +1,105 @@
+---
+title: "Update individual card holder"
+description: "Change the personal data of the holder of an individual card."
+api: "PATCH /cards/individual-cards/{cardId}/holder"
+---
+
+Updates the personal data of the holder of an individual card. Requires an API key with access level 2 or higher.
+
+<Warning>
+  The holder is the client who owns the card, and there is no per-card copy of their data. Updating it through any card of that client updates the client's record, and therefore the holder data behind **every other card of that same client**.
+</Warning>
+
+The card issuer is updated first. If the issuer rejects the change, this endpoint returns an error and **nothing is saved** — your copy and the issuer's never diverge, so there is no partial state to reconcile and nothing to retry beyond calling this endpoint again with valid data.
+
+Only the fields below can be changed. The holder's address, birth date and identity document were captured during identity verification and are fixed at the issuer: they cannot be changed through this endpoint.
+
+Every field is optional and independent: send the ones you want to change. A field you omit keeps its stored value — omitting a field never clears it.
+
+## Path parameters
+
+<ParamField path="cardId" type="string" required>
+  Unique identifier of the individual card. The holder is resolved from this card.
+</ParamField>
+
+## Body
+
+<ParamField body="first_name" type="string">
+  Holder's first name. Up to 50 characters.
+</ParamField>
+
+<ParamField body="last_name" type="string">
+  Holder's last name. Up to 50 characters.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Holder's email address. This is the address the card issuer uses for its own notifications to the holder.
+</ParamField>
+
+<ParamField body="phone_country_code" type="integer">
+  Phone country code, digits only. Up to 3 digits.
+</ParamField>
+
+<ParamField body="phone_number" type="integer">
+  Phone number without the country code, digits only. Up to 15 digits.
+</ParamField>
+
+## Response
+
+Returns HTTP 204 with an empty body on success.
+
+## Errors
+
+<ResponseField name="400" type="Bad Request">
+  A value exceeds what the card issuer accepts, or the holder's enrollment with the card issuer is not active. An enrollment that is still being verified, or was rejected, cannot have its data updated.
+</ResponseField>
+
+<ResponseField name="404" type="Not Found">
+  The card does not exist for your company.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X PATCH "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23/holder" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "phone_country_code": 54,
+    "phone_number": 1122334455
+  }'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 204 No Content
+{}
+```
+
+```json 400 Bad Request
+{
+  "code": "BAD_REQUEST",
+  "message": "The card holder's enrollment with the card issuer is not active; its data cannot be updated"
+}
+```
+
+```json 401 Unauthorized
+{
+  "code": "AUTH",
+  "message": "Invalid API key"
+}
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Card not found"
+}
+```
+
+</ResponseExample>
