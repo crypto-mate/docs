@@ -4,9 +4,11 @@ description: "Add an inbound Stellar address to an individual card."
 api: "POST /cards/individual-cards/{cardId}/mirror-wallets"
 ---
 
-<Note>
-  **A mirror wallet accepts USDC only.** Any other asset is rejected by the network, so it never leaves the wallet you sent it from and no funds are lost.
+<Warning>
+  **Send USDC only.** A mirror wallet is provisioned to receive USDC on its blockchain and credits nothing else. Any other asset can land at the address and stay there: it is never credited to the card balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
+</Warning>
 
+<Note>
   A USDC deposit at a mirror address is credited to the card balance, the same as a deposit at the address returned by [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets).
 </Note>
 
