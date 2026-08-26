@@ -39,7 +39,7 @@ This is version 2 of [Get transaction](/api-reference/cards/transactions/get-tra
 </ResponseField>
 
 <ResponseField name="bill_amount" type="number">
-  Current amount of the operation in billing currency, fees included. Can be `0` after a full reversal, or negative if a refund exceeded what was charged.
+  Current amount of the operation in billing currency, fees included. A reversal or a refund gives back the fees the operation was charged, in proportion to the amount returned: a full reversal or a full refund leaves exactly `0`. It can be negative if a refund exceeded what was charged.
 </ResponseField>
 
 <ResponseField name="bill_currency" type="string">
@@ -109,7 +109,7 @@ This is version 2 of [Get transaction](/api-reference/cards/transactions/get-tra
     </ResponseField>
 
     <ResponseField name="outcome" type="string">
-      Whether anything came back, which `state` cannot tell you. Possible values: `NONE` (nothing came back), `PARTIALLY_REVERSED` (part of the hold was released and the operation never settled anything), `REVERSED` (the whole hold was released, so the purchase left no charge), `PARTIALLY_REFUNDED` (the merchant returned part of what had been settled), `REFUNDED` (the merchant returned all of it). Measured on the original-currency amounts, because the billing amount carries fees that a return does not give back.
+      Whether anything came back, which `state` cannot tell you. Possible values: `NONE` (nothing came back), `PARTIALLY_REVERSED` (part of the hold was released and the operation never settled anything), `REVERSED` (the whole hold was released, so the purchase left no charge), `PARTIALLY_REFUNDED` (the merchant returned part of what had been settled), `REFUNDED` (the merchant returned all of it). Measured on the original-currency amounts, the same ones `state` compares.
 
       Two rules worth knowing: a refund outranks a release of the hold, so an operation with both reports the refund; and the release of a hold is only reported when **nothing at all was settled** — if any amount was settled, releasing part of the hold is the ordinary right-sizing of it and reports `NONE`.
     </ResponseField>
@@ -139,7 +139,7 @@ This is version 2 of [Get transaction](/api-reference/cards/transactions/get-tra
 </ResponseField>
 
 <Note>
-  Events carry no amount. The net of an operation depends on the fee regime it closed under, so adding up the events does not reproduce `bill_amount`. Read the amount from the operation.
+  Events carry no amount. The net of an operation depends on the fee regime it closed under and on the fees a reversal or a refund gave back, so adding up the events does not reproduce `bill_amount`. Read the amount from the operation.
 </Note>
 
 ## State and outcome together

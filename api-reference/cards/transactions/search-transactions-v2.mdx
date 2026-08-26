@@ -79,7 +79,7 @@ Results are always ordered by date, newest first, by when the operation started.
     </ResponseField>
 
     <ResponseField name="bill_amount" type="number">
-      Current amount of the operation in billing currency, fees included. Can be `0` after a full reversal, or negative if a refund exceeded what was charged.
+      Current amount of the operation in billing currency, fees included. A reversal or a refund gives back the fees the operation was charged, in proportion to the amount returned: a full reversal or a full refund leaves exactly `0`. It can be negative if a refund exceeded what was charged.
     </ResponseField>
 
     <ResponseField name="bill_currency" type="string">
