@@ -49,14 +49,30 @@ Applies to `passport`, `national_id`, `drivers_license` and `ssn`.
 
 ## For selfies
 
+Before a selfie reaches the KYC provider, it goes through an automated image-quality check. The check looks at framing and pose — not identity — and rejects an image it can't process with a specific, actionable reason (occasionally two, joined by `; `), for example: *"Your face is off-center in the frame. Center your face and try again."*
+
 <Check>
-  - The face is centered, fully visible and well lit.
+  - Exactly one face is visible, sized correctly in the frame and not cut off at the edge.
+  - The face is centered.
+  - The head faces the camera straight on — no tilting up, down or to the side.
+  - The eyes are open.
+  - The image is a readable JPG or PNG, within the size limit above.
+</Check>
+
+<Note>
+  This check validates framing and pose only. It does not check liveness or detect spoofing, does not evaluate sharpness/blur or exposure, and does not check background uniformity. It's a quality pre-filter, not a replacement for the KYC provider's own identity review — passing it doesn't guarantee the selfie will pass KYC.
+</Note>
+
+The following still matter for the KYC provider's review, even though they aren't checked automatically:
+
+<Check>
   - The background is plain and free of objects.
-  - The expression is neutral and the eyes are open.
   - The selfie is recent and reflects the person's current appearance.
   - No glasses, hats or veils that do not appear in the identity document.
   - The document is not held in frame — it is not required and only adds noise around the face.
 </Check>
+
+A selfie that fails the check is not saved — the document requirement stays pending. Fix the issue and upload it again. A **HEIC/HEIF** selfie fails here too, with a clear reason (*"We could not read that image. Upload a JPEG or PNG photo and try again."*) instead of failing KYC review later — this applies to selfies only; other document types follow the general format rule above.
 
 <Tip>
   If a document is rejected, the `rejected_items` array returned by [Complete product documentation](/api-reference/management/individual-clients/complete-product-documentation) carries a `reason` for each item. Fix the issue it names, re-check the requirements above, and upload the image again.
