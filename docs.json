@@ -257,6 +257,7 @@
                 "group": "Cards",
                 "pages": [
                   "api-reference/cards/individual-cards/create-individual-card",
+                  "api-reference/cards/individual-cards/delete-individual-card",
                   "api-reference/cards/individual-cards/get-individual-card",
                   "api-reference/cards/individual-cards/get-individual-card-pan",
                   "api-reference/cards/individual-cards/search-individual-cards",
