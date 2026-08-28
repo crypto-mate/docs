@@ -4,7 +4,7 @@ description: "Permanently delete a virtual card."
 api: "DELETE /cards/virtual-cards/{cardId}"
 ---
 
-Permanently deletes a virtual card. Requires an API key with access level 2 or higher.
+Permanently deletes a virtual card. A card that still holds a virtual balance cannot be deleted: the request answers `412` and the card stays as it is. Any positive amount blocks the deletion, however small; only a balance of exactly zero deletes. Cards whose `approval_method` is not `TOPUP` have no virtual balance and are never blocked. Requires an API key with access level 2 or higher.
 
 ## Path parameters
 
@@ -49,6 +49,13 @@ curl -X DELETE "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c
   "last4": "4242",
   "status": "DELETED",
   "approval_method": "TOPUP"
+}
+```
+
+```json 412 Has Balance
+{
+  "code": "VAL",
+  "message": "Cannot delete card TLyVxTwALL9ClB7QEIW4HEttxeSI5OzB. It still has a virtual balance of 3.50."
 }
 ```
 
