@@ -55,7 +55,7 @@ Submits a missing document for a pending product enablement request. Data fields
 </ResponseField>
 
 <ResponseField name="rejected_items" type="array">
-  Items rejected during the submission. Each item has `type` (`document` or `data`), `key`, and `reason`.
+  Items rejected during the submission. Each item has `type` (`document` or `data`), `key`, and `reason`. For a rejected document, `reason` can describe an image-quality issue — see the [KYC image guidelines](/clients/kyc-image-guidelines). A rejected document is not saved; the requirement stays pending until you upload it again.
 </ResponseField>
 
 <RequestExample>
