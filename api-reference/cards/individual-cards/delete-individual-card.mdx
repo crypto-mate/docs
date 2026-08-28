@@ -4,7 +4,7 @@ description: "Permanently delete an individual card."
 api: "DELETE /cards/individual-cards/{cardId}"
 ---
 
-Permanently deletes an individual card. The deletion is irreversible: the card stops authorizing transactions and cannot be reactivated. Deleting a card frees one renewable slot of your company's card plan, so you can issue another individual card in its place. Requires an API key with access level 2 or higher.
+Permanently deletes an individual card. The deletion is irreversible: the card stops authorizing transactions and cannot be reactivated. Deleting a card frees one renewable slot of your company's card plan, so you can issue another individual card in its place. A card that still holds a virtual balance cannot be deleted: the request answers `412` and the card stays as it is. Any positive amount blocks the deletion, however small; only a balance of exactly zero deletes. Cards whose `approval_method` is not `TOPUP` have no virtual balance and are never blocked. Requires an API key with access level 2 or higher.
 
 ## Path parameters
 
@@ -111,6 +111,13 @@ curl -X DELETE "https://api.cryptomate.me/cards/individual-cards/icard_6f1e2a30-
 {
   "code": "NOT_FOUND",
   "message": "Card not found"
+}
+```
+
+```json 412 Has Balance
+{
+  "code": "VAL",
+  "message": "Cannot delete card icard_6f1e2a30-4a3c-4b2e-9a1d-5e8c9b7a1f23. It still has a virtual balance of 3.50."
 }
 ```
 
