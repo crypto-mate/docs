@@ -47,6 +47,31 @@ Applies to `passport`, `national_id`, `drivers_license` and `ssn`.
   - The name and date of birth match the details submitted when the client was created.
 </Check>
 
+### The automated check
+
+`passport` and `national_id` images go through an automated image-quality check before they reach the KYC provider, on **both the front and the back**. Like the selfie check, it rejects an image it can't process with a specific, actionable reason (occasionally two, joined by `; `), for example: *"Part of the document is outside the photo. Move the camera back until all four corners are inside the frame, and take the photo again."*
+
+<Check>
+  - The image is a readable JPG or PNG, within the size limit above.
+  - It has enough resolution to read — a reduced or forwarded copy is rejected.
+  - The document is in focus.
+  - It isn't washed out by glare or a flash reflection, and isn't too dark.
+  - A document is actually visible in the photo.
+  - **All four of its corners are inside the frame.**
+</Check>
+
+<Note>
+  This check looks at the photograph, not at the document. It does **not** read any field, does not verify the document type or the country, does not check the expiry date, and does not detect a photocopy, a screenshot or an edited image — all of those still fail later in the KYC provider's own review. It also does not check orientation: a document photographed sideways passes this check. Passing it doesn't guarantee the document will pass KYC.
+</Note>
+
+A document that fails the check is not saved — the requirement stays pending. Fix what the reason names and upload it again.
+
+<Tip>
+  The corner check is the one worth designing your capture flow around: it is the single most common reason a document is rejected here, and the fix is always the same — move the camera back until the whole document, including its four corners, sits inside the frame with a margin of background around it.
+</Tip>
+
+`drivers_license` and `ssn` are **not** covered by the automated check today; they go straight to the KYC provider, where the same guidance above still applies.
+
 ## For selfies
 
 Before a selfie reaches the KYC provider, it goes through an automated image-quality check. The check looks at framing and pose — not identity — and rejects an image it can't process with a specific, actionable reason (occasionally two, joined by `; `), for example: *"Your face is off-center in the frame. Center your face and try again."*
