@@ -205,15 +205,14 @@ When a velocity block fires, a [`card_blocked_by_velocity`](/integration/webhook
 
 ### Risk score engine
 
-The risk score engine evaluates every purchase in real time. It assigns a numeric **score** by combining up to six signals, each weighted independently. If the score reaches or exceeds a configurable **threshold**, the transaction is declined.
+The risk score engine evaluates every purchase in real time. It assigns a numeric **score** by combining up to five signals, each weighted independently. If the score reaches or exceeds a configurable **threshold**, the transaction is declined.
 
 #### How the score is calculated
 
 Each signal is binary (0 or 1). The final score is the weighted sum:
 
 ```
-score = (signal_geo × w_geo)
-      + (signal_mcc × w_mcc)
+score = (signal_mcc × w_mcc)
       + (signal_amount × w_amount)
       + (signal_time × w_time)
       + (signal_declines × w_declines)
@@ -226,7 +225,6 @@ A transaction is **rejected** when `score ≥ threshold`.
 
 | Signal | ID | Fires (= 1) when… | Notes |
 |---|---|---|---|
-| Impossible travel | `geo_distance` | Card used in a different country less than **4 hours** after the previous transaction | Compares merchant country of current vs. last approved transaction |
 | Unfamiliar MCC | `mcc_profile` | Merchant category code was never seen in the card's **90-day history** | Requires ≥ 5 historical transactions to activate |
 | Amount above baseline | `amount_baseline` | Purchase amount exceeds the **95th percentile** of the card's historical amounts | Requires ≥ 5 historical transactions to activate |
 | Unusual hour | `time_window` | Transaction hour appears in **less than 5%** of the card's historical transactions | Requires ≥ 5 historical transactions to activate |
@@ -234,7 +232,7 @@ A transaction is **rejected** when `score ≥ threshold`.
 | Foreign merchant country | `merchant_country` | Merchant's country differs from the cardholder's country (set via `metadata.country` at card creation) | Signal is 0 if `metadata.country` is not set |
 
 <Note>
-Signals that require a minimum history return 0 (no contribution) until the card has enough approved transactions. A brand-new card is only evaluated by `geo_distance`, `decline_rate`, and `merchant_country`.
+Signals that require a minimum history return 0 (no contribution) until the card has enough approved transactions. A brand-new card is only evaluated by `decline_rate` and `merchant_country`.
 </Note>
 
 #### Configuration
@@ -244,7 +242,6 @@ The engine is configured at the account level from the Portal (Cards → Configu
 | Field | Description |
 |---|---|
 | `threshold` | Score at or above which a transaction is rejected. Range: `0.0` – any positive value. |
-| `geo_distance_weight` | Weight for the impossible travel signal. |
 | `mcc_profile_weight` | Weight for the unfamiliar MCC signal. |
 | `amount_baseline_weight` | Weight for the above-P95 amount signal. |
 | `time_window_weight` | Weight for the unusual hour signal. |
@@ -258,7 +255,6 @@ The engine is configured at the account level from the Portal (Cards → Configu
 ```json
 {
   "threshold": 0.8,
-  "geo_distance_weight": 0.5,
   "mcc_profile_weight": 0.2,
   "amount_baseline_weight": 0.2,
   "time_window_weight": 0.1,
@@ -267,14 +263,13 @@ The engine is configured at the account level from the Portal (Cards → Configu
 }
 ```
 
-In this configuration a transaction is rejected only if, for example, both impossible travel (0.5) and high decline rate (0.4) fire simultaneously (score = 0.9 ≥ 0.8). A single signal is not enough to reach the threshold.
+In this configuration a transaction is rejected only if, for example, high decline rate (0.4), unfamiliar MCC (0.2) and an above-baseline amount (0.2) fire simultaneously (score = 0.8 ≥ 0.8). A single signal is not enough to reach the threshold.
 
 **Strict setup** — any single anomaly blocks the transaction:
 
 ```json
 {
   "threshold": 0.3,
-  "geo_distance_weight": 1.0,
   "mcc_profile_weight": 0.5,
   "amount_baseline_weight": 0.5,
   "time_window_weight": 0.3,
@@ -283,14 +278,13 @@ In this configuration a transaction is rejected only if, for example, both impos
 }
 ```
 
-Here, impossible travel alone (1.0) exceeds the threshold. Even an unusual hour (0.3) is enough to reject.
+Here, high decline rate alone (1.0) exceeds the threshold. Even an unusual hour (0.3) is enough to reject.
 
 **Disabled engine** — all weights set to 0, no transaction is ever rejected by risk score:
 
 ```json
 {
   "threshold": 1.0,
-  "geo_distance_weight": 0.0,
   "mcc_profile_weight": 0.0,
   "amount_baseline_weight": 0.0,
   "time_window_weight": 0.0,
