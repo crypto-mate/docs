@@ -8,6 +8,10 @@ Searches for treasury transactions across multiple wallets with filtering by dat
 
 Allowed operation types: `TRANSFER`, `DEPOSIT`, `WITHDRAWAL`, `RAMP_ON_TRANSFER`, `RAMP_OFF_TRANSFER`.
 
+<Note>
+  The date range is optional. If you omit `to_date` it defaults to the current time, and if you omit `from_date` it defaults to **30 days before `to_date`**. Searches are therefore always bounded to a time window — omitting both returns the last 30 days, not the full history.
+</Note>
+
 ## Query parameters
 
 <ParamField query="wallet_ids" type="string[]" required>
@@ -18,12 +22,12 @@ Allowed operation types: `TRANSFER`, `DEPOSIT`, `WITHDRAWAL`, `RAMP_ON_TRANSFER`
   List of operation types to filter by. One or more of `TRANSFER`, `DEPOSIT`, `WITHDRAWAL`, `RAMP_ON_TRANSFER`, `RAMP_OFF_TRANSFER`.
 </ParamField>
 
-<ParamField query="from_date" type="string">
-  Start date (ISO 8601 `LocalDateTime`, e.g. `2026-01-01T00:00:00`) for the search range.
+<ParamField query="from_date" type="string" default="30 days before to_date">
+  Start date (ISO 8601 `LocalDateTime`, e.g. `2026-01-01T00:00:00`) for the search range. Defaults to 30 days before `to_date`.
 </ParamField>
 
-<ParamField query="to_date" type="string">
-  End date (ISO 8601 `LocalDateTime`, e.g. `2026-02-01T00:00:00`) for the search range.
+<ParamField query="to_date" type="string" default="now">
+  End date (ISO 8601 `LocalDateTime`, e.g. `2026-02-01T00:00:00`) for the search range. Defaults to the current time.
 </ParamField>
 
 <ParamField query="size" type="integer" default="10">
