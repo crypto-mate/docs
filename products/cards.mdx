@@ -88,6 +88,8 @@ If your funds live on **Solana** or **Stellar**, you can ask for an additional d
 
 A mirror wallet is **additional**, not a replacement. The Polygon address stays the program's main deposit address and does not change. You can hold one mirror wallet per blockchain, and a mirror wallet can be added but never removed.
 
+The personal deposit wallets described above work the same way: each card can also have its own Solana and Stellar mirror addresses — see [Create card mirror wallet](/api-reference/cards/virtual-cards/create-mirror-wallet).
+
 <Warning>
 A deposit to a mirror address is **not** credited on the blockchain it landed on. It is transferred to the Polygon holding wallet and credited there, so the balance moves once that transfer settles — not when the deposit confirms on Solana or Stellar. Expect a delay between the two.
 
