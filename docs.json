@@ -220,6 +220,8 @@
                 "group": "Holding",
                 "pages": [
                   "api-reference/cards/holding/get-balance",
+                  "api-reference/cards/holding/create-holding-mirror-wallet",
+                  "api-reference/cards/holding/get-holding-mirror-wallets",
                   "api-reference/cards/holding/withdraw"
                 ]
               },
@@ -288,7 +290,9 @@
               {
                 "group": "Holding",
                 "pages": [
-                  "api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance"
+                  "api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance",
+                  "api-reference/cards/individual-cards/create-individual-cards-holding-mirror-wallet",
+                  "api-reference/cards/individual-cards/get-individual-cards-holding-mirror-wallets"
                 ]
               },
               {

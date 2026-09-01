@@ -1,0 +1,82 @@
+---
+title: "Get holding mirror wallets"
+description: "List the mirror wallet addresses of the card program's holding wallet."
+api: "GET /cards/holding/mirror-wallets"
+---
+
+<Warning>
+  **Send USDC only.** A mirror wallet is provisioned to receive USDC on its blockchain and credits nothing else. Any other asset can land at the address and stay there: it is never credited to the holding balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
+</Warning>
+
+Returns the mirror wallets of the card program's holding wallet: the additional inbound addresses it has on other blockchains, each of which funds the same holding balance. Requires an API key with access level 1 or higher.
+
+The request carries no identifier. The company is taken from the API key, and the holding wallet is resolved from it.
+
+The holding wallet's main deposit address is not a mirror wallet and is not part of this list — it comes from [Get holding balance](/api-reference/cards/holding/get-balance). That Polygon address stays the program's main deposit address and does not change when you add a mirror wallet.
+
+A holding wallet that has no mirror wallet answers `200` with an empty list. It holds at most one mirror wallet per blockchain, so with Solana and Stellar available the list has at most two entries.
+
+Individual cards have their own program and their own pair of endpoints — see [Get individual cards holding mirror wallets](/api-reference/cards/individual-cards/get-individual-cards-holding-mirror-wallets).
+
+## How a mirror deposit reaches the holding balance
+
+USDC sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get holding balance](/api-reference/cards/holding/get-balance) rather than from a block explorer on the mirror blockchain.
+
+<Warning>
+  **The 10 USD minimum deposit applies to mirror addresses too.** A deposit below 10 USD is not picked up: it is neither bridged nor credited, and the funds stay at the mirror address. No endpoint recovers them. Send at least 10 USD per transfer.
+</Warning>
+
+## Response
+
+Returns an array of mirror wallet objects.
+
+<ResponseField name="address" type="string">
+  Inbound address of the mirror wallet on its blockchain.
+</ResponseField>
+
+<ResponseField name="blockchain" type="string">
+  Blockchain of the mirror wallet. `SOLANA` or `STELLAR`.
+</ResponseField>
+
+<ResponseField name="enabled" type="boolean">
+  Whether the mirror wallet is receiving deposits. A new mirror wallet comes back `true`. A `false` means the address is not accepting deposits — do not send funds to it while it reads `false`. This is not a state you can change.
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.cryptomate.me/cards/holding/mirror-wallets" \
+  -H "x-api-key: $CRYPTOMATE_API_KEY"
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+[
+  {
+    "address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
+    "blockchain": "SOLANA",
+    "enabled": true
+  },
+  {
+    "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
+    "blockchain": "STELLAR",
+    "enabled": true
+  }
+]
+```
+
+```json 200 No Mirror Wallets
+[]
+```
+
+```json 404 Not Found
+{
+  "code": "NOT_FOUND",
+  "message": "Holding wallet not found"
+}
+```
+
+</ResponseExample>
