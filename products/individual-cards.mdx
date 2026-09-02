@@ -116,3 +116,87 @@ The card issuer is updated first: if it rejects the change, nothing is saved and
 </Step>
 
 </Steps>
+
+---
+
+## Purchase lifecycle
+
+A purchase is not a single event. It starts as an **authorization** — money reserved on the program balance — and finishes when the card network **settles** it, which normally happens days later, can arrive in several pieces, and occasionally never arrives at all.
+
+```mermaid
+flowchart LR
+  A["Customer pays"] --> B{"Real-time checks"}
+  B -- "Rejected" --> D["Declined - no funds move"]
+  B -- "Approved" --> C["Authorized - funds held"]
+  C --> E["Cleared - funds settled"]
+  C --> F["Reversed - hold released"]
+  E --> G["Refunded - funds returned"]
+```
+
+### Where the money comes from
+
+The individual cards program has its **own holding wallet** and its **own fees wallet**, funded and withdrawn separately from any other card program you run. Every card your customers hold spends that single holding balance. Cards created with the top-up approval method also get their own deposit wallet, so an individual customer can be funded on their own.
+
+### Stage 1 — Authorization
+
+The network asks CryptoMate to approve the purchase and expects an answer within about a second. The purchase is declined when:
+
+- The card is blocked or deleted.
+- It breaks one of the account's velocity rules.
+- It exceeds the card's daily, weekly, monthly or per-transaction limit.
+- The program holding balance does not cover it.
+- The risk score engine rejects it as fraudulent.
+- On cards using the webhook approval method, your own systems decline it or fail to answer in time.
+
+Every check is applied to the **total cost of the purchase**, fees included. A purchase that fits the merchant's price but not the price with fees is declined.
+
+A declined purchase moves no money and reaches your systems as a `declined` event carrying the reason.
+
+### Stage 2 — Hold
+
+An approved purchase is reserved right away, long before the merchant is paid:
+
+| Balance | Effect at authorization |
+|---|---|
+| Customer's card deposit wallet (top-up cards only) | Debited by the purchase plus fees |
+| Program holding wallet | Debited by the purchase plus fees |
+| Program fees wallet | Credited with your commission on the purchase |
+
+Your systems receive an `authorized` event. From here the money is no longer spendable, but it has not left the program either.
+
+<Warning>
+A hold is not a payment. Until the purchase settles or is released, the reserved amount is unavailable for other purchases — on that card and on every other card in the program, because they all draw on the same holding balance.
+</Warning>
+
+### Stage 3 — Settlement
+
+Once the merchant submits the purchase for payment, the network settles it and CryptoMate emits a `cleared` event.
+
+The settled amount is frequently **not** the amount that was authorized: tips added after the fact, incremental captures and exchange-rate re-rating on multi-day settlements all change it. CryptoMate compares what was held against what was settled, recalculates the fees on the settled amount, and adjusts the balance **once**, when the purchase closes. A purchase can settle in several pieces, and each piece emits its own `cleared` event — while the purchase is still partially settled the remaining hold keeps covering what is left, so reconcile on the purchase, not on the event.
+
+### Stage 4 — Releases and returns
+
+Not every purchase ends at settlement:
+
+| Outcome | What it means |
+|---|---|
+| `reversal` | The merchant or the network released the hold, fully or partially. The released amount is credited back. |
+| `refund` | The merchant returned money after settlement. It arrives as its own credit, not as a change to the original purchase. |
+| `declined` after an `authorized` | The network cancelled an authorization it had already approved. It is processed as a reversal, so the held funds are credited back. |
+
+<Warning>
+If a settlement never arrives, the hold is **not** released automatically. Contact CryptoMate support to have the purchase reviewed and the funds freed.
+</Warning>
+
+### Program limitations
+
+Two parts of the purchase flow are not available for individual cards yet:
+
+- **3DS challenges.** A purchase that triggers a cardholder challenge does not complete.
+- **Disputes.** Dispute events are not processed, so a dispute outcome is never credited automatically.
+
+<Note>
+When a velocity rule trips, the card is **frozen** — and on top-up cards its deposit wallet is disabled too. Unfreeze it to let the customer transact again.
+</Note>
+
+Purchase events for this program are delivered with the `individual_cards` product. The event names are shared with other card programs, so route on the product first: a `cleared` event for an individual card looks like any other apart from that field.
