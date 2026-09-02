@@ -41,6 +41,100 @@ Cards are issued against a card pack. Each company has a maximum number of activ
 
 ---
 
+## Purchase lifecycle
+
+A purchase is not a single event. It starts as an **authorization** — money reserved on your balance — and finishes when the card network **settles** it, which normally happens days later, can arrive in several pieces, and occasionally never arrives at all.
+
+Knowing the two phases explains the two things that surprise most integrations: your balance moves before the merchant has actually been paid, and the final amount can differ from the one you approved.
+
+```mermaid
+flowchart LR
+  A["Cardholder pays"] --> B{"Real-time checks"}
+  B -- "Rejected" --> D["Declined - no funds move"]
+  B -- "Approved" --> C["Authorized - funds held"]
+  C --> E["Cleared - funds settled"]
+  C --> F["Reversed - hold released"]
+  E --> G["Refunded - funds returned"]
+```
+
+### Stage 1 — Authorization
+
+The network asks CryptoMate to approve the purchase and expects an answer within about a second. Checks run in this order, and the first one that fails declines the purchase:
+
+1. **Card state** — a blocked or deleted card is declined immediately.
+2. **Merchant category and merchant country** — see [Blocked merchant categories](#blocked-merchant-categories) and [Blocked merchant countries](#blocked-merchant-countries).
+3. **Velocity rules** — see [Velocity rules](#velocity-rules). A breach declines the purchase and blocks the card.
+4. **Balance, limits, risk and your own decision**, evaluated together: the holding balance, the card's [spending limits](#spending-limits), the [risk score engine](#risk-score-engine), and — on cards using `WEBHOOK` — the answer your endpoint returns within 1,200 ms.
+
+Every check is applied to the **total cost of the purchase**, fees included. A purchase that fits the merchant's price but not the price with fees is declined.
+
+A declined purchase moves no money and reaches your systems as a `declined` event carrying the reason. See [Card decline codes](/integration/card-decline-codes).
+
+### Stage 2 — Hold
+
+An approved purchase is reserved on your side right away, long before the merchant is paid:
+
+| Balance | Effect at authorization |
+|---|---|
+| Card's deposit wallet (`TOPUP` cards only) | Debited by the purchase plus fees |
+| Program holding wallet | Debited by the purchase plus fees |
+| [Fees wallet](#fees-wallet) | Credited with your commission on the purchase |
+
+Your systems receive an `authorized` event. From here the money is no longer spendable, but it has not left the program either — it is a hold, and it stays open until the network settles or releases it.
+
+### Stage 3 — Settlement
+
+Once the merchant submits the purchase for payment, the network settles it and CryptoMate emits a `cleared` event.
+
+The settled amount is frequently **not** the amount you approved. Tips added after the fact, incremental captures (hotels, car rentals, fuel pumps) and exchange-rate re-rating on multi-day settlements all change it. CryptoMate compares what was held against what was settled, recalculates the fees on the settled amount, and adjusts your balance **once**, when the purchase closes:
+
+| Settled vs. authorized | What happens |
+|---|---|
+| Equal | The purchase closes. Any difference in fees is adjusted. |
+| **Less** — a partial settlement | The purchase stays open and more settlements are expected. The remaining hold keeps covering them, so no adjustment is applied yet. |
+| **More** — an over-capture | The purchase closes and the difference is debited. |
+
+<Note>
+One purchase can settle in several pieces, and each piece emits its own `cleared` event. Reconcile on the transaction, not on the event: only the last one closes the purchase.
+</Note>
+
+### Stage 4 — Releases and returns
+
+Not every purchase ends at settlement:
+
+| Outcome | What it means |
+|---|---|
+| `reversal` | The merchant or the network released the hold, fully or partially. The released amount is credited back. |
+| `refund` | The merchant returned money after settlement. It arrives as its own credit, not as a change to the original purchase. |
+| `declined` after an `authorized` | The network cancelled an authorization it had already approved. It is processed as a reversal, so the held funds are credited back. |
+| Dispute won | A dispute resolved in the cardholder's favor credits the disputed amount back. |
+| Hold that never settles | If no settlement ever arrives, the hold expires after **32 days** and the reserved funds are released automatically. |
+
+<Warning>
+A hold is not a payment. Until it settles or is released, the reserved amount is unavailable for other purchases — it counts against your holding balance and against the card's accumulated limits.
+</Warning>
+
+### Putting it together
+
+```mermaid
+sequenceDiagram
+  participant H as Cardholder
+  participant N as Card network
+  participant CM as CryptoMate
+  participant Y as Your systems
+  H->>N: Pays at the merchant
+  N->>CM: Authorization request
+  CM->>Y: authorization (WEBHOOK cards only)
+  Y-->>CM: Approve or decline
+  CM-->>N: Decision
+  CM->>Y: authorized - funds held
+  Note over N,CM: Days later, when the merchant<br/>submits the purchase
+  N->>CM: Settlement, in one or more pieces
+  CM->>Y: cleared - balance adjusted
+```
+
+---
+
 ## Creating a card
 
 Use [Create virtual card](/api-reference/cards/virtual-cards/create-card) to issue a new card.
