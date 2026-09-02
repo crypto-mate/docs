@@ -55,7 +55,21 @@ Submits a missing document for a pending product enablement request. Data fields
 </ResponseField>
 
 <ResponseField name="rejected_items" type="array">
-  Items rejected during the submission. Each item has `type` (`document` or `data`), `key`, and `reason`. For a rejected document, `reason` can describe an image-quality issue — see the [KYC image guidelines](/clients/kyc-image-guidelines). A rejected document is not saved; the requirement stays pending until you upload it again.
+  Items rejected during the submission. Each item has `type` (`document` or `data`), `key`, `reason`, and `code`. For a rejected document, `reason` can describe an image-quality issue — see the [KYC image guidelines](/clients/kyc-image-guidelines). A rejected document is not saved; the requirement stays pending until you upload it again.
+
+  `code` is a machine-readable identifier for the rejection — use it to branch your integration's logic. `reason` is display text in English for humans, its wording is not stable, and it can change without notice; never match on it. `code` can be absent or `null` for a rejected data field, since those come from internal validations that have no code catalog.
+
+  | `code` | Returned for | Meaning |
+  |---|---|---|
+  | `DOCUMENT_QUALITY_REJECTED` | `document` | The identity document photo failed the automated quality check. |
+  | `SELFIE_QUALITY_REJECTED` | `document` | The selfie failed the automated quality check. |
+  | `APP_ERROR` | `document` | The document could not be processed. Retrying makes sense; retaking the photo does not — this is not an issue with the image. |
+  | `SERV_ERROR` | `document` | Same as `APP_ERROR` — a processing failure unrelated to the image itself. |
+  | `UPLOAD_UNAVAILABLE` | `document` | The upload is temporarily unavailable on CryptoMate's side. Retry the request. |
+
+  <Note>
+    `APP_ERROR`, `SERV_ERROR` and `UPLOAD_UNAVAILABLE` indicate a problem on CryptoMate's side, not with the client's document — retry the request instead of asking the client to retake the photo.
+  </Note>
 </ResponseField>
 
 <RequestExample>
