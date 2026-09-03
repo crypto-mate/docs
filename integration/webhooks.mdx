@@ -355,6 +355,8 @@ Delivered when an individual cardholder attempts a purchase that requires an Out
 
 This event is sent on the same channel as `authorization`, so acknowledge it with `200 OK` promptly. The challenge itself expires at `expiry_time` — report the cardholder's decision before then, or it is treated as expired.
 
+If CryptoMate cannot deliver this event to your webhook — no webhook configured, an error response, or no response in time — the 3DS authentication is declined and the purchase does not go through. The cardholder is never left waiting on a prompt that never resolves: a delivery failure fails the transaction fast instead of hanging it.
+
 ```json
 {
   "product": "cards",
