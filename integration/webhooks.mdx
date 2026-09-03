@@ -108,6 +108,7 @@ The response **must** arrive within the deadline described below or CryptoMate a
 | Scenario | Timeout | Retries |
 |---|---|---|
 | Card `authorization` (external authorization) | 1,200 ms hard deadline on the response | None — a missed deadline applies the card's default behavior |
+| Individual card `notification_3ds_authorization_oob` (external authorization channel) | Short deadline on the response — acknowledge with `200 OK` promptly | None — a missed acknowledgment is treated as a failed delivery |
 | Regular events (most webhooks) | 30 s HTTP timeout | Up to 10 attempts with exponential backoff (initial 1 s, multiplier 2x) |
 | Non-retriable informational events (e.g. `notification_3ds_authorization`) | 30 s | None |
 
@@ -344,6 +345,30 @@ Informational event containing the code the cardholder needs for a 3DS challenge
     "transaction_amount": "42.50",
     "transaction_currency": "USD",
     "transaction_timestamp": "2025-01-15T12:34:56Z"
+  }
+}
+```
+
+#### `notification_3ds_authorization_oob` — Out-of-Band 3DS challenge (Individual Cards)
+
+Delivered when an individual cardholder attempts a purchase that requires an Out-of-Band 3D Secure challenge. CryptoMate never talks to the cardholder directly — your app shows the approve/deny prompt and reports the decision via [Respond to 3DS authorization](/api-reference/cards/individual-cards/respond-3ds-authorization).
+
+This event is sent on the same synchronous channel as `authorization`, so acknowledge it with `200 OK` promptly. Unlike `authorization`, your response's `response_code` does not decide the outcome — it only confirms delivery. The challenge itself expires after a short window, so report the cardholder's decision before it does.
+
+```json
+{
+  "product": "cards",
+  "event_type": "notification_3ds_authorization_oob",
+  "operation_id": "25e4988d-9303-4199-983f-e90cc7bf9832",
+  "status": "pending",
+  "data": {
+    "challenge_id": "25e4988d-9303-4199-983f-e90cc7bf9832",
+    "card_id": "icrd_123",
+    "merchant_name": "Acme Coffee",
+    "merchant_country": "USA",
+    "transaction_amount": "42.50",
+    "transaction_currency": "USD",
+    "expiry_time": "2025-01-15T12:34:56Z"
   }
 }
 ```
