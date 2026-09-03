@@ -108,7 +108,7 @@ The response **must** arrive within the deadline described below or CryptoMate a
 | Scenario | Timeout | Retries |
 |---|---|---|
 | Card `authorization` (external authorization) | 1,200 ms hard deadline on the response | None — a missed deadline applies the card's default behavior |
-| Individual card `notification_3ds_authorization_oob` (external authorization channel) | Short deadline on the response — acknowledge with `200 OK` promptly | None — a missed acknowledgment is treated as a failed delivery |
+| Individual card `notification_3ds_authorization_oob` (external authorization channel) | No fixed timeout — the deadline is the `expiry_time` in the event payload, which varies per challenge | None — a decision reported after `expiry_time` finds the challenge already expired |
 | Regular events (most webhooks) | 30 s HTTP timeout | Up to 10 attempts with exponential backoff (initial 1 s, multiplier 2x) |
 | Non-retriable informational events (e.g. `notification_3ds_authorization`) | 30 s | None |
 
@@ -353,7 +353,7 @@ Informational event containing the code the cardholder needs for a 3DS challenge
 
 Delivered when an individual cardholder attempts a purchase that requires an Out-of-Band 3D Secure challenge. CryptoMate never talks to the cardholder directly — your app shows the approve/deny prompt and reports the decision via [Respond to 3DS authorization](/api-reference/cards/individual-cards/respond-3ds-authorization).
 
-This event is sent on the same synchronous channel as `authorization`, so acknowledge it with `200 OK` promptly. Unlike `authorization`, your response's `response_code` does not decide the outcome — it only confirms delivery. The challenge itself expires after a short window, so report the cardholder's decision before it does.
+This event is sent on the same channel as `authorization`, so acknowledge it with `200 OK` promptly. The challenge itself expires at `expiry_time` — report the cardholder's decision before then, or it is treated as expired.
 
 ```json
 {

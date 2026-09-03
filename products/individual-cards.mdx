@@ -95,6 +95,27 @@ The card issuer is updated first: if it rejects the change, nothing is saved and
 
 ---
 
+## 3DS authentication
+
+Individual cards use **Out-of-Band 3D Secure**: the cardholder never talks to CryptoMate directly, and CryptoMate never talks to the cardholder directly either. Your app is the one showing the approve/deny prompt.
+
+The flow works like this:
+
+1. The card issuer detects a purchase that needs 3DS verification and raises a challenge.
+2. CryptoMate delivers that challenge to your webhook.
+3. Your app shows the cardholder an approve/deny prompt.
+4. You report the cardholder's decision back to CryptoMate, which relays it to the issuer.
+
+<Warning>
+The challenge expires a short time after it is raised. Report the cardholder's decision before it does, or the purchase falls through as if it had been denied.
+</Warning>
+
+Reporting the same decision for a challenge more than once is safe — it will not be sent to the card issuer twice. Reporting a different decision for a challenge that was already answered is rejected.
+
+See the [webhooks guide](/integration/webhooks) for the event that delivers the challenge, and [Respond to 3DS authorization](/api-reference/cards/individual-cards/respond-3ds-authorization) for reporting the decision.
+
+---
+
 ## Summary
 
 <Steps>
