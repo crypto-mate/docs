@@ -5,7 +5,7 @@ api: "POST /cards/holding/mirror-wallets"
 ---
 
 <Warning>
-  **Send USDC only.** A mirror wallet is provisioned to receive USDC on its blockchain and credits nothing else. Any other asset can land at the address and stay there: it is never credited to the holding balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
+  **Send only the assets this address accepts.** A mirror wallet is provisioned for a specific set of assets on its blockchain — the ones listed in `tokens` — and credits nothing else. Which assets those are depends on the blockchain. Any other asset can land at the address and stay there: it is never credited to the holding balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
 </Warning>
 
 Creates a mirror wallet for the card program's holding wallet: an additional inbound address on another blockchain that funds the same holding balance. Requires an API key with access level 2 or higher.
@@ -22,7 +22,7 @@ Individual cards have their own program and their own pair of endpoints — see 
 
 A mirror wallet does not move the holding wallet off Polygon. The Polygon address returned by [Get holding balance](/api-reference/cards/holding/get-balance) stays the program's main deposit address and does not change — a mirror wallet is an additional way in, not a replacement.
 
-USDC sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get holding balance](/api-reference/cards/holding/get-balance) rather than from a block explorer on the mirror blockchain.
+An accepted asset sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get holding balance](/api-reference/cards/holding/get-balance) rather than from a block explorer on the mirror blockchain.
 
 <Warning>
   **The 10 USD minimum deposit applies to mirror addresses too.** A deposit below 10 USD is not picked up: it is neither bridged nor credited, and the funds stay at the mirror address. No endpoint recovers them. Send at least 10 USD per transfer.
@@ -50,6 +50,10 @@ Unknown fields are ignored.
   Whether the mirror wallet is receiving deposits. A new mirror wallet comes back `true`. A `false` means the address is not accepting deposits — do not send funds to it while it reads `false`. This is not a state you can change.
 </ResponseField>
 
+<ResponseField name="tokens" type="string[]">
+  Symbols of the assets this address accepts and credits, in the order the platform provisions them. Which assets these are depends on the blockchain: a `STELLAR` mirror wallet accepts `USDC` and `USDT0`, a `SOLANA` one accepts `USDC`. Anything not in this list is not credited and cannot be recovered — see the warning above.
+</ResponseField>
+
 ## Rejected blockchains
 
 Two different statuses answer a blockchain the endpoint will not accept, and they tell you different things:
@@ -67,7 +71,7 @@ Do not treat a `409` like a `412`. A `412` is permanent and a `409` is not — g
 
 ## Provisioning failures
 
-Creating the address takes several on-chain steps, and which ones depends on the blockchain: a Stellar address is funded and given a USDC trustline, a Solana address is funded for rent and given a USDC associated token account. If any step fails, the call answers `500` with a generic message and no internal detail.
+Creating the address takes several on-chain steps, and which ones depends on the blockchain: a Stellar address is funded and given a trustline for each asset it accepts, a Solana address is funded for rent and given an associated token account for each. If any step fails, the call answers `500` with a generic message and no internal detail.
 
 Retrying is safe — you end up with a program that has a usable mirror wallet. What a retry does not do is hand you back the address the failed attempt was working on: a call that fails records no mirror wallet for the holding, so the retry provisions and funds a new address. Only a call that already succeeded returns the same wallet when you repeat it.
 
@@ -90,7 +94,8 @@ curl -X POST "https://api.cryptomate.me/cards/holding/mirror-wallets" \
 {
   "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
   "blockchain": "STELLAR",
-  "enabled": true
+  "enabled": true,
+  "tokens": ["USDC", "USDT0"]
 }
 ```
 
@@ -98,7 +103,8 @@ curl -X POST "https://api.cryptomate.me/cards/holding/mirror-wallets" \
 {
   "address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
   "blockchain": "SOLANA",
-  "enabled": true
+  "enabled": true,
+  "tokens": ["USDC"]
 }
 ```
 

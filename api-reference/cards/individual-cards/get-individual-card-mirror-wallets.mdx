@@ -5,11 +5,11 @@ api: "GET /cards/individual-cards/{cardId}/mirror-wallets"
 ---
 
 <Warning>
-  **Send USDC only.** A mirror wallet is provisioned to receive USDC on its blockchain and credits nothing else. Any other asset can land at the address and stay there: it is never credited to the card balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
+  **Send only the assets this address accepts.** A mirror wallet is provisioned for a specific set of assets on its blockchain — the ones listed in `tokens` — and credits nothing else. Which assets those are depends on the blockchain. Any other asset can land at the address and stay there: it is never credited to the card balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
 </Warning>
 
 <Note>
-  A USDC deposit at a mirror address is credited to the card balance, the same as a deposit at the address returned by [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets).
+  A deposit of an accepted asset at a mirror address is credited to the card balance, the same as a deposit at the address returned by [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets).
 </Note>
 
 Returns the mirror wallets of the individual card: the additional inbound addresses it has on other blockchains, each of which funds the card balance. The card's main deposit address is not a mirror wallet and is not part of this list — it comes from [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets). Requires an API key with access level 1 or higher.
@@ -40,6 +40,10 @@ Returns an array of mirror wallet objects.
   Whether the mirror wallet is receiving deposits. A new mirror wallet comes back `true`. A `false` means the address is not accepting deposits — do not send funds to it while it reads `false`. This is not a state you can change.
 </ResponseField>
 
+<ResponseField name="tokens" type="string[]">
+  Symbols of the assets this address accepts and credits, in the order the platform provisions them. Which assets these are depends on the blockchain: a `STELLAR` mirror wallet accepts `USDC` and `USDT0`, a `SOLANA` one accepts `USDC`. Anything not in this list is not credited and cannot be recovered — see the warning above.
+</ResponseField>
+
 <RequestExample>
 
 ```bash cURL
@@ -56,12 +60,14 @@ curl -X GET "https://api.cryptomate.me/cards/individual-cards/card_6f1e2a30-4a3c
   {
     "address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
     "blockchain": "SOLANA",
-    "enabled": true
+    "enabled": true,
+    "tokens": ["USDC"]
   },
   {
     "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
     "blockchain": "STELLAR",
-    "enabled": true
+    "enabled": true,
+    "tokens": ["USDC", "USDT0"]
   }
 ]
 ```

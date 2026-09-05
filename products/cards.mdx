@@ -187,7 +187,7 @@ The personal deposit wallets described above work the same way: each card can al
 <Warning>
 A deposit to a mirror address is **not** credited on the blockchain it landed on. It is transferred to the Polygon holding wallet and credited there, so the balance moves once that transfer settles — not when the deposit confirms on Solana or Stellar. Expect a delay between the two.
 
-Mirror addresses accept **USDC only**, and the **10 USD minimum deposit** applies to them as well. A smaller deposit is neither transferred nor credited: the funds stay at the mirror address and cannot be recovered through the platform.
+Mirror addresses accept a fixed set of assets that depends on the blockchain — `USDC` on Solana, `USDC` and `USDT0` on Stellar — and the **10 USD minimum deposit** applies to them as well. The accepted assets come back in the `tokens` field of the mirror wallet endpoints; anything else is not credited. A smaller deposit is neither transferred nor credited: the funds stay at the mirror address and cannot be recovered through the platform.
 </Warning>
 
 ---
