@@ -5,7 +5,7 @@ api: "GET /cards/individual-cards/holding-wallet/mirror-wallets"
 ---
 
 <Warning>
-  **Send USDC only.** A mirror wallet is provisioned to receive USDC on its blockchain and credits nothing else. Any other asset can land at the address and stay there: it is never credited to the holding balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
+  **Send only the assets this address accepts.** A mirror wallet is provisioned for a specific set of assets on its blockchain — the ones listed in `tokens` — and credits nothing else. Which assets those are depends on the blockchain. Any other asset can land at the address and stay there: it is never credited to the holding balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
 </Warning>
 
 Returns the mirror wallets of the individual cards program's holding wallet: the additional inbound addresses it has on other blockchains, each of which funds the same holding balance. Requires an API key with access level 1 or higher.
@@ -20,7 +20,7 @@ Enterprise cards have their own program and their own pair of endpoints — see 
 
 ## How a mirror deposit reaches the holding balance
 
-USDC sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) rather than from a block explorer on the mirror blockchain.
+An accepted asset sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) rather than from a block explorer on the mirror blockchain.
 
 <Warning>
   **The 10 USD minimum deposit applies to mirror addresses too.** A deposit below 10 USD is not picked up: it is neither bridged nor credited, and the funds stay at the mirror address. No endpoint recovers them. Send at least 10 USD per transfer.
@@ -42,6 +42,10 @@ Returns an array of mirror wallet objects.
   Whether the mirror wallet is receiving deposits. A new mirror wallet comes back `true`. A `false` means the address is not accepting deposits — do not send funds to it while it reads `false`. This is not a state you can change.
 </ResponseField>
 
+<ResponseField name="tokens" type="string[]">
+  Symbols of the assets this address accepts and credits, in the order the platform provisions them. Which assets these are depends on the blockchain: a `STELLAR` mirror wallet accepts `USDC` and `USDT0`, a `SOLANA` one accepts `USDC`. Anything not in this list is not credited and cannot be recovered — see the warning above.
+</ResponseField>
+
 <RequestExample>
 
 ```bash cURL
@@ -58,12 +62,14 @@ curl -X GET "https://api.cryptomate.me/cards/individual-cards/holding-wallet/mir
   {
     "address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
     "blockchain": "SOLANA",
-    "enabled": true
+    "enabled": true,
+    "tokens": ["USDC"]
   },
   {
     "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
     "blockchain": "STELLAR",
-    "enabled": true
+    "enabled": true,
+    "tokens": ["USDC", "USDT0"]
   }
 ]
 ```

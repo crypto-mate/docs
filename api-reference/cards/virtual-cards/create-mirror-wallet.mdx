@@ -5,11 +5,11 @@ api: "POST /cards/virtual-cards/{cardId}/mirror-wallets"
 ---
 
 <Warning>
-  **Send USDC only.** A mirror wallet is provisioned to receive USDC on its blockchain and credits nothing else. Any other asset can land at the address and stay there: it is never credited to the card balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
+  **Send only the assets this address accepts.** A mirror wallet is provisioned for a specific set of assets on its blockchain — the ones listed in `tokens` — and credits nothing else. Which assets those are depends on the blockchain. Any other asset can land at the address and stay there: it is never credited to the card balance, nothing returns it automatically, and no endpoint recovers it. Check the asset and the blockchain before every transfer — a wrong one is not reversible from the API.
 </Warning>
 
 <Note>
-  A USDC deposit at a mirror address is credited to the card balance, the same as a deposit at the address returned by [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets).
+  A deposit of an accepted asset at a mirror address is credited to the card balance, the same as a deposit at the address returned by [Get card top-up wallets](/api-reference/cards/virtual-cards/get-card-top-up-wallets).
 </Note>
 
 Creates a mirror wallet for the card: an additional inbound address on another blockchain that funds the same card balance. Requires an API key with access level 2 or higher.
@@ -48,6 +48,10 @@ Unknown fields are ignored.
   Whether the mirror wallet is receiving deposits. A new mirror wallet comes back `true`. A `false` means the address is not accepting deposits — do not send funds to it while it reads `false`. This is not a state you can change.
 </ResponseField>
 
+<ResponseField name="tokens" type="string[]">
+  Symbols of the assets this address accepts and credits, in the order the platform provisions them. Which assets these are depends on the blockchain: a `STELLAR` mirror wallet accepts `USDC` and `USDT0`, a `SOLANA` one accepts `USDC`. Anything not in this list is not credited and cannot be recovered — see the warning above.
+</ResponseField>
+
 ## Rejected blockchains
 
 Two different statuses answer a blockchain the endpoint will not accept, and they tell you different things:
@@ -57,7 +61,7 @@ Two different statuses answer a blockchain the endpoint will not accept, and the
 
 ## Provisioning failures
 
-Creating the address takes several on-chain steps, and which ones depends on the blockchain: a Stellar address is funded and given a USDC trustline, a Solana address is funded for rent and given a USDC associated token account. If any step fails, the call answers `500` with a generic message and no internal detail.
+Creating the address takes several on-chain steps, and which ones depends on the blockchain: a Stellar address is funded and given a trustline for each asset it accepts, a Solana address is funded for rent and given an associated token account for each. If any step fails, the call answers `500` with a generic message and no internal detail.
 
 Retrying is safe — you end up with a card that has a usable mirror wallet. What a retry does not do is hand you back the address the failed attempt was working on: a call that fails records no mirror wallet for the card, so the retry provisions and funds a new address. Only a call that already succeeded returns the same wallet when you repeat it.
 
@@ -80,7 +84,8 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4
 {
   "address": "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWUVBVBDOOWMGF5",
   "blockchain": "STELLAR",
-  "enabled": true
+  "enabled": true,
+  "tokens": ["USDC", "USDT0"]
 }
 ```
 
@@ -88,7 +93,8 @@ curl -X POST "https://api.cryptomate.me/cards/virtual-cards/card_6f1e2a30-4a3c-4
 {
   "address": "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH",
   "blockchain": "SOLANA",
-  "enabled": true
+  "enabled": true,
+  "tokens": ["USDC"]
 }
 ```
 
