@@ -14,13 +14,13 @@ The request carries no identifier. The company is taken from the API key, and th
 
 The holding wallet's main deposit address is not a mirror wallet and is not part of this list — it comes from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance). That Polygon address stays the program's main deposit address and does not change when you add a mirror wallet.
 
-A holding wallet that has no mirror wallet answers `200` with an empty list. It holds at most one mirror wallet per blockchain, so with Solana and Stellar available the list has at most two entries.
+A holding wallet that has no mirror wallet answers `200` with an empty list. It holds at most one mirror wallet per blockchain, so with Solana, Stellar and BNB Chain available the list has at most three entries.
 
 Enterprise cards have their own program and their own pair of endpoints — see [Get holding mirror wallets](/api-reference/cards/holding/get-holding-mirror-wallets).
 
 ## How a mirror deposit reaches the holding balance
 
-An accepted asset sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) rather than from a block explorer on the mirror blockchain.
+An accepted asset sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana, Stellar or BNB Chain. Expect a delay between the two, and read the balance from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) rather than from a block explorer on the mirror blockchain.
 
 <Warning>
   **The 10 USD minimum deposit applies to mirror addresses too.** A deposit below 10 USD is not picked up: it is neither bridged nor credited, and the funds stay at the mirror address. No endpoint recovers them. Send at least 10 USD per transfer.

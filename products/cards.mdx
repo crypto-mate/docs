@@ -178,17 +178,23 @@ For cards using `TOPUP` approval, each card also has a **personal deposit wallet
 
 ### Funding from another blockchain
 
-If your funds live on **Solana** or **Stellar**, you can ask for an additional deposit address for the holding wallet on that blockchain — a **mirror wallet**. Request one with [Create holding mirror wallet](/api-reference/cards/holding/create-holding-mirror-wallet), and list the ones you already have with [Get holding mirror wallets](/api-reference/cards/holding/get-holding-mirror-wallets). The individual cards program has its own pair — see [Create individual cards holding mirror wallet](/api-reference/cards/individual-cards/create-individual-cards-holding-mirror-wallet).
+If your funds live on **Solana**, **Stellar** or **BNB Chain**, you can ask for an additional deposit address for the holding wallet on that blockchain — a **mirror wallet**. Request one with [Create holding mirror wallet](/api-reference/cards/holding/create-holding-mirror-wallet), and list the ones you already have with [Get holding mirror wallets](/api-reference/cards/holding/get-holding-mirror-wallets). The individual cards program has its own pair — see [Create individual cards holding mirror wallet](/api-reference/cards/individual-cards/create-individual-cards-holding-mirror-wallet).
 
 A mirror wallet is **additional**, not a replacement. The Polygon address stays the program's main deposit address and does not change. You can hold one mirror wallet per blockchain, and a mirror wallet can be added but never removed.
 
-The personal deposit wallets described above work the same way: each card can also have its own Solana and Stellar mirror addresses — see [Create card mirror wallet](/api-reference/cards/virtual-cards/create-mirror-wallet).
+The personal deposit wallets described above work the same way: each card can also have its own Solana, Stellar and BNB Chain mirror addresses — see [Create card mirror wallet](/api-reference/cards/virtual-cards/create-mirror-wallet).
 
 <Warning>
-A deposit to a mirror address is **not** credited on the blockchain it landed on. It is transferred to the Polygon holding wallet and credited there, so the balance moves once that transfer settles — not when the deposit confirms on Solana or Stellar. Expect a delay between the two.
+A deposit to a mirror address is **not** credited on the blockchain it landed on. It is transferred to the Polygon holding wallet and credited there, so the balance moves once that transfer settles — not when the deposit confirms on Solana, Stellar or BNB Chain. Expect a delay between the two.
 
-Mirror addresses accept a fixed set of assets that depends on the blockchain — `USDC` on Solana, `USDC` and `USDT0` on Stellar — and the **10 USD minimum deposit** applies to them as well. The accepted assets come back in the `tokens` field of the mirror wallet endpoints; anything else is not credited. A smaller deposit is neither transferred nor credited: the funds stay at the mirror address and cannot be recovered through the platform.
+Mirror addresses accept a fixed set of assets that depends on the blockchain — `USDC` on Solana, `USDC` and `USDT0` on Stellar, `USDC` and `USDT` on BNB Chain — and the **10 USD minimum deposit** applies to them as well. The accepted assets come back in the `tokens` field of the mirror wallet endpoints; anything else is not credited. A smaller deposit is neither transferred nor credited: the funds stay at the mirror address and cannot be recovered through the platform.
 </Warning>
+
+<Note>
+**On BNB Chain the mirror address is the Polygon address you already have.** An EVM address is derived from its key rather than from the network, so the same account exists on both and there is nothing new to create — asking for a BNB Chain mirror wallet only registers it so that deposits there are watched.
+
+Seeing the same `0x…` on two networks is expected. The network still matters: the two balances are independent, and a deposit on BNB Chain is bridged to Polygon rather than appearing there directly.
+</Note>
 
 ---
 

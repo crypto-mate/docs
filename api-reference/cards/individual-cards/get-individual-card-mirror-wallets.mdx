@@ -14,7 +14,7 @@ api: "GET /cards/individual-cards/{cardId}/mirror-wallets"
 
 Returns the mirror wallets of the individual card: the additional inbound addresses it has on other blockchains, each of which funds the card balance. The card's main deposit address is not a mirror wallet and is not part of this list — it comes from [Get individual card top-up wallets](/api-reference/cards/individual-cards/get-individual-card-top-up-wallets). Requires an API key with access level 1 or higher.
 
-A card that has no mirror wallet answers `200` with an empty list. A card holds at most one mirror wallet per blockchain, so with Solana and Stellar available the list has at most two entries.
+A card that has no mirror wallet answers `200` with an empty list. A card holds at most one mirror wallet per blockchain, so with Solana, Stellar and BNB Chain available the list has at most three entries.
 
 Enterprise virtual cards have the same pair of endpoints — see [Get card mirror wallets](/api-reference/cards/virtual-cards/get-mirror-wallets).
 

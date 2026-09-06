@@ -1,6 +1,6 @@
 ---
 title: "Create individual cards holding mirror wallet"
-description: "Add an inbound Solana or Stellar address to the individual cards program's holding wallet."
+description: "Add an inbound Solana, Stellar or BNB Chain address to the individual cards program's holding wallet."
 api: "POST /cards/individual-cards/holding-wallet/mirror-wallets"
 ---
 
@@ -14,7 +14,7 @@ The request carries no identifier. The company is taken from the API key, and th
 
 The call answers `200`, not `201`. Repeating a call that succeeded returns the mirror wallet the holding already has on that blockchain, instead of creating a second one. A mirror wallet can only be added — there is no way to remove one or replace it with another address.
 
-Solana and Stellar are available. The holding wallet holds at most one mirror wallet per blockchain, so it can have one of each — call the endpoint once per blockchain. Other blockchains are enabled in later developments.
+Solana, Stellar and BNB Chain are available. The holding wallet holds at most one mirror wallet per blockchain, so it can have one of each — call the endpoint once per blockchain. Other blockchains are enabled in later developments.
 
 Enterprise cards have their own program and their own pair of endpoints — see [Create holding mirror wallet](/api-reference/cards/holding/create-holding-mirror-wallet). A mirror wallet created here funds the individual cards program only.
 
@@ -22,7 +22,7 @@ Enterprise cards have their own program and their own pair of endpoints — see 
 
 A mirror wallet does not move the holding wallet off Polygon. The Polygon address returned by [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) stays the program's main deposit address and does not change — a mirror wallet is an additional way in, not a replacement.
 
-An accepted asset sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana or Stellar. Expect a delay between the two, and read the balance from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) rather than from a block explorer on the mirror blockchain.
+An accepted asset sent to a mirror address is **not** credited on the blockchain it landed on. It is bridged to the Polygon holding wallet and credited there, so the balance moves once the transfer settles on Polygon, not when the deposit confirms on Solana, Stellar or BNB Chain. Expect a delay between the two, and read the balance from [Get individual cards holding wallet balance](/api-reference/cards/individual-cards/get-individual-cards-holding-wallet-balance) rather than from a block explorer on the mirror blockchain.
 
 <Warning>
   **The 10 USD minimum deposit applies to mirror addresses too.** A deposit below 10 USD is not picked up: it is neither bridged nor credited, and the funds stay at the mirror address. No endpoint recovers them. Send at least 10 USD per transfer.
@@ -69,9 +69,19 @@ A `409` is different: it means another provisioning for the same program and blo
 
 Do not treat a `409` like a `412`. A `412` is permanent and a `409` is not — give up on a `409` and the program is left without the mirror wallet you asked for.
 
+## BNB Chain reuses the holding wallet's own address
+
+A BNB Chain mirror wallet is **not a new address**. It is the holding wallet's Polygon address, registered so that deposits on BNB Chain are watched too — an EVM address is derived from its key rather than from the network, so the same account already exists on both.
+
+That has three consequences worth knowing before you use it:
+
+- **`address` will match the one you already have on Polygon.** That is expected, not a bug, and not something to report.
+- **The network still matters.** The same address on Polygon and on BNB Chain holds two independent balances. Sending BNB Chain USDT and expecting it on Polygon does not work: it is bridged, and the balance moves when that bridge settles.
+- **Nothing is created on chain**, so this call has no funding step to fail at — the whole "provisioning failures" section above is about the other two blockchains.
+
 ## Provisioning failures
 
-Creating the address takes several on-chain steps, and which ones depends on the blockchain: a Stellar address is funded and given a trustline for each asset it accepts, a Solana address is funded for rent and given an associated token account for each. If any step fails, the call answers `500` with a generic message and no internal detail.
+Creating the address takes several on-chain steps, and which ones depends on the blockchain: a Stellar address is funded and given a trustline for each asset it accepts, a Solana address is funded for rent and given an associated token account for each. **A BNB Chain address takes none of them** — see below. If any step fails, the call answers `500` with a generic message and no internal detail.
 
 Retrying is safe — you end up with a program that has a usable mirror wallet. What a retry does not do is hand you back the address the failed attempt was working on: a call that fails records no mirror wallet for the holding, so the retry provisions and funds a new address. Only a call that already succeeded returns the same wallet when you repeat it.
 
